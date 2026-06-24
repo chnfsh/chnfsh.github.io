@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>陈辉盛 · 个人主页</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500&display=swap');
+
+:root{
+  --ink:#1a1410;
+  --paper:#faf7f2;
+  --warm:#f3ede3;
+  --red:#c0392b;
+  --gold:#b8860b;
+  --border:#d4c9b5;
+  --muted:#7a6e62;
+  --shadow:0 2px 16px rgba(26,20,16,.09);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;
+  background:var(--paper);
+  color:var(--ink);
+  min-height:100vh;
+  line-height:1.75;
+}
+
+/* ── 顶部导航 ── */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(250,247,242,.92);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+  padding:0 28px;
+}
+.nav-in{
+  max-width:960px;margin:0 auto;
+  display:flex;align-items:center;gap:0;height:52px;
+}
+.nav-brand{
+  font-family:'Noto Serif SC',serif;
+  font-size:15px;letter-spacing:3px;font-weight:700;
+  color:var(--ink);text-decoration:none;margin-right:auto;
+}
+.nav-links{display:flex;gap:0;}
+.nav-links a{
+  font-size:13px;color:var(--muted);text-decoration:none;
+  padding:0 16px;height:52px;display:flex;align-items:center;
+  border-bottom:2px solid transparent;
+  transition:color .15s,border-color .15s;letter-spacing:.5px;
+}
+.nav-links a:hover{color:var(--red);border-bottom-color:var(--red);}
+@media(max-width:600px){.nav-links a{padding:0 10px;font-size:12px;}}
+
+/* ── 英雄区 ── */
+.hero{
+  max-width:960px;margin:0 auto;
+  padding:72px 28px 60px;
+  display:grid;grid-template-columns:1fr auto;align-items:center;gap:48px;
+}
+.hero-text{}
+.hero-eyebrow{
+  font-size:11px;letter-spacing:4px;color:var(--muted);
+  margin-bottom:16px;text-transform:uppercase;
+}
+.hero-name{
+  font-family:'Noto Serif SC',serif;
+  font-size:clamp(36px,6vw,58px);
+  font-weight:700;line-height:1.1;
+  letter-spacing:6px;
+  margin-bottom:8px;
+}
+.hero-name-en{
+  font-size:clamp(14px,2vw,18px);
+  color:var(--muted);letter-spacing:4px;margin-bottom:24px;
+  font-weight:300;
+}
+.hero-desc{
+  font-size:15px;color:var(--muted);line-height:2;
+  max-width:480px;margin-bottom:32px;
+}
+.hero-tags{display:flex;flex-wrap:wrap;gap:8px;}
+.tag{
+  font-size:12px;border:1px solid var(--border);
+  border-radius:20px;padding:4px 14px;color:var(--muted);
+  background:white;letter-spacing:.5px;
+}
+
+/* 印章 */
+.hero-seal{
+  width:96px;height:96px;flex-shrink:0;
+  border:3px solid var(--red);border-radius:8px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-family:'Noto Serif SC',serif;
+  color:var(--red);line-height:1.3;letter-spacing:2px;font-size:18px;
+  font-weight:700;text-align:center;
+  position:relative;
+  box-shadow:inset 0 0 0 4px rgba(192,57,43,.08);
+}
+.hero-seal::before{
+  content:'';position:absolute;inset:4px;
+  border:1px solid rgba(192,57,43,.2);border-radius:4px;pointer-events:none;
+}
+@media(max-width:600px){
+  .hero{grid-template-columns:1fr;padding:48px 20px 40px;gap:32px;}
+  .hero-seal{width:72px;height:72px;font-size:14px;order:-1;}
+}
+
+/* ── 分割线 ── */
+.divider{
+  max-width:960px;margin:0 auto;padding:0 28px;
+  display:flex;align-items:center;gap:16px;margin-bottom:48px;
+}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
+.divider span{
+  font-family:'Noto Serif SC',serif;font-size:11px;
+  color:var(--muted);letter-spacing:4px;white-space:nowrap;
+}
+
+/* ── 应用卡片区 ── */
+.section{max-width:960px;margin:0 auto;padding:0 28px 64px;}
+.section-hdr{margin-bottom:28px;}
+.section-hdr h2{
+  font-family:'Noto Serif SC',serif;font-size:20px;
+  font-weight:700;letter-spacing:2px;margin-bottom:6px;
+}
+.section-hdr p{font-size:13px;color:var(--muted);}
+
+.apps-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:20px;
+}
+.app-card{
+  background:white;border:1px solid var(--border);border-radius:12px;
+  padding:24px;box-shadow:var(--shadow);
+  text-decoration:none;color:inherit;
+  display:flex;flex-direction:column;gap:12px;
+  transition:box-shadow .2s,transform .2s,border-color .2s;
+  position:relative;overflow:hidden;
+}
+.app-card:hover{
+  box-shadow:0 8px 32px rgba(26,20,16,.13);
+  transform:translateY(-2px);
+  border-color:rgba(192,57,43,.3);
+}
+.app-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--red);transform:scaleX(0);transform-origin:left;
+  transition:transform .2s;
+}
+.app-card:hover::before{transform:scaleX(1);}
+
+.app-icon{font-size:28px;line-height:1;}
+.app-title{
+  font-family:'Noto Serif SC',serif;font-size:16px;
+  font-weight:700;letter-spacing:1px;
+}
+.app-subtitle{font-size:12px;color:var(--red);letter-spacing:1px;}
+.app-desc{font-size:13px;color:var(--muted);line-height:1.8;flex:1;}
+.app-footer{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:4px;
+}
+.app-meta{font-size:11px;color:var(--border);letter-spacing:.5px;}
+.app-arrow{
+  width:28px;height:28px;border-radius:50%;
+  background:var(--warm);display:flex;align-items:center;justify-content:center;
+  font-size:12px;color:var(--muted);transition:background .2s,color .2s;
+}
+.app-card:hover .app-arrow{background:var(--red);color:white;}
+
+/* 占位卡片（即将推出） */
+.app-card.placeholder{
+  border-style:dashed;background:var(--paper);
+  opacity:.55;pointer-events:none;
+}
+.app-card.placeholder::before{display:none;}
+
+/* ── 底部 ── */
+footer{
+  border-top:1px solid var(--border);
+  padding:28px;text-align:center;
+  font-size:12px;color:var(--muted);letter-spacing:.5px;
+}
+footer a{color:var(--muted);text-decoration:none;}
+footer a:hover{color:var(--red);}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="nav-brand" href="#">辉盛</a>
+    <div class="nav-links">
+      <a href="#apps">教学工具</a>
+      <a href="#about">关于</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-text">
+    <div class="hero-eyebrow">个人主页 · Personal Homepage</div>
+    <div class="hero-name">陈辉盛</div>
+    <div class="hero-name-en">Chnfsh &nbsp;·&nbsp; Singapore</div>
+    <p class="hero-desc">
+      华文教育工作者，热衷于探索科技与人文的结合。
+      利用业余时间为学生开发华文学习工具，持续记录教学思考与创作。
+    </p>
+    <div class="hero-tags">
+      <span class="tag">华文教育</span>
+      <span class="tag">新加坡</span>
+      <span class="tag">教学工具开发</span>
+      <span class="tag">中华文学</span>
+    </div>
+  </div>
+  <div class="hero-seal">辉<br>盛</div>
+</section>
+
+<div class="divider"><span>教学工具</span></div>
+
+<section class="section" id="apps">
+  <div class="section-hdr">
+    <h2>自制教学软件</h2>
+    <p>为课堂教学与课外练习而开发，欢迎学生和家长使用。</p>
+  </div>
+  <div class="apps-grid">
+
+    <a class="app-card" href="https://chnfsh.github.io/P6ChineseWords/" target="_blank">
+      <div class="app-icon">字</div>
+      <div>
+        <div class="app-title">字字珠玑</div>
+        <div class="app-subtitle">梦溪小学 · 五六年级</div>
+      </div>
+      <p class="app-desc">华文听写与默写练习，覆盖五年级1-19单元和六年级1-12课，共约600个词语。采用间隔重复算法，专为9月考试备考设计。</p>
+      <div class="app-footer">
+        <span class="app-meta">词语听写 · 句子默写 · 形近字辨析</span>
+        <span class="app-arrow">→</span>
+      </div>
+    </a>
+
+    <a class="app-card" href="./bantest/" target="_blank">
+      <div class="app-icon">📖</div>
+      <div>
+        <div class="app-title">华文文学模拟测验</div>
+        <div class="app-subtitle">中二华文 · 第三学段</div>
+      </div>
+      <p class="app-desc">中二华文文学班级测验练习，涵盖新谣、微型小说、《永远的蝴蝶》、《在柏林》、《木兰辞》、初唐诗歌等考试范围，随机出题，配有参考答案。</p>
+      <div class="app-footer">
+        <span class="app-meta">选择题 · 赏析题 · 问答题</span>
+        <span class="app-arrow">→</span>
+      </div>
+    </a>
+
+    <div class="app-card placeholder">
+      <div class="app-icon">＋</div>
+      <div>
+        <div class="app-title">更多工具</div>
+        <div class="app-subtitle">即将推出</div>
+      </div>
+      <p class="app-desc">持续开发中，敬请期待。</p>
+      <div class="app-footer">
+        <span class="app-meta"></span>
+        <span class="app-arrow">·</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider" id="about"><span>关于</span></div>
+
+<section class="section">
+  <div class="section-hdr">
+    <h2>联系与关注</h2>
+    <p>如有任何教学合作或软件使用问题，欢迎联系。</p>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:12px;">
+    <a class="tag" style="text-decoration:none;color:var(--muted);" href="https://github.com/chnfsh" target="_blank">🐱 GitHub · chnfsh</a>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 陈辉盛 &nbsp;·&nbsp; 以教育为本，以科技为用 &nbsp;·&nbsp;
+  <a href="https://github.com/chnfsh" target="_blank">GitHub</a></p>
+</footer>
+
+</body>
+</html>
