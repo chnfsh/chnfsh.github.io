@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>陈辉盛 · 个人主页</title>
+<title>南洋经纬录</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500&display=swap');
 
@@ -36,7 +36,7 @@ nav{
   padding:0 28px;
 }
 .nav-in{
-  max-width:960px;margin:0 auto;
+  max-width:1080px;margin:0 auto;
   display:flex;align-items:center;gap:0;height:52px;
 }
 .nav-brand{
@@ -56,11 +56,10 @@ nav{
 
 /* ── 英雄区 ── */
 .hero{
-  max-width:960px;margin:0 auto;
+  max-width:1080px;margin:0 auto;
   padding:72px 28px 60px;
   display:grid;grid-template-columns:1fr auto;align-items:center;gap:48px;
 }
-.hero-text{}
 .hero-eyebrow{
   font-size:11px;letter-spacing:4px;color:var(--muted);
   margin-bottom:16px;text-transform:uppercase;
@@ -69,35 +68,26 @@ nav{
   font-family:'Noto Serif SC',serif;
   font-size:clamp(36px,6vw,58px);
   font-weight:700;line-height:1.1;
-  letter-spacing:6px;
-  margin-bottom:8px;
+  letter-spacing:6px;margin-bottom:8px;
 }
 .hero-name-en{
   font-size:clamp(14px,2vw,18px);
-  color:var(--muted);letter-spacing:4px;margin-bottom:24px;
-  font-weight:300;
+  color:var(--muted);letter-spacing:4px;margin-bottom:24px;font-weight:300;
 }
-.hero-desc{
-  font-size:15px;color:var(--muted);line-height:2;
-  max-width:480px;margin-bottom:32px;
-}
+.hero-desc{font-size:15px;color:var(--muted);line-height:2;max-width:480px;margin-bottom:32px;}
 .hero-tags{display:flex;flex-wrap:wrap;gap:8px;}
 .tag{
   font-size:12px;border:1px solid var(--border);
   border-radius:20px;padding:4px 14px;color:var(--muted);
   background:white;letter-spacing:.5px;
 }
-
-/* 印章 */
 .hero-seal{
   width:96px;height:96px;flex-shrink:0;
   border:3px solid var(--red);border-radius:8px;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   font-family:'Noto Serif SC',serif;
-  color:var(--red);line-height:1.3;letter-spacing:2px;font-size:18px;
-  font-weight:700;text-align:center;
-  position:relative;
-  box-shadow:inset 0 0 0 4px rgba(192,57,43,.08);
+  color:var(--red);line-height:1.3;letter-spacing:2px;font-size:18px;font-weight:700;text-align:center;
+  position:relative;box-shadow:inset 0 0 0 4px rgba(192,57,43,.08);
 }
 .hero-seal::before{
   content:'';position:absolute;inset:4px;
@@ -110,7 +100,7 @@ nav{
 
 /* ── 分割线 ── */
 .divider{
-  max-width:960px;margin:0 auto;padding:0 28px;
+  max-width:1080px;margin:0 auto;padding:0 28px;
   display:flex;align-items:center;gap:16px;margin-bottom:48px;
 }
 .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
@@ -119,64 +109,88 @@ nav{
   color:var(--muted);letter-spacing:4px;white-space:nowrap;
 }
 
-/* ── 应用卡片区 ── */
-.section{max-width:960px;margin:0 auto;padding:0 28px 64px;}
-.section-hdr{margin-bottom:28px;}
-.section-hdr h2{
-  font-family:'Noto Serif SC',serif;font-size:20px;
-  font-weight:700;letter-spacing:2px;margin-bottom:6px;
+/* ── 左右双栏主体 ── */
+.two-col{
+  max-width:1080px;margin:0 auto;
+  padding:0 28px 72px;
+  display:grid;
+  grid-template-columns:420px 1fr;
+  gap:56px;
+  align-items:start;
 }
-.section-hdr p{font-size:13px;color:var(--muted);}
+@media(max-width:860px){
+  .two-col{grid-template-columns:1fr;gap:48px;}
+}
 
-.apps-grid{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
-  gap:20px;
+/* ── 栏标题 ── */
+.col-hdr{
+  margin-bottom:20px;padding-bottom:14px;
+  border-bottom:2px solid var(--border);
 }
+.col-hdr h2{
+  font-family:'Noto Serif SC',serif;font-size:17px;
+  font-weight:700;letter-spacing:2px;margin-bottom:4px;
+}
+.col-hdr p{font-size:12px;color:var(--muted);}
+
+/* ── 程序卡片（左栏，竖向堆叠） ── */
+.col-apps{display:flex;flex-direction:column;gap:14px;}
 .app-card{
   background:white;border:1px solid var(--border);border-radius:12px;
-  padding:24px;box-shadow:var(--shadow);
+  padding:20px;box-shadow:var(--shadow);
   text-decoration:none;color:inherit;
-  display:flex;flex-direction:column;gap:12px;
+  display:flex;flex-direction:column;gap:10px;
   transition:box-shadow .2s,transform .2s,border-color .2s;
   position:relative;overflow:hidden;
 }
 .app-card:hover{
   box-shadow:0 8px 32px rgba(26,20,16,.13);
-  transform:translateY(-2px);
-  border-color:rgba(192,57,43,.3);
+  transform:translateY(-2px);border-color:rgba(192,57,43,.3);
 }
 .app-card::before{
   content:'';position:absolute;top:0;left:0;right:0;height:3px;
-  background:var(--red);transform:scaleX(0);transform-origin:left;
-  transition:transform .2s;
+  background:var(--red);transform:scaleX(0);transform-origin:left;transition:transform .2s;
 }
 .app-card:hover::before{transform:scaleX(1);}
-
-.app-icon{font-size:28px;line-height:1;}
-.app-title{
-  font-family:'Noto Serif SC',serif;font-size:16px;
-  font-weight:700;letter-spacing:1px;
-}
-.app-subtitle{font-size:12px;color:var(--red);letter-spacing:1px;}
-.app-desc{font-size:13px;color:var(--muted);line-height:1.8;flex:1;}
-.app-footer{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-top:4px;
-}
+.app-icon{font-size:26px;line-height:1;}
+.app-title{font-family:'Noto Serif SC',serif;font-size:15px;font-weight:700;letter-spacing:1px;}
+.app-subtitle{font-size:11px;color:var(--red);letter-spacing:1px;}
+.app-desc{font-size:12px;color:var(--muted);line-height:1.8;flex:1;}
+.app-footer{display:flex;align-items:center;justify-content:space-between;margin-top:4px;}
 .app-meta{font-size:11px;color:var(--border);letter-spacing:.5px;}
 .app-arrow{
-  width:28px;height:28px;border-radius:50%;
+  width:26px;height:26px;border-radius:50%;
   background:var(--warm);display:flex;align-items:center;justify-content:center;
-  font-size:12px;color:var(--muted);transition:background .2s,color .2s;
+  font-size:12px;color:var(--muted);transition:background .2s,color .2s;flex-shrink:0;
 }
 .app-card:hover .app-arrow{background:var(--red);color:white;}
 
-/* 占位卡片（即将推出） */
-.app-card.placeholder{
-  border-style:dashed;background:var(--paper);
-  opacity:.55;pointer-events:none;
+/* ── 文章列表（右栏） ── */
+.col-articles{}
+.sub-label{
+  font-size:10px;letter-spacing:.18em;color:var(--muted);
+  text-transform:uppercase;margin:24px 0 6px;
 }
-.app-card.placeholder::before{display:none;}
+.sub-label:first-child{margin-top:0;}
+.article-list{list-style:none;display:flex;flex-direction:column;}
+.article-item{border-bottom:1px solid var(--border);}
+.article-item:first-child{border-top:1px solid var(--border);}
+.article-item a{
+  display:grid;grid-template-columns:2rem 1fr 1.2rem;
+  align-items:baseline;gap:.5rem .8rem;
+  padding:1rem 0;text-decoration:none;color:inherit;
+}
+.article-item a:hover .art-title{color:var(--red);}
+.article-item a:hover .art-arrow{color:var(--red);transform:translateX(3px);}
+.art-num{font-size:10px;color:var(--border);font-variant-numeric:tabular-nums;padding-top:.15em;}
+.art-title{font-family:'Noto Serif SC',serif;font-size:13.5px;font-weight:400;line-height:1.6;transition:color .2s;}
+.art-arrow{font-size:12px;color:var(--muted);transition:color .2s,transform .2s;justify-self:end;}
+
+/* ── 关于 ── */
+.section{max-width:1080px;margin:0 auto;padding:0 28px 64px;}
+.section-hdr{margin-bottom:28px;}
+.section-hdr h2{font-family:'Noto Serif SC',serif;font-size:20px;font-weight:700;letter-spacing:2px;margin-bottom:6px;}
+.section-hdr p{font-size:13px;color:var(--muted);}
 
 /* ── 底部 ── */
 footer{
@@ -192,9 +206,10 @@ footer a:hover{color:var(--red);}
 
 <nav>
   <div class="nav-in">
-    <a class="nav-brand" href="#">辉盛</a>
+    <a class="nav-brand" href="#">经纬录</a>
     <div class="nav-links">
-      <a href="#apps">教学工具</a>
+      <a href="#main">教学工具</a>
+      <a href="#articles">文章记录</a>
       <a href="#about">关于</a>
     </div>
   </div>
@@ -203,72 +218,119 @@ footer a:hover{color:var(--red);}
 <section class="hero">
   <div class="hero-text">
     <div class="hero-eyebrow">个人主页 · Personal Homepage</div>
-    <div class="hero-name">陈辉盛</div>
-    <div class="hero-name-en">Chnfsh &nbsp;·&nbsp; Singapore</div>
-    <p class="hero-desc">
-      华文教育工作者，热衷于探索科技与人文的结合。
-      利用业余时间为学生开发华文学习工具，持续记录教学思考与创作。
-    </p>
+    <div class="hero-name">南洋经纬录</div>
+    <div class="hero-name-en">Nanyang Chronicles &nbsp;·&nbsp; Singapore</div>
+    <p class="hero-desc">以谋生为经，以爱好为纬，记录这些年做的点点滴滴。</p>
     <div class="hero-tags">
-      <span class="tag">华文教育</span>
+      <span class="tag">大宗商品金融</span>
       <span class="tag">新加坡</span>
-      <span class="tag">教学工具开发</span>
-      <span class="tag">中华文学</span>
+      <span class="tag">行业活动</span>
+      <span class="tag">华文教育</span>
+      <span class="tag">羽毛球</span>
     </div>
   </div>
-  <div class="hero-seal">辉<br>盛</div>
+  <div class="hero-seal">经<br>纬</div>
 </section>
 
-<div class="divider"><span>教学工具</span></div>
+<div class="divider"><span>内容总览</span></div>
 
-<section class="section" id="apps">
-  <div class="section-hdr">
-    <h2>自制教学软件</h2>
-    <p>为课堂教学与课外练习而开发，欢迎学生和家长使用。</p>
-  </div>
-  <div class="apps-grid">
+<div class="two-col" id="main">
 
-    <a class="app-card" href="https://chnfsh.github.io/P6ChineseWords/" target="_blank">
-      <div class="app-icon">字</div>
-      <div>
-        <div class="app-title">字字珠玑</div>
-        <div class="app-subtitle">梦溪小学 · 五六年级</div>
-      </div>
-      <p class="app-desc">华文听写与默写练习，覆盖五年级1-19单元和六年级1-12课，共约600个词语。采用间隔重复算法，专为9月考试备考设计。</p>
-      <div class="app-footer">
-        <span class="app-meta">词语听写 · 句子默写 · 形近字辨析</span>
-        <span class="app-arrow">→</span>
-      </div>
-    </a>
-
-    <a class="app-card" href="https://chnfsh.github.io/S2ChineseTest/" target="_blank">
-      <div class="app-icon">📖</div>
-      <div>
-        <div class="app-title">华文文学模拟测验</div>
-        <div class="app-subtitle">中二华文 · 第三学段</div>
-      </div>
-      <p class="app-desc">中二华文文学班级测验练习，涵盖新谣、微型小说、《永远的蝴蝶》、《在柏林》、《木兰辞》、初唐诗歌等考试范围，随机出题，配有参考答案。</p>
-      <div class="app-footer">
-        <span class="app-meta">选择题 · 赏析题 · 问答题</span>
-        <span class="app-arrow">→</span>
-      </div>
-    </a>
-
-    <div class="app-card placeholder">
-      <div class="app-icon">＋</div>
-      <div>
-        <div class="app-title">更多工具</div>
-        <div class="app-subtitle">即将推出</div>
-      </div>
-      <p class="app-desc">持续开发中，敬请期待。</p>
-      <div class="app-footer">
-        <span class="app-meta"></span>
-        <span class="app-arrow">·</span>
-      </div>
+  <!-- 左栏：教学工具 -->
+  <div>
+    <div class="col-hdr">
+      <h2>教学工具</h2>
+      <p>自制教学软件，欢迎学生和家长使用。</p>
     </div>
+    <div class="col-apps">
 
+      <a class="app-card" href="https://chnfsh.github.io/P6ChineseWords/" target="_blank">
+        <div class="app-icon">字</div>
+        <div>
+          <div class="app-title">字字珠玑</div>
+          <div class="app-subtitle">梦溪小学 · 五六年级</div>
+        </div>
+        <p class="app-desc">华文听写与默写练习，覆盖五年级1-19单元和六年级1-12课，共约600个词语。采用间隔重复算法，专为9月考试备考设计。</p>
+        <div class="app-footer">
+          <span class="app-meta">词语听写 · 句子默写 · 形近字辨析</span>
+          <span class="app-arrow">→</span>
+        </div>
+      </a>
+
+      <a class="app-card" href="https://chnfsh.github.io/S2ChineseTest/" target="_blank">
+        <div class="app-icon">📖</div>
+        <div>
+          <div class="app-title">华文文学模拟测验</div>
+          <div class="app-subtitle">中二华文 · 第三学段</div>
+        </div>
+        <p class="app-desc">中二华文文学班级测验练习，涵盖新谣、微型小说、《木兰辞》、初唐诗歌等考试范围，随机出题，配有参考答案。</p>
+        <div class="app-footer">
+          <span class="app-meta">选择题 · 赏析题 · 问答题</span>
+          <span class="app-arrow">→</span>
+        </div>
+      </a>
+
+      <a class="app-card" href="https://chnfsh.github.io/S2MathSignFlip/" target="_blank">
+        <div class="app-icon">±</div>
+        <div>
+          <div class="app-title">Sign Flip Trainer</div>
+          <div class="app-subtitle">中二数学 · 代数式去括号</div>
+        </div>
+        <p class="app-desc">专攻括号内符号变换的数学练习工具，涵盖加减去括号与乘法分配律三种题型，两步骤引导作答，内置正确率统计。</p>
+        <div class="app-footer">
+          <span class="app-meta">展开 · 合并同类项 · 变号训练</span>
+          <span class="app-arrow">→</span>
+        </div>
+      </a>
+
+    </div>
   </div>
-</section>
+
+  <!-- 右栏：文章记录 -->
+  <div id="articles">
+    <div class="col-hdr">
+      <h2>文章记录</h2>
+      <p>发布于微信公众号，点击跳转阅读原文。</p>
+    </div>
+    <div class="col-articles">
+
+      <div class="sub-label">行业记录</div>
+      <ul class="article-list">
+        <li class="article-item"><a href="https://mp.weixin.qq.com/s/6iuKiP--Yarhabo4WxDz-w" target="_blank" rel="noopener"><span class="art-num">01</span><span class="art-title">成功组织主办 2026SIFW 羽毛球嘉年华</span><span class="art-arrow">→</span></a></li>
+        <li class="article-item"><a href="https://mp.weixin.qq.com/s/2YNslbSMPDMo4TMWrOee5Q" target="_blank" rel="noopener"><span class="art-num">02</span><span class="art-title">就 INE 集运指数合约修订接受媒体采访</span><span class="art-arrow">→</span></a></li>
+        <li class="article-item"><a href="https://mp.weixin.qq.com/s/MOsI1b-3TPbFNzTtsFNoeQ" target="_blank" rel="noopener"><span class="art-num">03</span><span class="art-title">在新加坡成功举办策略分析暨 2025 客户答谢盛会</span><span class="art-arrow">→</span></a></li>
+        <li class="article-item"><a href="https://mp.weixin.qq.com/s/j-Y_kyl6kX9meBso0aYJ2A" target="_blank" rel="noopener"><span class="art-num">04</span><span class="art-title">组织参与 2025 年新交所公益慈善跑</span><span class="art-arrow">→</span></a></li>
+        <li class="article-item"><a href="https://mp.weixin.qq.com/s/qekvlksqy0aatIeRPuLs2g" target="_blank" rel="noopener"><span class="art-num">05</span><span class="art-title">举办"走进郑商所"2025 能化与黑色产品推介会</span><span class="art-arrow">→</span></a></li>
+        <li class="article-item"><a href="https://mp.weixin.qq.com/s/q2z_tLn0WM0Eznc8TzogEg" target="_blank" rel="noopener"><span class="art-num">06</span><span class="art-title">2025 亮点国际金融【友谊杯】羽毛球锦标赛圆满落幕</span><span class="art-arrow">→</span></a></li>
+        <li class="article-item"><a href="https://mp.weixin.qq.com/s/ePtNWLxilwvUI64FS9-mnA" target="_blank" rel="noopener"><span class="art-num">07</span><span class="art-title">APPEC 2025 午餐会：能源转型与数字未来</span><span class="art-arrow">→</span></a></li>
+        <li class="article-item"><a href="https://mp.weixin.qq.com/s/HGnA_EUtoXF4srnTsi714A" target="_blank" rel="noopener"><span class="art-num">08</span><span class="art-title">2025 新加坡国际黑色金属周：收获新殊荣</span><span class="art-arrow">→</span></a></li>
+        <li class="article-item"><a href="https://mp.weixin.qq.com/s/fTeLgDdhPWS6zapvGxbnAA" target="_blank" rel="noopener"><span class="art-num">09</span><span class="art-title">《上海原油白皮书 2025》— BPI 旗下两机构再度上榜</span><span class="art-arrow">→</span></a></li>
+        <li class="article-item"><a href="https://mp.weixin.qq.com/s/gXLw65o8mm1--vFwrzazrw" target="_blank" rel="noopener"><span class="art-num">10</span><span class="art-title">"伦镍事件"尘埃落定，接受期货日报采访</span><span class="art-arrow">→</span></a></li>
+        <li class="article-item"><a href="https://mp.weixin.qq.com/s/gK_3Rk2zqg5xbprtYkIf-w" target="_blank" rel="noopener"><span class="art-num">11</span><span class="art-title">与上期能源联办原油市场展望推介会</span><span class="art-arrow">→</span></a></li>
+        <li class="article-item"><a href="https://mp.weixin.qq.com/s/RDVQ9ktZLLtTBDVRY7ZplA" target="_blank" rel="noopener"><span class="art-num">12</span><span class="art-title">举办"走进郑商所"PTA 市场研讨会</span><span class="art-arrow">→</span></a></li>
+      </ul>
+
+      <div class="sub-label">校友会活动</div>
+      <ul class="article-list">
+        <li class="article-item"><a href="https://mp.weixin.qq.com/s/pMMIJsmB9T4yXkopgFdrtA" target="_blank" rel="noopener"><span class="art-num">01</span><span class="art-title">牵头筹办，奋力出征，中大校友闪耀 2025"友谊杯"！</span><span class="art-arrow">→</span></a></li>
+        <li class="article-item"><a href="https://mp.weixin.qq.com/s/fUUhFv5vZliICc-gQiLXdA" target="_blank" rel="noopener"><span class="art-num">02</span><span class="art-title">会长推荐：不容错过的秋斋藏画展</span><span class="art-arrow">→</span></a></li>
+        <li class="article-item"><a href="https://mp.weixin.qq.com/s/oQVnK-0AlrvK5klbhSbafw" target="_blank" rel="noopener"><span class="art-num">03</span><span class="art-title">中山大学新加坡校友足球队勇夺"进步杯"亚军</span><span class="art-arrow">→</span></a></li>
+        <li class="article-item"><a href="https://mp.weixin.qq.com/s/DFNgc0GpTkF9NMyYU4MfzA" target="_blank" rel="noopener"><span class="art-num">04</span><span class="art-title">中山大学新加坡校友会 2025 新春寄语</span><span class="art-arrow">→</span></a></li>
+        <li class="article-item"><a href="https://mp.weixin.qq.com/s/AIbcRHCwKe7abFyJu8NALA" target="_blank" rel="noopener"><span class="art-num">05</span><span class="art-title">"百年国光，南洋传承"中大校友晚宴——邹鲁书法集字手记</span><span class="art-arrow">→</span></a></li>
+        <li class="article-item"><a href="https://mp.weixin.qq.com/s/CqDwCwufJ7mh3GjmmEbVqg" target="_blank" rel="noopener"><span class="art-num">06</span><span class="art-title">"百年国光，南洋传承"中大校友晚宴——礼品筹备手记</span><span class="art-arrow">→</span></a></li>
+        <li class="article-item"><a href="https://mp.weixin.qq.com/s/5Qoba_k9UahuSGNYDbvF8A" target="_blank" rel="noopener"><span class="art-num">07</span><span class="art-title">"百年国光，南洋传承"中大校友晚宴——创意全记录</span><span class="art-arrow">→</span></a></li>
+        <li class="article-item"><a href="https://mp.weixin.qq.com/s/w7YWja3vKG-kqTvoKPKN6A" target="_blank" rel="noopener"><span class="art-num">08</span><span class="art-title">2025 年 11-12 月校友会活动精彩回顾</span><span class="art-arrow">→</span></a></li>
+        <li class="article-item"><a href="https://mp.weixin.qq.com/s/9jwyR1pN2XadU_Fl9G1TQA" target="_blank" rel="noopener"><span class="art-num">09</span><span class="art-title">安排新加坡中大二代参加南粤寻根之旅</span><span class="art-arrow">→</span></a></li>
+        <li class="article-item"><a href="https://mp.weixin.qq.com/s/345UIswertpCgN1wLlDcRQ" target="_blank" rel="noopener"><span class="art-num">10</span><span class="art-title">2026 年春季校友会活动精彩纷呈</span><span class="art-arrow">→</span></a></li>
+        <li class="article-item"><a href="https://mp.weixin.qq.com/s/6zj6H5NsFQnSEMXBLu1-Rw" target="_blank" rel="noopener"><span class="art-num">11</span><span class="art-title">校友会组织参与 26 届世界华人学生作文大赛成果斐然</span><span class="art-arrow">→</span></a></li>
+        <li class="article-item"><a href="https://mp.weixin.qq.com/s/D7OxqO9QENd7Aq1a-kKWbg" target="_blank" rel="noopener"><span class="art-num">12</span><span class="art-title">百年特别致敬："邹鲁创校纪念对联"镇纸</span><span class="art-arrow">→</span></a></li>
+        <li class="article-item"><a href="https://mp.weixin.qq.com/s/4cEYVVO8BWXRrfdjtEBzVw" target="_blank" rel="noopener"><span class="art-num">13</span><span class="art-title">校友会帮助南都报道，寻迹新加坡飞虎何永道校友传奇故事</span><span class="art-arrow">→</span></a></li>
+      </ul>
+
+    </div>
+  </div>
+
+</div>
 
 <div class="divider" id="about"><span>关于</span></div>
 
@@ -283,7 +345,7 @@ footer a:hover{color:var(--red);}
 </section>
 
 <footer>
-  <p>© 2026 陈辉盛 &nbsp;·&nbsp; 以教育为本，以科技为用 &nbsp;·&nbsp;
+  <p>© 2026 南洋经纬录 &nbsp;·&nbsp; 以谋生为经，以爱好为纬 &nbsp;·&nbsp;
   <a href="https://github.com/chnfsh" target="_blank">GitHub</a></p>
 </footer>
 
