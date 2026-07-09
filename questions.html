@@ -211,83 +211,107 @@ footer a:hover{color:var(--red);}
   <button class="filter-btn" onclick="filterQ(this,'哲学')">哲学</button>
   <button class="filter-btn" onclick="filterQ(this,'历史')">历史</button>
   <button class="filter-btn" onclick="filterQ(this,'新加坡')">新加坡</button>
+  <button class="filter-btn" onclick="filterQ(this,'健康')">健康</button>
+  <button class="filter-btn" onclick="filterQ(this,'职场')">职场</button>
+  <button class="filter-btn" onclick="filterQ(this,'科技')">科技</button>
 </div>
 
-<div class="section-divider"><span>示例条目</span></div>
+<div class="section-divider"><span>收藏条目</span></div>
 
 <div class="q-list" id="qlist">
 
-  <!-- ── 示例1：微信来源，无全文 ── -->
-  <details class="q-item" data-tag="金融">
+  <details class="q-item" data-tag="健康">
     <summary class="q-header">
       <span class="q-num">01</span>
-      <span class="q-title">伦镍事件的根本原因是什么？它暴露了大宗商品市场哪些结构性问题？</span>
-      <span class="q-meta">
-        <span class="q-tag">金融</span>
-        <span class="q-chevron">›</span>
-      </span>
+      <span class="q-title">一份体检报告能告诉我们什么？</span>
+      <span class="q-meta"><span class="q-tag">健康</span><span class="q-chevron">›</span></span>
     </summary>
     <div class="q-body">
-      <p class="q-note">
-        伦镍事件是近年最罕见的市场失控案例之一。镍价单日暴涨250%，最终LME宣布取消交易，引发了关于交易所权威性和风险管理机制的深层讨论。作为从业者，我亲历了当时市场的震荡，也接受了期货日报的采访，留下了自己的判断。
-      </p>
+      <p class="q-note">特朗普体检报告（王立铭）——从一份公开的政治人物体检报告出发，科普了现代医学体检的底层逻辑，哪些指标真正重要，哪些是噱头。对普通人制定自己的健康管理策略很有参考价值。</p>
       <div class="q-source">
         <span class="q-source-type">微信</span>
-        <a href="https://mp.weixin.qq.com/s/gXLw65o8mm1--vFwrzazrw" target="_blank" rel="noopener">"伦镍事件"尘埃落定，接受期货日报采访</a>
+        <a href="https://mp.weixin.qq.com/s/em6xx5imn2DUXP7eGVrOtw" target="_blank" rel="noopener">特朗普的体检报告对普通人的启示</a>
       </div>
     </div>
   </details>
 
-  <!-- ── 示例2：外部来源，含折叠全文 ── -->
-  <details class="q-item" data-tag="教育">
+  <details class="q-item" data-tag="健康">
     <summary class="q-header">
       <span class="q-num">02</span>
-      <span class="q-title">新加坡的双语教育政策，究竟成功了吗？</span>
-      <span class="q-meta">
-        <span class="q-tag">教育</span>
-        <span class="q-tag">新加坡</span>
-        <span class="q-chevron">›</span>
-      </span>
+      <span class="q-title">普通人如何用90天真正改变身体状态？</span>
+      <span class="q-meta"><span class="q-tag">健康</span><span class="q-chevron">›</span></span>
     </summary>
     <div class="q-body">
-      <p class="q-note">
-        新加坡双语政策自1966年推行至今，争议从未停歇。一方面英语成为工作语言撑起了经济腾飞，另一方面华语地位的边缘化让一代人经历了文化断裂。作为亲历者和华文教育工作者，我对这个问题有切身的感受。
-      </p>
+      <p class="q-note">用九十天时间，一起重塑健康人生（大树乡谈）——不是鸡汤，而是一套可执行的健康重建方案。90天是一个足够长又不太长的周期，作者给出了具体的行动框架，值得照着试一试。</p>
       <div class="q-source">
-        <span class="q-source-type">外部文章</span>
-        <a href="#" target="_blank" rel="noopener">待填入文章标题</a>
+        <span class="q-source-type">微信</span>
+        <a href="https://mp.weixin.qq.com/s/56A2oJtQHh_lB6DWfafxew" target="_blank" rel="noopener">用九十天时间，一起重塑健康人生</a>
       </div>
-      <details class="q-fulltext">
-        <summary>展开文章摘录</summary>
-        <div class="q-fulltext-body">
-          （在这里粘贴文章原文或摘要。微信文章无法复制全文，外部网站的好文章请在此处粘贴，以防网页失效。）
-        </div>
-      </details>
     </div>
   </details>
 
-  <!-- ── 示例3：哲学类 ── -->
-  <details class="q-item" data-tag="哲学">
+  <details class="q-item" data-tag="教育 新加坡">
     <summary class="q-header">
       <span class="q-num">03</span>
-      <span class="q-title">人为什么需要提问？知识与问题，哪个更重要？</span>
-      <span class="q-meta">
-        <span class="q-tag">哲学</span>
-        <span class="q-chevron">›</span>
-      </span>
+      <span class="q-title">新加坡的教育压力，真的比中国小吗？</span>
+      <span class="q-meta"><span class="q-tag">教育</span><span class="q-tag">新加坡</span><span class="q-chevron">›</span></span>
     </summary>
     <div class="q-body">
-      <p class="q-note">
-        "星洲做题家"这个名字的由来，有一层含义就是：光有知识没有用，要回答生命之问。这让我想到费曼说过的——知道一件事的名字，和真正了解这件事，是两回事。提问才是思考的起点。
-      </p>
+      <p class="q-note">新加坡教育有多卷？实话难听，不到中国的3%（Steven@北纬一度North）——身处新加坡教育体系的家长和学生，常常对这个问题有切身感受。这篇文章用数据说话，打破了一些流行的误解，也引发了对教育内卷本质的反思。</p>
       <div class="q-source">
-        <span class="q-source-type">个人思考</span>
-        <a href="index.html">星洲做题家 · 建站缘起</a>
+        <span class="q-source-type">微信</span>
+        <a href="https://mp.weixin.qq.com/s/IgFc2CyTHxFVxewjV50FwA" target="_blank" rel="noopener">新加坡教育有多卷？实话难听，不到中国的3%</a>
+      </div>
+    </div>
+  </details>
+
+  <details class="q-item" data-tag="职场">
+    <summary class="q-header">
+      <span class="q-num">04</span>
+      <span class="q-title">顶尖销售和普通销售，差距究竟在哪里？</span>
+      <span class="q-meta"><span class="q-tag">职场</span><span class="q-chevron">›</span></span>
+    </summary>
+    <div class="q-body">
+      <p class="q-note">顶尖销售，强在基本功（张坚）——销售是一门被低估的学问。这篇文章拆解了顶尖销售的底层能力，不是话术和套路，而是对客户需求的真正理解和长期信任的建立。对任何需要与人打交道的工作都有启发。</p>
+      <div class="q-source">
+        <span class="q-source-type">微信</span>
+        <a href="https://mp.weixin.qq.com/s/amEVGf78JdOXvZAdkzYa3w" target="_blank" rel="noopener">顶尖销售，强在基本功</a>
+      </div>
+    </div>
+  </details>
+
+  <details class="q-item" data-tag="健康 职场">
+    <summary class="q-header">
+      <span class="q-num">05</span>
+      <span class="q-title">成年人的精力管理，有没有科学的方法？</span>
+      <span class="q-meta"><span class="q-tag">健康</span><span class="q-tag">职场</span><span class="q-chevron">›</span></span>
+    </summary>
+    <div class="q-body">
+      <p class="q-note">成年人最需要补充精力的好方法（万维钢）——万维钢的文章一贯有料。精力不是靠意志力撑出来的，而是有其生理和心理机制。这篇梳理了几种经过研究验证的精力恢复方式，对高强度工作状态下的人尤其实用。</p>
+      <div class="q-source">
+        <span class="q-source-type">微信</span>
+        <a href="https://mp.weixin.qq.com/s/Bubpl45DQHZSqnlp187kgw" target="_blank" rel="noopener">成年人最需要补充精力的好方法</a>
+      </div>
+    </div>
+  </details>
+
+  <details class="q-item" data-tag="科技">
+    <summary class="q-header">
+      <span class="q-num">06</span>
+      <span class="q-title">AI编程时代，程序员的价值还在哪里？</span>
+      <span class="q-meta"><span class="q-tag">科技</span><span class="q-chevron">›</span></span>
+    </summary>
+    <div class="q-body">
+      <p class="q-note">AI编程深度体验，程序员要告别历史舞台了吗（Steven@北纬一度North）——这个问题对我也有切身意义：我自己就在用AI辅助开发教学工具。这篇文章给出了一个亲历者的观察，AI改变的不只是编程效率，而是整个软件开发的协作方式和人的角色定位。</p>
+      <div class="q-source">
+        <span class="q-source-type">微信</span>
+        <a href="https://mp.weixin.qq.com/s/jk20dXIjXjqxlO7uo9HmIQ" target="_blank" rel="noopener">AI编程深度体验，程序员要告别历史舞台了吗</a>
       </div>
     </div>
   </details>
 
 </div>
+
 
 <footer>
   <p>© 2026 星洲做题家 &nbsp;·&nbsp; 人来世上，皆有题解 &nbsp;·&nbsp;
