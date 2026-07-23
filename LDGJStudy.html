@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>商务英语学习</title>
+<style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        font-size: 17px;
+        line-height: 1.7;
+        color: #333;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f4f6f9;
+    }
+    header {
+        background: linear-gradient(135deg, #141e30 0%, #243b55 100%);
+        color: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+    header h1 { margin: 0 0 8px 0; font-size: 28px; }
+    header p { margin: 0; opacity: 0.9; font-size: 16px; }
+    .nav-tabs {
+        display: flex;
+        border-bottom: 2px solid #dee2e6;
+        margin-bottom: 25px;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+    .tab-btn {
+        padding: 12px 20px;
+        border: none;
+        background: #e9ecef;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 6px 6px 0 0;
+        transition: all 0.2s ease;
+        color: #495057;
+    }
+    .tab-btn.active { background: #243b55; color: #fff; }
+    .tab-content {
+        background: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        display: none;
+    }
+    .tab-content.active { display: block; }
+    h2 { border-left: 5px solid #243b55; padding-left: 12px; color: #141e30; margin-top: 10px; font-size: 22px; }
+    p.intro { color: #555; margin-bottom: 20px; }
+    .vocab-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+        font-size: 16px;
+    }
+    .vocab-table th, .vocab-table td {
+        border: 1px solid #dee2e6;
+        padding: 12px;
+        text-align: left;
+        vertical-align: top;
+    }
+    .vocab-table th { background-color: #243b55; color: #fff; font-weight: 600; }
+    .vocab-table tr:nth-child(even) { background-color: #f8f9fa; }
+    .english-phrase { font-family: "Consolas", "Courier New", monospace; color: #b81d24; background-color: #fdf2f2; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+    .vocab-word { font-family: "Consolas", "Courier New", monospace; color: #243b55; background-color: #eef2f7; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+
+    /* Quiz styles */
+    .quiz-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+    .refresh-btn {
+        background: #0056b3; color: #fff; border: none; padding: 12px 22px;
+        border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer;
+        transition: background 0.2s ease;
+    }
+    .refresh-btn:hover { background: #003d80; }
+    .score-badge { font-size: 16px; font-weight: 600; color: #243b55; background: #eef2f7; padding: 8px 16px; border-radius: 20px; }
+    .quiz-card {
+        border: 1px solid #dee2e6; border-radius: 8px; padding: 20px; margin-bottom: 20px; background: #fafbfc;
+    }
+    .quiz-zh { font-size: 17px; color: #141e30; margin-bottom: 8px; font-weight: 600; }
+    .quiz-en { font-size: 17px; color: #333; margin-bottom: 16px; }
+    .blank-slot { display: inline-block; min-width: 140px; border-bottom: 2px solid #0056b3; text-align: center; font-weight: 600; color: #0056b3; }
+    .quiz-options { display: flex; flex-direction: column; gap: 10px; }
+    .option-btn {
+        text-align: left; padding: 12px 16px; border: 1.5px solid #cdd5df; background: #fff;
+        border-radius: 6px; font-size: 16px; cursor: pointer; transition: all 0.15s ease;
+        font-family: "Consolas", "Courier New", monospace;
+    }
+    .option-btn:hover { border-color: #0056b3; background: #f0f7ff; }
+    .option-btn.correct { background: #e6f7ea; border-color: #28a745; color: #1e7e34; font-weight: bold; }
+    .option-btn.wrong { background: #fdecea; border-color: #dc3545; color: #a71d2a; }
+    .option-btn.disabled { pointer-events: none; opacity: 0.85; }
+    .quiz-feedback { margin-top: 10px; font-size: 15px; color: #555; min-height: 22px; }
+
+    /* Buzz-in game styles */
+    .notice-box { background:#fff3cd; border:1px solid #ffeeba; padding:15px; border-radius:6px; margin-bottom:20px; color:#856404; font-size:15px; line-height:1.6; }
+    .option-display { padding: 10px 14px; border: 1.5px solid #cdd5df; border-radius: 6px; font-family: "Consolas", "Courier New", monospace; font-size: 16px; background: #fff; }
+    .quiz-options { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+    .buzz-btn {
+        background: linear-gradient(135deg, #dc3545 0%, #a71d2a 100%); color: #fff; border: none;
+        padding: 22px 50px; font-size: 24px; font-weight: 800; border-radius: 50px; cursor: pointer;
+        box-shadow: 0 6px 14px rgba(167,29,42,0.35); transition: transform 0.1s ease;
+    }
+    .buzz-btn:active { transform: scale(0.96); }
+    .buzz-btn:disabled { background: #cdd5df; box-shadow: none; cursor: not-allowed; }
+    .buzz-status { margin-top: 16px; font-size: 18px; font-weight: 700; color: #243b55; }
+    .judge-btn { padding: 10px 18px; border-radius: 6px; border: none; font-size: 15px; font-weight: 600; cursor: pointer; }
+    .correct-judge { background: #28a745; color: #fff; }
+    .wrong-judge { background: #dc3545; color: #fff; }
+</style>
+</head>
+<body>
+
+<header>
+    <h1>商务英语学习</h1>
+    <p>核心进阶生词 · 地道高级好词好句 · 情景练习</p>
+</header>
+
+<div class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('vocab_words', event)">1. 核心进阶生词 (68个)</button>
+    <button class="tab-btn" onclick="switchTab('vocab', event)">2. 地道高级好词好句 (70组)</button>
+    <button class="tab-btn" onclick="switchTab('quiz', event)">3. 情景练习题</button>
+</div>
+
+<!-- TAB 1: CHALLENGING WORDS -->
+<div id="vocab_words" class="tab-content active">
+    <h2>精选核心进阶生词 (68个)</h2>
+    <p class="intro">以下精选 68 个高频进阶词汇，涵盖国际投行、企业并购、跨境合规等商务场景，是商务英语学习与实战应用中的核心词汇。</p>
+    <table class="vocab-table">
+        <thead>
+            <tr>
+                <th style="width: 30%;">核心生词 (Word)</th>
+                <th style="width: 70%;">商务场景精准释义 (Contextual Meaning)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>1. <span class="vocab-word">Consolidating</span></td><td><strong>行业整合中/集约化</strong>。指行业内企业通过兼并重组使市场集中度不断提高的过程。</td></tr>
+            <tr><td>2. <span class="vocab-word">Inorganically</span></td><td><strong>外延式地/非内生增长地</strong>。指企业不是通过自身业务自然增长（Organically），而是通过并购、重组等外部手段实现规模扩张。</td></tr>
+            <tr><td>3. <span class="vocab-word">Complement</span></td><td><strong>补充/使相得益彰</strong>。指两种业务、系统或优势能够相互填补空白，发挥一加一大于二的效用。</td></tr>
+            <tr><td>4. <span class="vocab-word">Traction</span></td><td><strong>（业务/销售的）动能、吸引力与突破口</strong>。指新产品或新业务在市场上开始获得客户接纳、产生实际销售拉动力的状态。</td></tr>
+            <tr><td>5. <span class="vocab-word">Footing</span></td><td><strong>立足点/根基</strong>。如 "find our footing"（站稳脚跟），形容在全新市场或区域打下稳固的基础。</td></tr>
+            <tr><td>6. <span class="vocab-word">Mandate</span></td><td><strong>（来自董事会或客户的）正式授权/指令</strong>。常指获得推进某项交易、募资或业务扩张的排他性权利。</td></tr>
+            <tr><td>7. <span class="vocab-word">Due diligence</span></td><td><strong>尽职调查</strong>。并购中极其核心的法务与财务环节，指买方在签署最终协议前对目标公司的资产、负债、合规性进行的全面深入审查。</td></tr>
+            <tr><td>8. <span class="vocab-word">Tentative</span></td><td><strong>暂定的/意向性的</strong>。如 "tentative pricing"（初步意向定价），常用于商务谈判早期尚未最终法律绑定的阶段。</td></tr>
+            <tr><td>9. <span class="vocab-word">Executed</span></td><td><strong>（正式）签署/履行</strong>。法律合同术语，"executed the agreement" 表示双方已在协议上签字使其正式生效。</td></tr>
+            <tr><td>10. <span class="vocab-word">Ownership</span></td><td><strong>所有权/股权</strong>。指对某家公司股份的最终合法占有与控制。</td></tr>
+            <tr><td>11. <span class="vocab-word">Balance sheet</span></td><td><strong>资产负债表</strong>。此处特指企业的资金实力规模，大型机构通常对合作方的资金规模有明确的门槛要求。</td></tr>
+            <tr><td>12. <span class="vocab-word">Acquisition spree</span></td><td><strong>疯狂收购潮/连续并购行为</strong>。形容资本雄厚的头部企业在短时间内连续不断地兼并中小型竞争对手。</td></tr>
+            <tr><td>13. <span class="vocab-word">Jurisdiction</span></td><td><strong>司法管辖区/合规辖区</strong>。指不同国家或地区各自独立的监管法域。</td></tr>
+            <tr><td>14. <span class="vocab-word">Synergy</span></td><td><strong>协同效应</strong>。指两家公司合并后由于资源共享、业务互补而产生的效率提升或成本降低的红利。</td></tr>
+            <tr><td>15. <span class="vocab-word">Economies of scale</span></td><td><strong>规模经济效益</strong>。指通过扩大生产或业务服务规模，使单位固定成本被大幅稀释，从而大幅提高利润率。</td></tr>
+            <tr><td>16. <span class="vocab-word">Streamline</span></td><td><strong>精简/优化（流程或系统）</strong>。多用于合并后通过取消重复的系统或供应商合同来达到降本增效的目的。</td></tr>
+            <tr><td>17. <span class="vocab-word">Premium</span></td><td><strong>（收购）溢价</strong>。指买方为了获得目标公司的控制权或核心团队，付出了远高于其净资产实际账面价值的优厚价格。</td></tr>
+            <tr><td>18. <span class="vocab-word">Contingent</span></td><td><strong>以……为先决条件的 / 取决于……的</strong>。如条款约定某事项的生效是 "contingent on core staff joining"（必须以核心团队集体留任为前提）。</td></tr>
+            <tr><td>19. <span class="vocab-word">Trajectory</span></td><td><strong>轨道/职业路径</strong>。常用 "career trajectory" 形容大平台能够为员工提供更宽广、清晰、具备高天花板的长期岗位升迁路径。</td></tr>
+            <tr><td>20. <span class="vocab-word">Embargoed</span></td><td><strong>（信息）处于保密期/暂缓公开的</strong>。新闻公关术语中的"信息封存期"，指消息已确定但需等到指定时间点才能对外公开发布，并非"贸易禁运"之意。</td></tr>
+            <tr><td>21. <span class="vocab-word">Retrenchment</span></td><td><strong>裁员/精简人员</strong>。与 layoff 同义的英式商务用语，常见于企业并购语境中描述人员削减动作。</td></tr>
+            <tr><td>22. <span class="vocab-word">Redundant</span></td><td><strong>（岗位）被裁减的/冗余的</strong>。"made redundant" 即因岗位重复或业务调整而被辞退，是英式劳动关系中的标准说法。</td></tr>
+            <tr><td>23. <span class="vocab-word">Succession planning</span></td><td><strong>接班人计划/管理层继任规划</strong>。指企业为避免过度依赖单一领导人，而提前部署的管理梯队建设机制。</td></tr>
+            <tr><td>24. <span class="vocab-word">Controllership</span></td><td><strong>公司控制权/实际控制方地位</strong>。并购交易中特指因股权变更而需要向监管机构申报变更的实际控制关系。</td></tr>
+            <tr><td>25. <span class="vocab-word">Disclosure</span></td><td><strong>（信息）披露</strong>。上市公司依法必须向交易所和公众履行的强制性公告义务，通常有严格的披露时点要求。</td></tr>
+            <tr><td>26. <span class="vocab-word">Prime brokerage</span></td><td><strong>主经纪商业务</strong>。面向对冲基金等机构投资者提供融资融券、托管、清算等一揽子综合服务的高端业务线。</td></tr>
+            <tr><td>27. <span class="vocab-word">Market making</span></td><td><strong>做市（业务）</strong>。指机构主动双向报价买卖以提供市场流动性，是大型金融集团区别于普通经纪商的核心业务能力。</td></tr>
+            <tr><td>28. <span class="vocab-word">Structured products</span></td><td><strong>结构化产品</strong>。将期权等金融衍生品打包设计而成的定制化投资工具，通常用于满足机构客户的特定风险收益需求。</td></tr>
+            <tr><td>29. <span class="vocab-word">Credit rated</span></td><td><strong>具备信用评级的</strong>。指经权威评级机构（如穆迪、标普）正式评定信用等级，是大型客户判断合作方资金实力的重要标尺。</td></tr>
+            <tr><td>30. <span class="vocab-word">Migrate</span></td><td><strong>（账户/系统）迁移</strong>。整合中常指客户账户或数据从一个平台转移至另一平台的操作过程。</td></tr>
+            <tr><td>31. <span class="vocab-word">Carve out</span></td><td><strong>剥离/单独划出</strong>。指将某项业务、资产或客户群体从整体交易中排除或单独处理，例如将存在法律纠纷的子公司整体 carve out。</td></tr>
+            <tr><td>32. <span class="vocab-word">Rationalize</span></td><td><strong>合理化整合</strong>。指对重复设置的实体、系统或人员进行归并精简，以消除冗余、提升效率。</td></tr>
+            <tr><td>33. <span class="vocab-word">Status quo</span></td><td><strong>现状</strong>。拉丁语借词，商务场景中常用来强调过渡期内业务和岗位维持原样不变。</td></tr>
+            <tr><td>34. <span class="vocab-word">Onboard</span></td><td><strong>（客户）开户引入</strong>。指完成合规文件签署、正式将新客户纳入平台服务体系的动作。</td></tr>
+            <tr><td>35. <span class="vocab-word">Papered</span></td><td><strong>已完成开户文件签署的</strong>。行业俚语，指客户已在某实体名下正式签约、归属于该实体管理。</td></tr>
+            <tr><td>36. <span class="vocab-word">Handful</span></td><td><strong>少数/屈指可数的一小撮</strong>。常用于强调某类情形数量极少，不足以影响整体决策。</td></tr>
+            <tr><td>37. <span class="vocab-word">Mutually exclusive</span></td><td><strong>互斥的/非此即彼的</strong>。指两个集合之间没有交集。</td></tr>
+            <tr><td>38. <span class="vocab-word">Objectively</span></td><td><strong>客观地</strong>。强调决策依据数据和事实，而非主观偏好。</td></tr>
+            <tr><td>39. <span class="vocab-word">Pragmatic</span></td><td><strong>务实的/讲求实际效果的</strong>。形容一种以效率为先、不拘泥于形式的决策风格，常用来形容企业管理层高效务实的处事方式。</td></tr>
+            <tr><td>40. <span class="vocab-word">Qualms</span></td><td><strong>顾虑、不安</strong>。常用于 "no qualms about..." 句型，表示对某项决定毫无迟疑或抵触情绪。</td></tr>
+            <tr><td>41. <span class="vocab-word">Originating</span></td><td><strong>源自于/出身于（某机构或团队）</strong>。用于描述某位高管的职业背景来源。</td></tr>
+            <tr><td>42. <span class="vocab-word">Binding agreement</span></td><td><strong>具有法律约束力的协议</strong>。指双方一旦签署便不能随意单方面退出的正式合同，与意向性文件（如 Term Sheet）性质不同。</td></tr>
+            <tr><td>43. <span class="vocab-word">Regulatory approval</span></td><td><strong>监管审批</strong>。跨境商业交易交割前必须取得的监管机构核准，通常涉及多个司法辖区并需要数月时间。</td></tr>
+            <tr><td>44. <span class="vocab-word">Full completion</span></td><td><strong>（交易）正式完成交割</strong>。指在获得全部监管审批后，股权及资金正式过户、买方取得100%所有权的最终节点。</td></tr>
+            <tr><td>45. <span class="vocab-word">Vendor</span></td><td><strong>（第三方系统/服务）供应商</strong>。是并购或整合后成本协同的主要整合对象。</td></tr>
+            <tr><td>46. <span class="vocab-word">Front office / back office</span></td><td><strong>前台业务与后台运营支持部门</strong>。前台指直接对接客户创收的团队，后台指结算、风控、IT 等支持性职能部门。</td></tr>
+            <tr><td>47. <span class="vocab-word">Market cap</span></td><td><strong>市值</strong>。指上市公司全部流通股份按当前股价计算的总价值，是衡量公司资本实力的核心指标。</td></tr>
+            <tr><td>48. <span class="vocab-word">Clearing member</span></td><td><strong>交易所清算会员（资格）</strong>。指机构在交易所直接开展清算业务所需取得的正式会员身份，申请流程通常漫长且合规要求严苛。</td></tr>
+            <tr><td>49. <span class="vocab-word">Agency business</span></td><td><strong>代理经纪业务</strong>。指机构代表客户执行买卖指令并收取佣金的传统经纪模式，区别于自营或做市业务。</td></tr>
+            <tr><td>50. <span class="vocab-word">Litigation</span></td><td><strong>未决诉讼/法律纠纷</strong>。常指企业尚未了结的法律诉讼案件，可能在并购或投资决策中被单独排除处理。</td></tr>
+            <tr><td>51. <span class="vocab-word">Consideration</span></td><td><strong>（并购）交易对价</strong>。指买方为取得标的资产或股权所支付的全部价款，与日常英语中"考虑"的含义不同。</td></tr>
+            <tr><td>52. <span class="vocab-word">Indicative value</span></td><td><strong>指示性/参考性估值</strong>。指在最终审批或交割前给出的暂定价格，仅供参考，不具有最终约束力。</td></tr>
+            <tr><td>53. <span class="vocab-word">Book value</span></td><td><strong>账面价值</strong>。指资产按照会计记录计算的价值，是并购定价中"账面价值加溢价"公式的基础参照。</td></tr>
+            <tr><td>54. <span class="vocab-word">Retained earnings</span></td><td><strong>留存收益</strong>。指企业实现的净利润中未作为股利分配、留存在公司内部的部分。</td></tr>
+            <tr><td>55. <span class="vocab-word">P&L (Profit and Loss)</span></td><td><strong>损益表/盈亏状况</strong>。反映企业在一定期间内收入、成本与利润情况的核心财务报表，高管口语中常直接说 "P and L"。</td></tr>
+            <tr><td>56. <span class="vocab-word">Stretch target</span></td><td><strong>挑战性目标/跳一跳才能够到的目标</strong>。指刻意设定得高于常规预期、需要额外努力才能达成的业绩目标。</td></tr>
+            <tr><td>57. <span class="vocab-word">Compressed target</span></td><td><strong>压缩式增长目标</strong>。指在更短时间内需要达成的加速增长目标，通常伴随更高的资源投入和更强的执行压力。</td></tr>
+            <tr><td>58. <span class="vocab-word">Move the needle</span></td><td><strong>产生实质性影响/撼动大局</strong>。地道商务口语，指某个因素或举措能够对整体结果带来明显、可感知的改变；常以否定形式 "doesn't move the needle" 出现，表示该因素小到不足以对大局产生影响。</td></tr>
+            <tr><td>59. <span class="vocab-word">Counterpart</span></td><td><strong>对口负责人/对接方</strong>。指在两个团队中职能对应、需要相互协作对接的同级人员。</td></tr>
+            <tr><td>60. <span class="vocab-word">Moving parts</span></td><td><strong>尚在变动中的环节</strong>。形容一个复杂流程中仍有多个变量未最终确定。</td></tr>
+            <tr><td>61. <span class="vocab-word">Nail down</span></td><td><strong>敲定、明确落实</strong>。指将尚不确定的细节最终确认并固定下来，是商务沟通中的高频口语动词短语。</td></tr>
+            <tr><td>62. <span class="vocab-word">Vehicle (corporate)</span></td><td><strong>载体公司/特殊目的实体</strong>。并购中常指为承载特定业务或资产而设立或收购的公司主体，如 SPV（特殊目的载体）。</td></tr>
+            <tr><td>63. <span class="vocab-word">Jump start</span></td><td><strong>快速启动/迅速带动</strong>。形容借助已有资源或平台，使某项原本进展缓慢的业务迅速运转起来。</td></tr>
+            <tr><td>64. <span class="vocab-word">Acquainted</span></td><td><strong>相互熟悉的</strong>。"get acquainted with your counterparts" 指两个团队初期安排互相认识、建立联系的过程。</td></tr>
+            <tr><td>65. <span class="vocab-word">Transition team</span></td><td><strong>专项过渡团队</strong>。为保障整合平稳过渡而专门配备的项目团队，通常具备丰富的历次整合经验。</td></tr>
+            <tr><td>66. <span class="vocab-word">Entrust</span></td><td><strong>委托、托付</strong>。指将某项重大职责正式交由某团队或个人负责，如管理层将新市场拓展的重任托付给某个团队。</td></tr>
+            <tr><td>67. <span class="vocab-word">Robustly</span></td><td><strong>稳健地、强劲有力地</strong>。常用于 "robustly build the business"，形容业务发展基础扎实、经得起检验。</td></tr>
+            <tr><td>68. <span class="vocab-word">Incubate</span></td><td><strong>孵化培养</strong>。商务语境中常指从零开始培养人才或新业务条线，如 "incubate traders"（孵化培养交易员）。</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- TAB 2: VOCABULARY PHRASES -->
+<div id="vocab" class="tab-content">
+    <h2>地道高级商务英语好词好句（共70组）</h2>
+    <p class="intro">以下精选 70 组地道高级商务英语表达，涵盖企业并购、团队管理、跨国沟通等场景，包含高级动词、投行术语及地道高管表达，附精确的上下文中文翻译，非常适合应用在商务谈判、跨国汇报与写作中。</p>
+    <table class="vocab-table">
+        <thead>
+            <tr>
+                <th style="width: 50%;">英文地道/高级表达 (English Expression)</th>
+                <th style="width: 50%;">中文精确翻译与释义 (Chinese Translation)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>1. <span class="english-phrase">mark the most significant milestone</span></td><td>标志着最具有里程碑意义的时刻</td></tr>
+            <tr><td>2. <span class="english-phrase">structurally change the landscape</span></td><td>从结构上彻底改变行业格局/版图</td></tr>
+            <tr><td>3. <span class="english-phrase">grow by leaps and bounds</span></td><td>突飞猛进地增长；实现跨越式发展</td></tr>
+            <tr><td>4. <span class="english-phrase">perform at our peak</span></td><td>处于巅峰状态/交出最亮眼的业绩表现</td></tr>
+            <tr><td>5. <span class="english-phrase">equip ourselves with more resources</span></td><td>让我们自己武装上/拥有更多充沛的资源</td></tr>
+            <tr><td>6. <span class="english-phrase">offer incremental value</span></td><td>提供持续的增量价值 / 带来叠加效益</td></tr>
+            <tr><td>7. <span class="english-phrase">highly competitive and consolidating</span></td><td>处于高度竞争和加速整合并购的（状态）</td></tr>
+            <tr><td>8. <span class="english-phrase">smaller ones get absorbed</span></td><td>小型机构逐渐被兼并、吸收</td></tr>
+            <tr><td>9. <span class="english-phrase">secured a mandate from the board</span></td><td>获得了董事会的正式授权/指令</td></tr>
+            <tr><td>10. <span class="english-phrase">grow organically or inorganically</span></td><td>通过自身内生增长或通过外延式并购增长</td></tr>
+            <tr><td>11. <span class="english-phrase">explore ideas collaboratively</span></td><td>共同探讨/拓展合作思路</td></tr>
+            <tr><td>12. <span class="english-phrase">complement each other in the businesses</span></td><td>在业务线条上形成极强的互补效应</td></tr>
+            <tr><td>13. <span class="english-phrase">gained strong traction with clients</span></td><td>在客户群体中获得了极大的吸引力和业务破局</td></tr>
+            <tr><td>14. <span class="english-phrase">unable to find our footing</span></td><td>未能真正站稳脚跟/无法打开局面</td></tr>
+            <tr><td>15. <span class="english-phrase">unlock key milestones</span></td><td>解锁、攻克关键的里程碑目标</td></tr>
+            <tr><td>16. <span class="english-phrase">hand to heart</span></td><td>坦白地说 / 扪心自问</td></tr>
+            <tr><td>17. <span class="english-phrase">exhibit growth in the region</span></td><td>在该地区展现出显著的业务增长</td></tr>
+            <tr><td>18. <span class="english-phrase">align into one pivotal point</span></td><td>迅速在核心的一点上达成了全面共识</td></tr>
+            <tr><td>19. <span class="english-phrase">agreed on a tentative pricing</span></td><td>就初步/意向性估值定价达成一致意见</td></tr>
+            <tr><td>20. <span class="english-phrase">nothing short of extraordinary</span></td><td>完全称得上是一场奇迹 / 堪称无与伦比</td></tr>
+            <tr><td>21. <span class="english-phrase">high intensity due diligence</span></td><td>高强度、全方位的尽职调查</td></tr>
+            <tr><td>22. <span class="english-phrase">execute the SPA (Share Purchase Agreement)</span></td><td>正式签署股权购买协议</td></tr>
+            <tr><td>23. <span class="english-phrase">take over 100% of the ownership</span></td><td>全面全资接管100%的股权所有权</td></tr>
+            <tr><td>24. <span class="english-phrase">share our strategic rationale</span></td><td>分享我们的战略考量与决策逻辑</td></tr>
+            <tr><td>25. <span class="english-phrase">not a one-way communication street</span></td><td>绝非单向的灌输或一言堂形式的沟通</td></tr>
+            <tr><td>26. <span class="english-phrase">main bread and butter business</span></td><td>最核心的顶梁柱业务 / 核心生计来源</td></tr>
+            <tr><td>27. <span class="english-phrase">thanks but no thanks</span></td><td>十分感谢，但只能委婉谢绝</td></tr>
+            <tr><td>28. <span class="english-phrase">on the back of a weak balance sheet</span></td><td>因为资产负债表规模薄弱、实力不足</td></tr>
+            <tr><td>29. <span class="english-phrase">go on an acquisition spree</span></td><td>掀起一轮高频次的疯狂收购潮</td></tr>
+            <tr><td>30. <span class="english-phrase">play to our disadvantage</span></td><td>彻底转化为了我们的竞争劣势</td></tr>
+            <tr><td>31. <span class="english-phrase">provide competitive pricing</span></td><td>提供极具市场竞争优势的报价</td></tr>
+            <tr><td>32. <span class="english-phrase">open up a massive toolbox</span></td><td>打开了一个功能强大的全新工具箱</td></tr>
+            <tr><td>33. <span class="english-phrase">lean on a very large balance sheet</span></td><td>依靠、倚仗其庞大雄厚的资产负债表背书</td></tr>
+            <tr><td>34. <span class="english-phrase">investment grade credit rating</span></td><td>投资级信用评级（企业的高信用证明）</td></tr>
+            <tr><td>35. <span class="english-phrase">open up a whole realm of opportunities</span></td><td>开辟出了一片前所未有的全新机会新天地</td></tr>
+            <tr><td>36. <span class="english-phrase">target clients we did not dare to think about</span></td><td>去攻克过去甚至连想都不敢想的顶级大客户</td></tr>
+            <tr><td>37. <span class="english-phrase">low-hanging fruit</span></td><td>唾手可得、极易摘得的果实/容易转化的现成机会</td></tr>
+            <tr><td>38. <span class="english-phrase">realize good synergy immediately</span></td><td>几乎在立竿见影间迅速释放出良好的协同效应</td></tr>
+            <tr><td>39. <span class="english-phrase">achieve economies of scale</span></td><td>实现大规模集约化的规模经济效益</td></tr>
+            <tr><td>40. <span class="english-phrase">streamline and collapse vendors</span></td><td>精简、整合并合并第三方供应商合同以降低成本</td></tr>
+            <tr><td>41. <span class="english-phrase">cost reduction targeting systems, not staff</span></td><td>成本裁减完全对准系统和采购，绝不针对员工</td></tr>
+            <tr><td>42. <span class="english-phrase">pay a substantial valuation premium</span></td><td>支付了极为丰厚昂贵的估值溢价</td></tr>
+            <tr><td>43. <span class="english-phrase">acquire core expertise rather than a client list</span></td><td>买入的是核心专业经验与团队，而绝非仅仅一张客户花名册</td></tr>
+            <tr><td>44. <span class="english-phrase">contingent on core staff joining</span></td><td>以核心团队愿意并同意整体加入为交易生效的先决条件</td></tr>
+            <tr><td>45. <span class="english-phrase">provide a clear career trajectory</span></td><td>为全员规划出一条清晰可见的职业晋升与长远发展路径</td></tr>
+            <tr><td>46. <span class="english-phrase">rationalization of parallel entities</span></td><td>对平行重复的实体进行资源优化与合理化重组</td></tr>
+            <tr><td>47. <span class="english-phrase">information is embargoed until 7 PM</span></td><td>该信息设有保密期，须待今日晚间7点才可对外公开</td></tr>
+            <tr><td>48. <span class="english-phrase">be as upfront and transparent as possible</span></td><td>做到尽可能地公开、坦诚与极度透明</td></tr>
+            <tr><td>49. <span class="english-phrase">hear about this from news</span></td><td>（避免通过冰冷的大众新闻媒体）被动得知重大变化</td></tr>
+            <tr><td>50. <span class="english-phrase">blend the best practices of both sides</span></td><td>有机地融合嫁接双方最完美的管理与实操体系</td></tr>
+            <tr><td>51. <span class="english-phrase">buy the people, not just the business</span></td><td>买下的是"人"本身，而非仅仅是一门生意</td></tr>
+            <tr><td>52. <span class="english-phrase">you guys would probably double your money</span></td><td>大家很可能实现投入资金翻倍的收益</td></tr>
+            <tr><td>53. <span class="english-phrase">an extraordinary growth</span></td><td>堪称非凡卓越的一段增长历程</td></tr>
+            <tr><td>54. <span class="english-phrase">make you redundant to save that cost</span></td><td>为节省这部分成本而将你辞退</td></tr>
+            <tr><td>55. <span class="english-phrase">they are in an acquisition spree</span></td><td>对方正处于密集连续收购的扩张期</td></tr>
+            <tr><td>56. <span class="english-phrase">the mandate is to keep growing</span></td><td>被赋予的核心使命就是持续做大做强</td></tr>
+            <tr><td>57. <span class="english-phrase">our salary doesn't really move the needle</span></td><td>我们个人的薪资根本不足以撼动集团大局</td></tr>
+            <tr><td>58. <span class="english-phrase">using the economies of scale</span></td><td>充分借助规模经济效应来降本增效</td></tr>
+            <tr><td>59. <span class="english-phrase">increasing our profit margin</span></td><td>持续稳步地提升整体利润率水平</td></tr>
+            <tr><td>60. <span class="english-phrase">get everybody acquainted with your counterparts</span></td><td>让大家尽快与各自的对接窗口相互熟悉</td></tr>
+            <tr><td>61. <span class="english-phrase">they have done many acquisitions</span></td><td>对方拥有极为丰富的历次并购整合经验</td></tr>
+            <tr><td>62. <span class="english-phrase">we will get more clarity as we move along</span></td><td>随着进程推进，情况会逐步变得清晰明朗</td></tr>
+            <tr><td>63. <span class="english-phrase">hunting for a big home for everybody</span></td><td>正在为全体合并团队物色一个宽敞的新据点</td></tr>
+            <tr><td>64. <span class="english-phrase">make sure nothing gets interrupted</span></td><td>确保核心业务运转不受到任何干扰中断</td></tr>
+            <tr><td>65. <span class="english-phrase">I want to be as transparent as I can</span></td><td>我希望尽己所能做到公开透明</td></tr>
+            <tr><td>66. <span class="english-phrase">grow your confidence and your comfort</span></td><td>不断增强大家的信心与内心的安全感</td></tr>
+            <tr><td>67. <span class="english-phrase">a huge responsibility entrusted to us</span></td><td>这是被郑重托付给我们的一份重大责任</td></tr>
+            <tr><td>68. <span class="english-phrase">the mandate is a clear sheet of paper</span></td><td>被赋予的授权如同一张可以自由挥洒的白纸（喻指充分自主空间）</td></tr>
+            <tr><td>69. <span class="english-phrase">we all deserve a pat on our back</span></td><td>我们所有人都值得为自己好好点赞鼓励一番</td></tr>
+            <tr><td>70. <span class="english-phrase">bring you on this journey</span></td><td>带领大家一起踏上这段全新的征程</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- TAB 3: LIVE BUZZ-IN GAME -->
+<div id="quiz" class="tab-content">
+    <h2>情景练习题 · 在线抢答</h2>
+    <div class="notice-box">
+        ⚠️ <strong>使用说明：</strong>本功能已接入腾讯云开发（CloudBase）实时数据库，只要大家打开的是<strong>同一个网址</strong>（例如你部署在 GitHub Pages 上的这个页面），无论各自在什么设备/地点（含中国大陆），抢答与排名榜都会实时同步。所有参与者输入的昵称与得分，对能访问该环境的所有人可见，请勿使用真实姓名之外的敏感信息。
+    </div>
+
+    <div id="joinGate" class="quiz-card">
+        <div class="quiz-zh" style="margin-bottom:12px;">👋 请输入你的昵称，加入本轮抢答：</div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <input id="nameInput" type="text" placeholder="输入昵称，例如：小王" style="flex:1; min-width:180px; padding:12px; font-size:16px; border:1.5px solid #cdd5df; border-radius:6px;">
+            <button class="refresh-btn" onclick="joinGame()">✅ 加入抢答</button>
+        </div>
+    </div>
+
+    <div id="gameArea" style="display:none;">
+        <div class="quiz-toolbar">
+            <span class="score-badge" id="playerBadge">昵称：--</span>
+            <button class="refresh-btn" onclick="nextQuestion()">🔀 下一题（随机换题）</button>
+        </div>
+
+        <div class="quiz-card" id="questionCard">
+            <div class="quiz-zh" id="qZh">加载题目中…</div>
+            <div class="quiz-en" id="qEn"></div>
+            <div class="quiz-options" id="qOptions"></div>
+        </div>
+
+        <div id="buzzSection" style="text-align:center; margin: 20px 0;">
+            <button id="buzzBtn" class="buzz-btn" onclick="buzzIn()">🔔 抢 答！</button>
+            <div id="buzzStatus" class="buzz-status">等待有人抢答…</div>
+            <div id="judgeButtons" style="display:none; justify-content:center; gap:14px; margin-top:14px;">
+                <button class="judge-btn correct-judge" onclick="markResult(true)">✅ 回答正确 +10分</button>
+                <button class="judge-btn wrong-judge" onclick="markResult(false)">❌ 回答错误，重新抢答</button>
+            </div>
+        </div>
+
+        <h2 style="margin-top:35px;">🏆 实时排名榜</h2>
+        <table class="vocab-table" id="leaderboardTable">
+            <thead><tr><th style="width:15%;">排名</th><th style="width:55%;">昵称</th><th style="width:30%;">得分</th></tr></thead>
+            <tbody id="leaderboardBody"><tr><td colspan="3">暂无数据</td></tr></tbody>
+        </table>
+    </div>
+
+    <noscript>
+        <div class="notice-box">⚠️ 检测到当前浏览器未启用 JavaScript，在线抢答功能无法使用。请使用完整浏览器（如 Chrome / Safari）打开本页面。</div>
+    </noscript>
+</div>
+
+<!-- CloudBase (腾讯云开发) SDK, loaded via CDN -->
+<script src="https://static.cloudbase.net/cloudbase-js-sdk/2.15.1/cloudbase.js"></script>
+<script src="https://static.cloudbase.net/cloudbase-js-sdk/2.15.1/cloudbase.auth.js"></script>
+<script src="https://static.cloudbase.net/cloudbase-js-sdk/2.15.1/cloudbase.database.js"></script>
+
+<script>
+function switchTab(tabId, evt) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    if (evt && evt.currentTarget) { evt.currentTarget.classList.add('active'); }
+}
+
+// ---- Quiz question bank ----
+const quizBank = [
+    { zh: "这笔交易将标志着公司发展历史上最具里程碑意义的时刻。", en: "This deal will {blank} in our company's history.",
+      answer: "mark the most significant milestone", options: ["mark the most significant milestone", "grow by leaps and bounds", "play to our disadvantage"] },
+    { zh: "这次合并将从结构上彻底改变整个行业的竞争格局。", en: "This merger will {blank} of the entire industry.",
+      answer: "structurally change the landscape", options: ["structurally change the landscape", "achieve economies of scale", "provide a clear career trajectory"] },
+    { zh: "过去三年，公司的业务实现了突飞猛进的增长。", en: "Over the past three years, our business has {blank}.",
+      answer: "grown by leaps and bounds", options: ["grown by leaps and bounds", "gone on an acquisition spree", "found our footing"] },
+    { zh: "在过去两年里，我们的团队一直处于业绩的巅峰状态。", en: "Over the last two years, our team has {blank}.",
+      answer: "performed at our peak", options: ["performed at our peak", "moved the needle", "streamlined and collapsed vendors"] },
+    { zh: "这次交易能让我们自己拥有更充沛的资源去武装团队。", en: "This deal allows us to {blank}.",
+      answer: "equip ourselves with more resources", options: ["equip ourselves with more resources", "acquire core expertise rather than a client list", "open up a massive toolbox"] },
+    { zh: "我们希望持续为客户提供叠加的增量价值。", en: "We hope to consistently {blank} for our clients.",
+      answer: "offer incremental value", options: ["offer incremental value", "provide competitive pricing", "share our strategic rationale"] },
+    { zh: "行业里的小型机构正逐渐被大型企业兼并吸收。", en: "The smaller players in the industry are gradually getting {blank}.",
+      answer: "absorbed", options: ["absorbed", "rationalized", "entrusted"] },
+    { zh: "管理团队已经从董事会获得了正式的扩张授权。", en: "The management team has {blank} to expand the business.",
+      answer: "secured a mandate from the board", options: ["secured a mandate from the board", "executed the SPA", "taken over 100% of the ownership"] },
+    { zh: "企业既可以通过自身内生增长，也可以通过外延并购来扩张。", en: "A company can choose to {blank}.",
+      answer: "grow organically or inorganically", options: ["grow organically or inorganically", "streamline and collapse vendors", "achieve economies of scale"] },
+    { zh: "双方的业务在很多方面能够形成很强的互补效应。", en: "The two businesses {blank} in many ways.",
+      answer: "complement each other in the businesses", options: ["complement each other in the businesses", "align into one pivotal point", "blend the best practices of both sides"] },
+    { zh: "新产品在客户群体中已经获得了很强的市场吸引力。", en: "The new product has {blank}.",
+      answer: "gained strong traction with clients", options: ["gained strong traction with clients", "played to our disadvantage", "been contingent on core staff joining"] },
+    { zh: "公司在那个新市场一直未能真正站稳脚跟。", en: "The company was {blank} in that new market.",
+      answer: "unable to find our footing", options: ["unable to find our footing", "nothing short of extraordinary", "on the back of a weak balance sheet"] },
+    { zh: "坦白地说，我们确实经过了非常艰难的一段时期。", en: "{blank}, we did go through a very tough period.",
+      answer: "Hand to heart", options: ["Hand to heart", "Thanks but no thanks", "Low-hanging fruit"] },
+    { zh: "这样的增长速度完全称得上是一场奇迹。", en: "Growth at this pace is {blank}.",
+      answer: "nothing short of extraordinary", options: ["nothing short of extraordinary", "a huge responsibility entrusted to us", "an extraordinary growth"] },
+    { zh: "双方已经正式签署了股权购买协议。", en: "Both parties have officially {blank}.",
+      answer: "executed the SPA (Share Purchase Agreement)", options: ["executed the SPA (Share Purchase Agreement)", "secured a mandate from the board", "agreed on a tentative pricing"] },
+    { zh: "买方将全资接管标的公司100%的股权。", en: "The buyer will {blank} of the target company.",
+      answer: "take over 100% of the ownership", options: ["take over 100% of the ownership", "carve out the litigation entity", "rationalize parallel entities"] },
+    { zh: "清算经纪业务是公司最核心的顶梁柱业务。", en: "Clearing and brokerage is our {blank}.",
+      answer: "main bread and butter business", options: ["main bread and butter business", "investment grade credit rating", "low-hanging fruit"] },
+    { zh: "很抱歉，由于对方规模不足，我们只能委婉谢绝这次合作。", en: "Given their balance sheet, it was often a case of {blank}.",
+      answer: "thanks but no thanks", options: ["thanks but no thanks", "hand to heart", "nothing short of extraordinary"] },
+    { zh: "近几年，行业头部机构一直在掀起一轮又一轮的收购潮。", en: "In recent years, the industry leaders have {blank}.",
+      answer: "gone on an acquisition spree", options: ["gone on an acquisition spree", "streamlined and collapsed vendors", "achieved economies of scale"] },
+    { zh: "规模上的劣势最终会转化为我们的竞争劣势。", en: "Our lack of scale will eventually {blank}.",
+      answer: "play to our disadvantage", options: ["play to our disadvantage", "open up a whole realm of opportunities", "realize good synergy immediately"] },
+    { zh: "公司可以依靠对方雄厚的资产负债表来拓展大客户。", en: "The company can {blank} to win over larger clients.",
+      answer: "lean on a very large balance sheet", options: ["lean on a very large balance sheet", "provide competitive pricing", "open up a massive toolbox"] },
+    { zh: "这家机构拥有投资级的信用评级，是实力的证明。", en: "The firm holds an {blank}, a proof of its strength.",
+      answer: "investment grade credit rating", options: ["investment grade credit rating", "acquisition spree", "economies of scale"] },
+    { zh: "这些新客户对我们来说，是唾手可得的现成机会。", en: "These new clients are {blank} for us.",
+      answer: "low-hanging fruit", options: ["low-hanging fruit", "main bread and butter business", "a huge responsibility entrusted to us"] },
+    { zh: "合并后，公司很快就能实现规模经济效益。", en: "After the merger, the company will quickly {blank}.",
+      answer: "achieve economies of scale", options: ["achieve economies of scale", "grow organically or inorganically", "provide a clear career trajectory"] },
+    { zh: "公司计划精简并合并重复的供应商合同以降低成本。", en: "The company plans to {blank} to cut costs.",
+      answer: "streamline and collapse vendors", options: ["streamline and collapse vendors", "carve out the litigation entity", "rationalize parallel entities"] },
+    { zh: "买家看重的是核心团队的专业能力，而不仅仅是一张客户名单。", en: "The buyer wants to {blank}.",
+      answer: "acquire core expertise rather than a client list", options: ["acquire core expertise rather than a client list", "buy the people, not just the business", "pay a substantial valuation premium"] },
+    { zh: "管理层承诺为员工提供清晰可见的职业发展路径。", en: "Management has promised to {blank}.",
+      answer: "provide a clear career trajectory", options: ["provide a clear career trajectory", "provide competitive pricing", "blend the best practices of both sides"] },
+    { zh: "他们收购的核心价值是买下团队本身，而非仅仅是一门生意。", en: "The core value of the deal is to {blank}.",
+      answer: "buy the people, not just the business", options: ["buy the people, not just the business", "make you redundant to save that cost", "acquire core expertise rather than a client list"] },
+    { zh: "对于这样规模的集团来说，我们个人的薪资根本不足以撼动大局。", en: "For a group of this size, our salary {blank}.",
+      answer: "doesn't really move the needle", options: ["doesn't really move the needle", "is a huge responsibility entrusted to us", "is nothing short of extraordinary"] },
+    { zh: "我认为我们所有人都值得为自己好好点赞鼓励一番。", en: "I think {blank}.",
+      answer: "we all deserve a pat on our back", options: ["we all deserve a pat on our back", "we will get more clarity as we move along", "we want to be as transparent as we can"] }
+];
+
+// ---- CloudBase (腾讯云开发) setup ----
+const CLOUDBASE_ENV_ID = "ldgj-english-study-d6cp8991d5afc";
+const COLLECTION_NAME = "buzz_game";
+
+let db = null;
+let cbApp = null;
+
+if (typeof cloudbase === 'undefined') {
+    showConnError('CloudBase SDK 未能从 CDN 加载成功（可能是网络问题或该环境屏蔽了外部脚本）。请尝试用完整浏览器直接打开本文件，或检查网络连接后刷新页面。');
+} else {
+    cbApp = cloudbase.init({ env: CLOUDBASE_ENV_ID });
+    const auth = cbApp.auth({ persistence: 'local' });
+    auth.anonymousAuthProvider().signIn().then(() => {
+        db = cbApp.database();
+        ensureSessionDoc();
+    }).catch(err => {
+        console.error('anonymous sign-in failed', err);
+        showConnError('匿名登录失败，请确认云开发环境已在"登录授权"中开启"匿名登录"。错误信息：' + (err && err.message ? err.message : err));
+    });
+}
+
+function showConnError(msg) {
+    const quizTab = document.getElementById('quiz');
+    if (quizTab) {
+        quizTab.insertAdjacentHTML('afterbegin',
+            '<div class="notice-box" style="background:#fdecea;border-color:#f5c2c7;color:#a71d2a;">⚠️ ' + msg + '</div>');
+    }
+}
+
+// ---- Live buzz-in game state ----
+let playerName = null;
+let currentQIndex = null;
+let currentRoundId = null;
+let sessionWatcher = null;
+let leaderboardWatcher = null;
+
+function pickRandomQIndex() {
+    return Math.floor(Math.random() * quizBank.length);
+}
+
+// Sanitize a nickname so it can safely be used as a document _id (no . $ # [ ] / or whitespace-only)
+function sanitizeName(name) {
+    return name.replace(/[.#$\[\]\/\s]/g, '').trim().slice(0, 20);
+}
+
+function ensureSessionDoc() {
+    if (!db) return;
+    db.collection(COLLECTION_NAME).doc('session').get().then(res => {
+        const exists = res.data && res.data.length > 0;
+        if (!exists) {
+            db.collection(COLLECTION_NAME).doc('session').set({
+                data: { type: 'session', qIndex: pickRandomQIndex(), roundId: Date.now(), buzzedBy: null }
+            }).catch(err => console.error('ensureSessionDoc set failed', err));
+        }
+    }).catch(err => console.error('ensureSessionDoc get failed', err));
+}
+
+function joinGame() {
+    if (!db) { alert('数据库尚未连接成功，无法加入抢答，请确认匿名登录已开启，然后刷新页面重试。'); return; }
+    const raw = document.getElementById('nameInput').value;
+    const val = sanitizeName(raw);
+    if (!val) { alert('请输入一个有效的昵称后再加入'); return; }
+    playerName = val;
+    document.getElementById('joinGate').style.display = 'none';
+    document.getElementById('gameArea').style.display = 'block';
+    document.getElementById('playerBadge').textContent = '昵称：' + playerName;
+
+    // Register this player on the leaderboard with 0 points if not already present
+    db.collection(COLLECTION_NAME).doc(playerName).get().then(res => {
+        const exists = res.data && res.data.length > 0;
+        if (!exists) {
+            db.collection(COLLECTION_NAME).doc(playerName).set({
+                data: { type: 'score', name: playerName, score: 0 }
+            }).catch(err => console.error('register player failed', err));
+        }
+    });
+
+    // Real-time listener on the session doc (push-based, no polling needed)
+    sessionWatcher = db.collection(COLLECTION_NAME).doc('session').watch({
+        onChange: function (snapshot) {
+            const docs = snapshot.docs;
+            if (!docs || !docs.length) return;
+            const s = docs[0];
+            if (s.qIndex !== currentQIndex || s.roundId !== currentRoundId) {
+                currentQIndex = s.qIndex;
+                currentRoundId = s.roundId;
+                renderQuestion(quizBank[s.qIndex]);
+            }
+            updateBuzzUI(s);
+        },
+        onError: function (err) { console.error('session watch error', err); }
+    });
+
+    // Real-time listener on all leaderboard (score) docs
+    leaderboardWatcher = db.collection(COLLECTION_NAME).where({ type: 'score' }).watch({
+        onChange: function (snapshot) {
+            const lb = {};
+            (snapshot.docs || []).forEach(d => { lb[d.name] = d.score; });
+            renderLeaderboard(lb);
+        },
+        onError: function (err) { console.error('leaderboard watch error', err); }
+    });
+}
+
+function buzzIn() {
+    if (!playerName || !db) return;
+    // Conditional update: only applies if buzzedBy is still null (first click wins)
+    const _ = db.command;
+    db.collection(COLLECTION_NAME).where({ _id: 'session', buzzedBy: _.eq(null) })
+        .update({ data: { buzzedBy: playerName } })
+        .catch(err => console.error('buzzIn failed', err));
+}
+
+function markResult(isCorrect) {
+    if (!db) return;
+    db.collection(COLLECTION_NAME).doc('session').get().then(res => {
+        const s = res.data && res.data[0];
+        if (!s || !s.buzzedBy) return;
+        if (isCorrect) {
+            const _ = db.command;
+            db.collection(COLLECTION_NAME).doc(s.buzzedBy).update({
+                data: { score: _.inc(10) }
+            }).catch(err => console.error('score update failed', err));
+            nextQuestion();
+        } else {
+            db.collection(COLLECTION_NAME).doc('session').update({
+                data: { buzzedBy: null }
+            }).catch(err => console.error('reset buzz failed', err));
+        }
+    });
+}
+
+function nextQuestion() {
+    if (!db) return;
+    db.collection(COLLECTION_NAME).doc('session').update({
+        data: { qIndex: pickRandomQIndex(), roundId: Date.now(), buzzedBy: null }
+    }).catch(err => console.error('nextQuestion failed', err));
+}
+
+function renderQuestion(q) {
+    document.getElementById('qZh').textContent = q.zh;
+    document.getElementById('qEn').innerHTML = q.en.replace('{blank}', '<span class="blank-slot">______</span>');
+    const optsDiv = document.getElementById('qOptions');
+    optsDiv.innerHTML = '';
+    q.options.forEach(opt => {
+        const div = document.createElement('div');
+        div.className = 'option-display';
+        div.textContent = opt;
+        optsDiv.appendChild(div);
+    });
+}
+
+function renderLeaderboard(lb) {
+    const body = document.getElementById('leaderboardBody');
+    const entries = Object.entries(lb || {}).sort((a, b) => b[1] - a[1]);
+    if (entries.length === 0) {
+        body.innerHTML = '<tr><td colspan="3">暂无数据</td></tr>';
+        return;
+    }
+    body.innerHTML = entries.map((e, i) => {
+        const medal = i === 0 ? '🥇' : (i === 1 ? '🥈' : (i === 2 ? '🥉' : (i + 1)));
+        return '<tr><td>' + medal + '</td><td>' + e[0] + '</td><td>' + e[1] + ' 分</td></tr>';
+    }).join('');
+}
+
+function updateBuzzUI(s) {
+    const statusDiv = document.getElementById('buzzStatus');
+    const buzzBtn = document.getElementById('buzzBtn');
+    const judgeButtons = document.getElementById('judgeButtons');
+
+    if (s.buzzedBy) {
+        statusDiv.textContent = '🔔 ' + s.buzzedBy + ' 抢到了！';
+        buzzBtn.disabled = true;
+        judgeButtons.style.display = 'flex';
+    } else {
+        statusDiv.textContent = '等待有人抢答…';
+        buzzBtn.disabled = false;
+        judgeButtons.style.display = 'none';
+    }
+}
+</script>
+
+</body>
+</html>
