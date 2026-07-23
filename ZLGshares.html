@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>持仓总账 · 多市场股票管理</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#11151b;
+  --ink2:#161b23;
+  --panel:#1c222c;
+  --panel-hi:#242c38;
+  --rule:#333e4c;
+  --rule-soft:#262e3a;
+  --brass:#c9a24b;
+  --brass-soft:#e6cd94;
+  --brass-dim:#7a6535;
+  --paper:#eee6d3;
+  --paper-dim:#b9b3a3;
+  --muted:#7c8798;
+  --red:#e0574e;
+  --red-soft:rgba(224,87,78,.14);
+  --green:#3fa478;
+  --green-soft:rgba(63,164,120,.14);
+  --font-display:'Noto Serif SC', serif;
+  --font-body:'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    radial-gradient(ellipse 1200px 600px at 15% -10%, rgba(201,162,75,.07), transparent 60%),
+    var(--ink);
+  color:var(--paper);
+  font-family:var(--font-body);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--brass); color:var(--ink);}
+
+/* ---------- layout shell ---------- */
+#app{max-width:1180px;margin:0 auto;padding:22px 18px 80px;}
+
+.masthead{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  gap:16px;flex-wrap:wrap;
+  padding-bottom:18px;margin-bottom:22px;
+  border-bottom:2px solid var(--rule);
+  position:relative;
+}
+.masthead h1{
+  font-family:var(--font-display);
+  font-weight:900;
+  font-size:clamp(24px,4vw,34px);
+  letter-spacing:.04em;
+  margin:0 0 4px;
+  color:var(--paper);
+}
+.masthead .sub{
+  font-size:12.5px;color:var(--muted);letter-spacing:.06em;
+}
+.masthead .sub b{color:var(--brass-soft);font-weight:600;}
+
+.seal{
+  width:60px;height:60px;border-radius:50%;
+  border:2.5px solid var(--red);
+  color:var(--red);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-weight:900;font-size:11px;
+  transform:rotate(-8deg);
+  flex-shrink:0;
+  opacity:.85;
+  writing-mode:vertical-rl;
+  letter-spacing:.15em;
+  padding:4px;
+  text-align:center;
+}
+
+/* ---------- global search ---------- */
+.search-row{
+  display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;
+}
+.search-box{
+  flex:1 1 280px;position:relative;
+}
+.search-box input{
+  width:100%;
+  background:var(--panel);
+  border:1.5px solid var(--rule);
+  border-radius:9px;
+  padding:12px 14px 12px 40px;
+  color:var(--paper);
+  font-family:var(--font-body);
+  font-size:14.5px;
+  outline:none;
+  transition:border-color .15s;
+}
+.search-box input:focus{border-color:var(--brass);}
+.search-box input::placeholder{color:var(--muted);}
+.search-box::before{
+  content:'搜';
+  position:absolute;left:13px;top:50%;transform:translateY(-50%);
+  font-size:12px;color:var(--muted);
+  font-family:var(--font-display);
+}
+.btn{
+  border:1.5px solid var(--rule);
+  background:var(--panel);
+  color:var(--paper);
+  border-radius:9px;
+  padding:11px 16px;
+  font-size:13.5px;
+  font-family:var(--font-body);
+  cursor:pointer;
+  white-space:nowrap;
+  transition:border-color .15s, background .15s, transform .1s;
+  font-weight:500;
+}
+.btn:hover{border-color:var(--brass-dim); background:var(--panel-hi);}
+.btn:active{transform:scale(.97);}
+.btn-brass{
+  background:linear-gradient(180deg, var(--brass-soft), var(--brass));
+  color:#251c08;border-color:var(--brass);font-weight:700;
+}
+.btn-brass:hover{filter:brightness(1.06);}
+.btn-ghost{background:transparent;}
+.btn-sm{padding:7px 11px;font-size:12.5px;border-radius:7px;}
+
+.search-results{
+  position:absolute;top:calc(100% + 6px);left:0;right:0;
+  background:var(--panel-hi);
+  border:1.5px solid var(--brass-dim);
+  border-radius:10px;
+  z-index:40;max-height:340px;overflow:auto;
+  box-shadow:0 14px 34px rgba(0,0,0,.45);
+}
+.search-results .sr-item{
+  padding:10px 14px;cursor:pointer;
+  border-bottom:1px solid var(--rule-soft);
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
+}
+.search-results .sr-item:last-child{border-bottom:none;}
+.search-results .sr-item:hover{background:rgba(201,162,75,.08);}
+.sr-name{font-weight:600;font-size:13.5px;}
+.sr-meta{font-size:11.5px;color:var(--muted);font-family:var(--font-mono);}
+.sr-empty{padding:14px;color:var(--muted);font-size:13px;text-align:center;}
+
+/* ---------- tabs (ledger dividers) ---------- */
+.tabs{display:flex;gap:6px;margin-bottom:0;position:relative;z-index:2;}
+.tab{
+  flex:1;
+  padding:13px 10px 15px;
+  background:var(--panel);
+  border:1.5px solid var(--rule);
+  border-bottom:none;
+  border-radius:10px 10px 0 0;
+  text-align:center;
+  cursor:pointer;
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:14.5px;
+  color:var(--muted);
+  position:relative;
+  transition:color .15s, background .15s;
+}
+.tab .t-en{display:block;font-family:var(--font-mono);font-weight:400;font-size:9.5px;letter-spacing:.14em;margin-top:3px;color:var(--muted);text-transform:uppercase;}
+.tab.active{
+  background:var(--panel-hi);
+  color:var(--brass-soft);
+  border-color:var(--brass-dim);
+}
+.tab.active .t-en{color:var(--brass-dim);}
+.tab-panel{
+  background:var(--panel-hi);
+  border:1.5px solid var(--brass-dim);
+  border-radius:0 10px 10px 10px;
+  padding:20px;
+}
+@media (max-width:640px){
+  .tab-panel{border-radius:0 0 10px 10px;}
+}
+
+/* ---------- summary strip ---------- */
+.summary-strip{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:10px;margin-bottom:18px;
+}
+@media (max-width:700px){.summary-strip{grid-template-columns:repeat(2,1fr);}}
+.sum-card{
+  background:var(--panel);
+  border:1px solid var(--rule-soft);
+  border-radius:9px;
+  padding:12px 14px;
+}
+.sum-card .lbl{font-size:11px;color:var(--muted);letter-spacing:.05em;margin-bottom:6px;}
+.sum-card .val{font-family:var(--font-mono);font-size:18px;font-weight:600;color:var(--paper);}
+.sum-card .val.pos{color:var(--red);}
+.sum-card .val.neg{color:var(--green);}
+
+/* ---------- holdings table ---------- */
+.table-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--rule-soft);}
+table.holdings{width:100%;border-collapse:collapse;font-size:13.5px;min-width:720px;}
+table.holdings thead th{
+  text-align:right;padding:10px 12px;
+  font-family:var(--font-body);font-weight:600;font-size:11.5px;
+  color:var(--brass-soft);letter-spacing:.04em;
+  background:var(--panel);border-bottom:2px solid var(--rule);
+  position:sticky;top:0;
+}
+table.holdings thead th:first-child, table.holdings thead th:nth-child(2){text-align:left;}
+table.holdings tbody td{
+  padding:11px 12px;text-align:right;
+  font-family:var(--font-mono);
+  border-bottom:1px solid var(--rule-soft);
+}
+table.holdings tbody td:first-child, table.holdings tbody td:nth-child(2){text-align:left;font-family:var(--font-body);}
+table.holdings tbody tr{cursor:pointer;transition:background .12s;}
+table.holdings tbody tr:hover{background:rgba(201,162,75,.06);}
+table.holdings tbody tr:last-child td{border-bottom:none;}
+.stock-name{font-weight:600;color:var(--paper);}
+.stock-code{display:block;font-size:11px;color:var(--muted);font-family:var(--font-mono);}
+.pos{color:var(--red);}
+.neg{color:var(--green);}
+.zero{color:var(--muted);}
+.tag-closed{
+  display:inline-block;font-size:10px;padding:2px 6px;border-radius:5px;
+  background:var(--rule-soft);color:var(--muted);margin-left:6px;font-family:var(--font-body);
+}
+.empty-row td{text-align:center;color:var(--muted);padding:30px;font-family:var(--font-body);}
+
+/* ---------- modal ---------- */
+.overlay{
+  position:fixed;inset:0;background:rgba(6,8,11,.72);
+  backdrop-filter:blur(2px);
+  display:none;align-items:flex-start;justify-content:center;
+  padding:5vh 16px;overflow-y:auto;z-index:100;
+}
+.overlay.show{display:flex;}
+.modal{
+  background:var(--ink2);border:1.5px solid var(--brass-dim);
+  border-radius:14px;max-width:720px;width:100%;
+  padding:24px;margin-bottom:5vh;
+  box-shadow:0 30px 70px rgba(0,0,0,.55);
+}
+.modal-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;gap:10px;}
+.modal-head h2{font-family:var(--font-display);font-size:21px;margin:0;color:var(--brass-soft);}
+.modal-head .mh-meta{font-size:12px;color:var(--muted);margin-top:4px;font-family:var(--font-mono);}
+.modal-close{
+  background:transparent;border:1px solid var(--rule);color:var(--muted);
+  border-radius:7px;width:30px;height:30px;cursor:pointer;font-size:15px;flex-shrink:0;
+}
+.modal-close:hover{color:var(--paper);border-color:var(--brass-dim);}
+
+.detail-summary{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px;
+}
+@media (max-width:560px){.detail-summary{grid-template-columns:repeat(2,1fr);}}
+.detail-summary .d-card{background:var(--panel);border:1px solid var(--rule-soft);border-radius:8px;padding:10px 12px;}
+.detail-summary .d-card .lbl{font-size:10.5px;color:var(--muted);margin-bottom:4px;}
+.detail-summary .d-card .val{font-family:var(--font-mono);font-size:15.5px;font-weight:600;}
+
+.section-label{
+  font-family:var(--font-display);font-weight:700;font-size:14px;color:var(--brass-soft);
+  margin:18px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--rule-soft);
+  display:flex;justify-content:space-between;align-items:center;
+}
+table.txns{width:100%;border-collapse:collapse;font-size:12.5px;}
+table.txns th{text-align:right;padding:7px 9px;color:var(--muted);font-weight:600;font-size:10.5px;border-bottom:1px solid var(--rule);}
+table.txns th:first-child{text-align:left;}
+table.txns td{text-align:right;padding:8px 9px;font-family:var(--font-mono);border-bottom:1px solid var(--rule-soft);}
+table.txns td:first-child{text-align:left;font-family:var(--font-body);color:var(--paper-dim);}
+table.txns tbody tr:last-child td{border-bottom:none;}
+
+/* ---------- forms ---------- */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media (max-width:560px){.form-grid{grid-template-columns:1fr;}}
+.field{display:flex;flex-direction:column;gap:5px;}
+.field.full{grid-column:1/-1;}
+.field label{font-size:12px;color:var(--muted);}
+.field input, .field select{
+  background:var(--panel);border:1.5px solid var(--rule);border-radius:8px;
+  padding:10px 11px;color:var(--paper);font-family:var(--font-body);font-size:14px;outline:none;
+}
+.field input:focus, .field select:focus{border-color:var(--brass);}
+.field .hint{font-size:11px;color:var(--muted);}
+.form-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;}
+.radio-toggle{display:flex;gap:8px;}
+.radio-toggle button{
+  flex:1;border:1.5px solid var(--rule);background:var(--panel);color:var(--muted);
+  border-radius:8px;padding:9px;cursor:pointer;font-size:13px;font-family:var(--font-body);
+}
+.radio-toggle button.active{border-color:var(--brass);color:var(--brass-soft);background:var(--panel-hi);}
+
+/* ---------- fab & toast ---------- */
+.fab-row{
+  position:fixed;bottom:20px;right:20px;display:flex;flex-direction:column;gap:10px;z-index:60;
+}
+.fab{
+  border:none;border-radius:50px;padding:14px 20px;
+  background:linear-gradient(180deg, var(--brass-soft), var(--brass));
+  color:#251c08;font-weight:700;font-size:13.5px;cursor:pointer;
+  box-shadow:0 10px 26px rgba(0,0,0,.4);
+  display:flex;align-items:center;gap:8px;
+  font-family:var(--font-body);
+}
+.fab.secondary{
+  background:var(--panel-hi);color:var(--paper);border:1.5px solid var(--rule);
+  box-shadow:0 8px 20px rgba(0,0,0,.35);
+}
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--panel-hi);border:1.5px solid var(--brass-dim);color:var(--paper);
+  padding:12px 20px;border-radius:10px;font-size:13.5px;
+  opacity:0;transition:opacity .25s, transform .25s;pointer-events:none;z-index:200;
+  box-shadow:0 12px 30px rgba(0,0,0,.4);
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.footer-note{
+  margin-top:28px;padding-top:16px;border-top:1px solid var(--rule-soft);
+  font-size:11.5px;color:var(--muted);line-height:1.7;
+}
+.footer-note a{color:var(--brass-soft);cursor:pointer;text-decoration:underline;}
+
+.csv-tpl{background:var(--panel);border:1px dashed var(--rule);border-radius:8px;padding:10px 12px;font-family:var(--font-mono);font-size:11.5px;color:var(--muted);margin-top:6px;overflow-x:auto;white-space:pre;}
+.upload-result{margin-top:12px;font-size:13px;}
+.upload-result .err-item{color:var(--red);font-size:12px;margin-top:4px;}
+.file-drop{
+  border:1.5px dashed var(--rule);border-radius:10px;padding:22px;text-align:center;
+  color:var(--muted);font-size:13px;cursor:pointer;transition:border-color .15s;
+}
+.file-drop:hover{border-color:var(--brass-dim);}
+.file-drop.drag{border-color:var(--brass);background:rgba(201,162,75,.06);}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div class="masthead">
+    <div>
+      <h1>持仓总账</h1>
+      <div class="sub">A股 · 港股 · 新加坡股票 &nbsp;|&nbsp; 三帧分账本 &middot; <b id="asOfDate">—</b> 数据</div>
+    </div>
+    <div class="seal" id="grandSeal">总览</div>
+  </div>
+
+  <div class="search-row">
+    <div class="search-box">
+      <input type="text" id="globalSearch" placeholder="输入股票名称或代码查询成本、历史交易与最新持仓…" autocomplete="off">
+      <div class="search-results" id="searchResults" style="display:none;"></div>
+    </div>
+    <button class="btn" id="btnRefreshPrices" title="从公开行情源尝试拉取最新价（实验性，需联网）">⟳ 刷新最新价</button>
+    <button class="btn" id="btnImport">批量导入</button>
+    <button class="btn btn-brass" id="btnAdd">＋ 添加交易</button>
+  </div>
+
+  <div class="tabs" id="tabs"></div>
+  <div class="tab-panel" id="tabPanel"></div>
+
+  <div class="footer-note">
+    数据来源：SHARES2026.xlsx（2026 年账本，含历史至今全部交易记录）。持仓数量与成本按加权平均成本法重新计算；原表中部分「盘位对比」列（与最新价比较的假设盈亏）未纳入本工具。<br>
+    「⟳ 刷新最新价」为实验性功能：A股/港股通过腾讯行情接口拉取，新加坡股票通过雅虎财经接口拉取，均为第三方公开数据源、非官方 API，可能因网络环境或数据源变更而失败或延迟，请以交易所官方行情为准。新加坡股票多数没有现成代码，需先在个股详情里填写 SGX 交易代码（如 Z74、9CI）才能自动拉取。任何时候都可以在个股详情里手动修改最新价。
+    <br>
+    <a id="btnExport">导出当前完整数据 (JSON)</a> &nbsp;|&nbsp;
+    <a id="btnReset">清除本地新增记录</a>
+  </div>
+</div>
+
+<!-- Detail Modal -->
+<div class="overlay" id="detailOverlay">
+  <div class="modal" id="detailModal"></div>
+</div>
+
+<!-- Add/Import Modal -->
+<div class="overlay" id="formOverlay">
+  <div class="modal" id="formModal"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script id="stockData" type="application/json">
+[{"name":"PETROCHINA","code":"601857","section":"A-shares","currency":"CNY","market":"A股(沪)","latest_price":12.22,"txns":[{"d":null,"q":200,"p":-6.32,"v":0.67}]},{"name":"BANK OF CHINA","code":"601988","section":"A-shares","currency":"CNY","market":"A股(沪)","latest_price":5.73,"txns":[{"d":null,"q":200,"p":-3.34,"v":0.355}]},{"name":"ICBC","code":"601398","section":"A-shares","currency":"CNY","market":"A股(沪)","latest_price":7.04,"txns":[{"d":null,"q":1600,"p":3.37,"v":0.44},{"d":"2024-01-25","q":-1000,"p":5.01,"v":0.44},{"d":"2024-06-28","q":-400,"p":5.7,"v":0.44},{"d":"2026-03-12","q":2000,"p":7.16,"v":0}]},{"name":"中国建筑CHINA CONSTRUCT","code":"601668","section":"A-shares","currency":"CNY","market":"A股(沪)","latest_price":4.72,"txns":[{"d":null,"q":2800,"p":3.5,"v":0.54},{"d":"2024-01-25","q":-1000,"p":5.02,"v":0.54},{"d":"2024-04-22","q":-1000,"p":5.4,"v":0.54},{"d":"2024-08-30","q":1000,"p":5.4,"v":0.27},{"d":"2024-10-08","q":1000,"p":6.6,"v":0.27},{"d":"2024-10-09","q":1000,"p":6,"v":0.27},{"d":"2025-02-17","q":1000,"p":5.56,"v":0.27},{"d":"2025-02-26","q":2000,"p":5.54,"v":0.27},{"d":"2025-04-07","q":-2000,"p":5.07,"v":0.27},{"d":"2025-04-09","q":-2000,"p":5.25,"v":0.27},{"d":"2025-07-07","q":-1000,"p":5.95,"v":0.27},{"d":"2025-08-21","q":3000,"p":5.58,"v":0},{"d":"2026-01-22","q":2000,"p":5.12,"v":0},{"d":"2026-04-07","q":1000,"p":5,"v":0}]},{"name":"中国中冶METALLURGICAL","code":"601618","section":"A-shares","currency":"CNY","market":"A股(沪)","latest_price":2.54,"txns":[{"d":null,"q":3000,"p":3.19,"v":0.12},{"d":"2024-01-25","q":-1000,"p":3.25,"v":0.12},{"d":"2024-03-20","q":-1000,"p":3.4,"v":0.12},{"d":"2026-01-28","q":2000,"p":3.31,"v":0}]},{"name":"中国联通CHINA UNITED NETWORK","code":"600050","section":"A-shares","currency":"CNY","market":"A股(沪)","latest_price":4.07,"txns":[{"d":null,"q":4000,"p":3.08,"v":0.3},{"d":"2024-01-25","q":-1000,"p":4.43,"v":0.3},{"d":"2024-01-31","q":-1000,"p":4.5,"v":0.3},{"d":"2024-02-19","q":1000,"p":4.6,"v":0.3},{"d":"2024-02-23","q":-1200,"p":4.85,"v":0.3},{"d":"2024-03-21","q":1200,"p":4.75,"v":0.3},{"d":"2024-07-04","q":-1000,"p":4.75,"v":0.3},{"d":"2024-08-22","q":-1000,"p":4.77,"v":0.25},{"d":"2024-10-09","q":1000,"p":5.4,"v":0.25},{"d":"2024-10-09","q":1000,"p":5.23,"v":0.25},{"d":"2024-11-15","q":2000,"p":5.6,"v":0.16},{"d":"2025-01-06","q":2000,"p":4.9,"v":0.16},{"d":"2025-02-11","q":-1000,"p":5.49,"v":0.16},{"d":"2025-02-14","q":-2000,"p":6.01,"v":0.16},{"d":"2025-02-20","q":-2000,"p":6.26,"v":0.16},{"d":"2025-04-11","q":1000,"p":5.4,"v":0.16},{"d":"2025-08-21","q":2000,"p":5.68,"v":0.1},{"d":"2026-02-04","q":2000,"p":4.85,"v":0},{"d":"2026-04-07","q":2000,"p":4.49,"v":0}]},{"name":"中国人寿China Life","code":"601628","section":"A-shares","currency":"CNY","market":"A股(沪)","latest_price":38.66,"txns":[{"d":null,"q":300,"p":28.82,"v":0.85},{"d":"2024-02-01","q":-200,"p":28.2,"v":0.85},{"d":null,"q":200,"p":28.45,"v":0.85},{"d":"2024-08-22","q":-200,"p":31.4,"v":0.43},{"d":"2025-03-06","q":300,"p":38.9,"v":0.23},{"d":"2025-08-18","q":-100,"p":43,"v":0.23},{"d":"2025-10-14","q":400,"p":39.6,"v":0.23},{"d":"2025-10-24","q":-200,"p":44.37,"v":0.23},{"d":"2026-01-06","q":-200,"p":49.79,"v":0},{"d":"2026-03-05","q":200,"p":42.76,"v":0.23},{"d":"2026-05-06","q":200,"p":36.63,"v":0},{"d":"2026-06-08","q":200,"p":33,"v":0},{"d":"2026-07-01","q":-200,"p":37.43,"v":0}]},{"name":"鹏鹞环保Penyao Enviromental Protection","code":"300664","section":"A-shares","currency":"CNY","market":"A股(沪)","latest_price":5.15,"txns":[{"d":null,"q":2450,"p":6.36,"v":0.24},{"d":"2024-02-28","q":1200,"p":4.6,"v":0.24},{"d":"2024-04-12","q":1000,"p":4.95,"v":0.24},{"d":"2024-10-08","q":-1000,"p":5.53,"v":0.1},{"d":"2024-11-19","q":1000,"p":5.2,"v":0.1},{"d":"2025-11-07","q":-1000,"p":6.04,"v":0},{"d":"2026-03-13","q":-1000,"p":6.47,"v":0},{"d":"2026-04-10","q":-1000,"p":6.3,"v":0}]},{"name":"苏美达","code":"600710","section":"A-shares","currency":"CNY","market":"A股(沪)","latest_price":11.48,"txns":[{"d":null,"q":600,"p":-9.24,"v":0.66},{"d":"2024-01-26","q":-400,"p":7.7,"v":0.66},{"d":"2024-02-07","q":600,"p":7.15,"v":0.66},{"d":"2024-02-26","q":-400,"p":8.1,"v":0.66},{"d":"2024-10-24","q":1000,"p":8.68,"v":0.35},{"d":"2024-12-19","q":-600,"p":9.4,"v":0.35},{"d":"2024-12-25","q":-400,"p":9.75,"v":0.35},{"d":"2025-01-02","q":800,"p":9.35,"v":0.35},{"d":"2025-02-13","q":600,"p":9.2,"v":0.35},{"d":"2025-02-24","q":-600,"p":10.5,"v":0.35},{"d":"2025-02-26","q":-400,"p":11.28,"v":0.35},{"d":"2025-03-06","q":600,"p":10.35,"v":0.35},{"d":"2025-03-12","q":-400,"p":10.92,"v":0.35},{"d":"2025-04-07","q":1000,"p":8.99,"v":0.35},{"d":"2025-04-09","q":1000,"p":8.25,"v":0.35},{"d":"2025-04-11","q":600,"p":9,"v":0.35},{"d":"2025-05-14","q":-600,"p":9.9,"v":0.35},{"d":"2025-08-01","q":-600,"p":10.76,"v":0},{"d":"2026-02-03","q":-800,"p":12,"v":0},{"d":"2026-03-06","q":-600,"p":14.91,"v":0},{"d":"2026-03-18","q":1000,"p":13.28,"v":0},{"d":"2026-03-23","q":600,"p":11.99,"v":0},{"d":"2026-05-22","q":600,"p":12.09,"v":0}]},{"name":"东睦股份","code":"600114","section":"A-shares","currency":"CNY","market":"A股(沪)","latest_price":5.08,"txns":[{"d":null,"q":200,"p":0.08,"v":0.47},{"d":"2024-01-24","q":400,"p":11.33,"v":0.47},{"d":"2024-01-26","q":400,"p":12,"v":0.47},{"d":"2024-01-29","q":600,"p":11,"v":0.47},{"d":"2024-02-19","q":-600,"p":13.7,"v":0.47},{"d":"2024-02-21","q":-400,"p":13.82,"v":0.47},{"d":"2024-03-27","q":400,"p":14,"v":0.47},{"d":"2024-04-29","q":-400,"p":15.18,"v":0.47},{"d":"2024-08-26","q":-400,"p":16,"v":0.28},{"d":"2025-03-21","q":400,"p":19.9,"v":0.28},{"d":"2025-07-29","q":-200,"p":24.6,"v":0},{"d":"2025-08-29","q":-200,"p":30.5,"v":0},{"d":"2025-11-12","q":200,"p":27.95,"v":0},{"d":"2025-11-21","q":200,"p":25.81,"v":0},{"d":"2026-01-16","q":-200,"p":31.2,"v":0},{"d":"2026-01-27","q":-200,"p":34.03,"v":0},{"d":"2026-03-05","q":200,"p":32.2,"v":0},{"d":"2026-03-09","q":200,"p":29.8,"v":0},{"d":"2026-03-19","q":400,"p":28.39,"v":0},{"d":"2026-04-24","q":-300,"p":32.58,"v":0},{"d":"2026-04-30","q":-200,"p":34.42,"v":0},{"d":"2026-05-22","q":-200,"p":37.54,"v":0},{"d":"2026-06-03","q":-200,"p":40.4,"v":0},{"d":null,"q":200,"p":1.46,"v":0}]},{"name":"中远海控","code":"601919","section":"A-shares","currency":"CNY","market":"A股(沪)","latest_price":13.72,"txns":[{"d":null,"q":1200,"p":9.74,"v":2.22},{"d":"2024-01-08","q":-600,"p":10.03,"v":1.72},{"d":"2024-02-23","q":-400,"p":10.8,"v":1.72},{"d":"2024-03-07","q":600,"p":10.5,"v":1.72},{"d":"2024-04-26","q":-600,"p":11.26,"v":1.72},{"d":"2024-12-19","q":800,"p":14.8,"v":1},{"d":"2025-06-05","q":-800,"p":15.9,"v":1},{"d":"2026-05-06","q":600,"p":14.18,"v":0}]},{"name":"恒力石化","code":"600346","section":"A-shares","currency":"CNY","market":"A股(沪)","latest_price":17.8,"txns":[{"d":null,"q":2400,"p":16.68,"v":1},{"d":"2024-02-06","q":600,"p":11.8,"v":1},{"d":"2024-02-26","q":-600,"p":12.75,"v":1},{"d":"2024-04-08","q":-600,"p":14.65,"v":1},{"d":"2024-04-16","q":-600,"p":15.4,"v":1},{"d":"2024-05-31","q":600,"p":14.35,"v":0.45},{"d":"2024-08-07","q":600,"p":13.45,"v":0.45},{"d":"2024-09-30","q":-600,"p":15.41,"v":0.45},{"d":"2024-11-01","q":600,"p":13.88,"v":0.45},{"d":"2024-11-08","q":-600,"p":15.36,"v":0.45},{"d":"2024-11-22","q":400,"p":14.3,"v":0.45},{"d":"2025-12-12","q":-600,"p":15.6,"v":0.45},{"d":"2025-02-28","q":-400,"p":15.7,"v":0.45},{"d":"2025-03-21","q":-600,"p":15.55,"v":0.45},{"d":"2025-11-06","q":-300,"p":18.23,"v":0},{"d":"2026-01-20","q":-200,"p":26.08,"v":0},{"d":"2026-03-09","q":200,"p":23.28,"v":0},{"d":"2026-05-07","q":300,"p":22.28,"v":0},{"d":"2026-05-21","q":300,"p":19.3,"v":0},{"d":"2026-06-23","q":600,"p":18.4,"v":0}]},{"name":"Wanke A","code":null,"section":"A-shares","currency":"CNY","market":"A股(沪)","latest_price":3.09,"txns":[{"d":null,"q":3200,"p":13.42,"v":0},{"d":"2024-02-19","q":1000,"p":9.7,"v":0},{"d":"2024-02-21","q":-600,"p":10.4,"v":0},{"d":"2024-02-28","q":1000,"p":10,"v":0},{"d":"2024-03-07","q":1000,"p":9.25,"v":0},{"d":"2024-04-15","q":1000,"p":7.19,"v":0},{"d":"2024-05-17","q":-1000,"p":8.07,"v":0},{"d":"2024-05-21","q":-1000,"p":9.13,"v":0},{"d":"2024-05-23","q":-800,"p":9.3,"v":0},{"d":"2024-05-30","q":600,"p":8.21,"v":0},{"d":"2024-06-05","q":800,"p":8.15,"v":0},{"d":"2024-06-21","q":600,"p":7.2,"v":0},{"d":"2024-06-28","q":1200,"p":7,"v":0},{"d":"2024-07-31","q":1200,"p":6.9,"v":0},{"d":"2024-09-25","q":-800,"p":7.58,"v":0},{"d":"2024-09-27","q":-1000,"p":8.6,"v":0},{"d":"2024-10-08","q":-1000,"p":10.4,"v":0},{"d":"2024-10-31","q":800,"p":9.29,"v":0},{"d":"2024-11-28","q":800,"p":8.5,"v":0},{"d":"2024-12-06","q":800,"p":8.68,"v":0},{"d":"2025-01-20","q":1000,"p":6.68,"v":0},{"d":"2025-02-07","q":-800,"p":7.59,"v":0},{"d":"2025-04-21","q":1000,"p":7.17,"v":0},{"d":"2025-06-24","q":1200,"p":6.35,"v":0},{"d":"2025-12-04","q":-2000,"p":5.027,"v":0},{"d":null,"q":1000,"p":4.84,"v":0},{"d":"2026-03-10","q":2000,"p":4.67,"v":0}]},{"name":"长城军工","code":"601606","section":"A-shares","currency":"CNY","market":"A股(沪)","latest_price":10.85,"txns":[{"d":"2023-03-15","q":800,"p":13.15,"v":0},{"d":"2024-01-23","q":600,"p":10.05,"v":0},{"d":"2024-01-25","q":400,"p":10.75,"v":0},{"d":"2024-01-30","q":600,"p":10.45,"v":0},{"d":"2024-02-02","q":800,"p":10,"v":0},{"d":"2024-02-06","q":600,"p":9.1,"v":0},{"d":"2024-02-19","q":600,"p":10,"v":0},{"d":"2024-02-23","q":-1000,"p":10.3,"v":0},{"d":"2024-03-05","q":-800,"p":10.65,"v":0},{"d":"2024-05-20","q":2000,"p":10.69,"v":0},{"d":"2024-05-24","q":-1000,"p":11.15,"v":0},{"d":"2024-06-05","q":600,"p":10.35,"v":0},{"d":"2024-06-21","q":800,"p":9.75,"v":0},{"d":"2024-07-23","q":800,"p":9.25,"v":0},{"d":"2024-08-07","q":-800,"p":10.05,"v":0},{"d":"2024-08-22","q":800,"p":9.15,"v":0},{"d":"2024-08-30","q":1000,"p":9.24,"v":0},{"d":"2024-09-30","q":-800,"p":10.47,"v":0},{"d":"2024-10-09","q":-800,"p":11.41,"v":0},{"d":"2024-10-11","q":-1000,"p":10.76,"v":0},{"d":"2024-10-15","q":-800,"p":12.51,"v":0},{"d":"2024-11-08","q":-800,"p":14,"v":0},{"d":"2024-11-14","q":600,"p":12.9,"v":0},{"d":"2024-12-06","q":600,"p":13.7,"v":0},{"d":"2024-12-17","q":600,"p":12.5,"v":0},{"d":"2025-01-10","q":400,"p":11.01,"v":0},{"d":"2025-01-14","q":400,"p":11.29,"v":0},{"d":"2025-02-10","q":-400,"p":12.64,"v":0},{"d":"2025-02-26","q":800,"p":12.385,"v":0},{"d":"2025-03-11","q":-400,"p":13.1,"v":0},{"d":"2025-03-26","q":400,"p":12.4,"v":0},{"d":"2025-03-31","q":400,"p":11.95,"v":0},{"d":"2025-04-07","q":800,"p":10.95,"v":0},{"d":"2025-04-09","q":-600,"p":12.18,"v":0},{"d":"2025-04-10","q":-600,"p":12.41,"v":0},{"d":"2025-04-17","q":-400,"p":12.2,"v":0},{"d":"2025-06-19","q":-600,"p":16.65,"v":0},{"d":"2025-06-20","q":-800,"p":18.33,"v":0},{"d":"2025-06-23","q":-800,"p":20.12,"v":0},{"d":"2025-06-25","q":-600,"p":22.3,"v":0},{"d":"2025-06-27","q":-400,"p":26.1,"v":0},{"d":"2025-07-03","q":-800,"p":30.15,"v":0},{"d":"2025-08-01","q":-600,"p":32.65,"v":0},{"d":"2025-08-05","q":-100,"p":42.3,"v":0},{"d":"2025-08-07","q":-200,"p":51.6,"v":0},{"d":"2025-09-01","q":-100,"p":73,"v":0},{"d":"2025-09-04","q":100,"p":59.5,"v":0},{"d":"2025-11-07","q":200,"p":48.92,"v":0},{"d":"2026-01-20","q":200,"p":47.28,"v":0},{"d":"2026-03-02","q":-200,"p":48.97,"v":0},{"d":"2026-03-05","q":200,"p":46.19,"v":0},{"d":"2026-03-19","q":200,"p":41.5,"v":0},{"d":"2026-03-23","q":300,"p":36.99,"v":0},{"d":"2026-03-25","q":-200,"p":42.98,"v":0},{"d":"2026-05-06","q":200,"p":38,"v":0},{"d":"2026-05-12","q":200,"p":41,"v":0},{"d":"2026-06-12","q":200,"p":32,"v":0},{"d":"2026-07-01","q":300,"p":28.6,"v":0},{"d":"2024-11-01","q":1000,"p":5,"v":0},{"d":"2024-12-27","q":1000,"p":4.25,"v":0},{"d":"2025-06-24","q":1000,"p":5,"v":0},{"d":"2025-08-01","q":-1000,"p":5.4,"v":0},{"d":"2026-02-09","q":-1000,"p":6,"v":0},{"d":"2026-04-01","q":-800,"p":6.86,"v":0},{"d":"2025-01-07","q":1000,"p":8.98,"v":0},{"d":"2025-02-27","q":-500,"p":10.5,"v":0},{"d":"2025-03-21","q":-400,"p":11,"v":0},{"d":"2025-04-02","q":500,"p":10,"v":0},{"d":"2025-04-07","q":600,"p":8.77,"v":0},{"d":"2025-04-10","q":600,"p":9.03,"v":0},{"d":"2025-04-24","q":-400,"p":9.1,"v":0},{"d":"2025-05-20","q":-400,"p":10,"v":0},{"d":"2025-07-02","q":-500,"p":10.7,"v":0},{"d":"2026-04-10","q":500,"p":13.5,"v":0},{"d":"2026-06-01","q":500,"p":11,"v":0}]},{"name":"TOPRAYSOLAR","code":null,"section":"S SHARES","currency":"CNY","market":"A股(深)","latest_price":3.79,"txns":[{"d":null,"q":3000,"p":3.13,"v":0},{"d":"2024-01-25","q":1200,"p":3.95,"v":0},{"d":"2024-01-30","q":1200,"p":3.85,"v":0},{"d":"2024-01-31","q":1200,"p":3.6,"v":0},{"d":"2024-02-02","q":1200,"p":3.4,"v":0},{"d":"2024-02-20","q":1000,"p":3.6,"v":0},{"d":"2024-02-26","q":-1000,"p":3.8,"v":0},{"d":"2024-04-12","q":-1200,"p":3.75,"v":0},{"d":"2024-05-23","q":-1200,"p":3.9,"v":0},{"d":"2024-06-05","q":1000,"p":3.41,"v":0},{"d":"2024-06-21","q":2000,"p":2.99,"v":0},{"d":"2024-10-09","q":-2000,"p":3.67,"v":0},{"d":"2024-12-06","q":-2000,"p":4.05,"v":0},{"d":"2025-02-17","q":2000,"p":3.55,"v":0},{"d":"2025-07-10","q":-1000,"p":4.47,"v":0},{"d":"2025-07-22","q":2000,"p":3.9,"v":0},{"d":"2025-11-12","q":-2000,"p":4.55,"v":0},{"d":"2026-01-27","q":-2000,"p":6.4,"v":0},{"d":"2026-03-19","q":1000,"p":6,"v":0},{"d":"2026-05-06","q":2000,"p":5.594,"v":0}]},{"name":"威孚高科000581","code":"000581","section":"S SHARES","currency":"CNY","market":"A股(深)","latest_price":17.96,"txns":[{"d":null,"q":400,"p":11.9,"v":0},{"d":"2024-01-08","q":300,"p":15,"v":0},{"d":"2024-01-26","q":-200,"p":16.2,"v":0},{"d":"2024-02-07","q":-200,"p":17.22,"v":0},{"d":"2024-03-28","q":300,"p":16.95,"v":0},{"d":"2024-12-25","q":-300,"p":18.9,"v":0},{"d":"2025-03-11","q":-200,"p":27.3,"v":0},{"d":"2025-04-07","q":200,"p":18.7,"v":0},{"d":"2025-04-09","q":300,"p":17.9,"v":0},{"d":"2025-07-11","q":300,"p":19.2,"v":0},{"d":"2025-08-28","q":-300,"p":22.3,"v":0},{"d":"2025-10-27","q":300,"p":21.08,"v":0},{"d":"2026-02-25","q":-300,"p":22.91,"v":0},{"d":"2026-04-01","q":400,"p":20.7,"v":0}]},{"name":"金新农002548","code":"002548","section":"S SHARES","currency":"CNY","market":"A股(深)","latest_price":4.05,"txns":[{"d":null,"q":200,"p":-9.5,"v":0},{"d":"2024-01-08","q":800,"p":5.15,"v":0},{"d":"2024-01-25","q":1200,"p":4.66,"v":0},{"d":"2024-01-29","q":800,"p":4.95,"v":0},{"d":"2024-02-01","q":1200,"p":4.53,"v":0},{"d":"2024-02-05","q":1200,"p":3.8,"v":0},{"d":"2024-02-21","q":-1000,"p":4.4,"v":0},{"d":"2024-03-05","q":1000,"p":4.15,"v":0},{"d":"2024-03-20","q":-1200,"p":4.85,"v":0},{"d":"2024-03-28","q":-1200,"p":4.95,"v":0},{"d":"2024-04-16","q":1000,"p":3.9,"v":0},{"d":"2024-05-08","q":-1000,"p":4.6,"v":0},{"d":"2024-05-23","q":-1000,"p":4.8,"v":0},{"d":"2024-07-09","q":2000,"p":3.7,"v":0},{"d":"2024-12-11","q":-2000,"p":4.58,"v":0},{"d":"2025-03-12","q":1000,"p":3.9,"v":0},{"d":"2025-08-18","q":-1000,"p":4.83,"v":0},{"d":"2025-11-13","q":-1000,"p":5.656,"v":0},{"d":"2026-02-05","q":-800,"p":6.52,"v":0},{"d":"2026-03-30","q":2000,"p":5.494,"v":0}]},{"name":"中国长城000066","code":"000066","section":"S SHARES","currency":"CNY","market":"A股(深)","latest_price":11.68,"txns":[{"d":null,"q":1200,"p":10.37,"v":0},{"d":"2024-03-28","q":600,"p":9.9,"v":0},{"d":"2024-04-15","q":600,"p":9.2,"v":0},{"d":"2024-04-22","q":600,"p":9.1,"v":0},{"d":"2024-07-05","q":600,"p":8.4,"v":0},{"d":"2024-09-27","q":-800,"p":9.35,"v":0},{"d":"2024-10-08","q":-800,"p":11.22,"v":0},{"d":"2024-10-30","q":-600,"p":14.4,"v":0},{"d":"2024-11-01","q":-400,"p":17.44,"v":0},{"d":"2024-11-04","q":-600,"p":16.15,"v":0},{"d":"2024-12-25","q":400,"p":15.25,"v":0},{"d":"2024-12-27","q":600,"p":15.7,"v":0},{"d":"2025-01-20","q":800,"p":13.93,"v":0},{"d":"2025-02-10","q":-400,"p":16.1,"v":0},{"d":"2025-03-11","q":600,"p":15.84,"v":0},{"d":"2025-07-15","q":1000,"p":15.04,"v":0},{"d":"2025-08-18","q":-400,"p":18.14,"v":0},{"d":"2025-09-03","q":400,"p":16.6,"v":0},{"d":"2025-10-14","q":400,"p":17.1,"v":0},{"d":"2025-11-20","q":400,"p":15.6,"v":0},{"d":"2025-12-08","q":400,"p":14.9,"v":0},{"d":"2026-01-16","q":-400,"p":15.99,"v":0},{"d":"2026-01-22","q":-400,"p":19,"v":0},{"d":"2026-01-29","q":400,"p":16.49,"v":0},{"d":"2026-03-02","q":400,"p":16.6,"v":0},{"d":"2026-03-23","q":800,"p":14.7,"v":0},{"d":"2026-03-25","q":400,"p":15,"v":0},{"d":"2026-04-15","q":-400,"p":16,"v":0},{"d":"2026-04-24","q":-400,"p":16.9,"v":0},{"d":"2026-04-28","q":-400,"p":17.9,"v":0},{"d":"2026-04-30","q":-1200,"p":19.15,"v":0},{"d":"2026-05-06","q":-400,"p":21.74,"v":0},{"d":"2026-05-12","q":-400,"p":25.2,"v":0},{"d":"2026-05-15","q":400,"p":20.45,"v":0},{"d":"2026-06-03","q":400,"p":18.09,"v":0},{"d":"2026-06-25","q":-300,"p":20,"v":0},{"d":"2026-06-26","q":-300,"p":18.9,"v":0},{"d":null,"q":3400,"p":12.2,"v":0},{"d":"2024-04-03","q":-600,"p":11.33,"v":0},{"d":"2024-05-20","q":800,"p":11,"v":0},{"d":"2024-06-05","q":800,"p":9.9,"v":0},{"d":"2024-10-23","q":800,"p":9.4,"v":0},{"d":"2024-11-15","q":-1000,"p":10,"v":0},{"d":"2025-02-28","q":800,"p":8.9,"v":0},{"d":"2025-08-07","q":-1000,"p":9.1,"v":0},{"d":"2025-12-30","q":-800,"p":12.01,"v":0},{"d":"2026-01-09","q":-800,"p":11.5,"v":0},{"d":"2026-01-22","q":-800,"p":13.2,"v":0},{"d":"2026-02-04","q":-800,"p":14,"v":0},{"d":"2026-02-12","q":-600,"p":15.19,"v":0}]},{"name":"京东方A 000725","code":"000725","section":"S SHARES","currency":"CNY","market":"A股(深)","latest_price":8.38,"txns":[{"d":"2025-02-27","q":1000,"p":4.38,"v":0},{"d":"2025-03-06","q":1000,"p":4.46,"v":0},{"d":"2025-03-14","q":2000,"p":4.36,"v":0},{"d":"2025-04-14","q":2000,"p":3.85,"v":0},{"d":"2025-10-13","q":2000,"p":4.06,"v":0},{"d":"2025-12-05","q":-1200,"p":4.1,"v":0},{"d":"2025-12-16","q":-2000,"p":4.15,"v":0},{"d":"2025-12-23","q":-1200,"p":4.04,"v":0},{"d":"2026-01-06","q":-1200,"p":4.5,"v":0},{"d":"2026-02-03","q":-1000,"p":4.3,"v":0},{"d":"2026-03-31","q":1000,"p":3.96,"v":0},{"d":"2026-05-19","q":-1200,"p":4.3,"v":0},{"d":"2026-05-22","q":-600,"p":5.12,"v":0},{"d":"2026-05-28","q":-400,"p":5.6,"v":0}]},{"name":"中航西飞 000768","code":"000768","section":"S SHARES","currency":"CNY","market":"A股(深)","latest_price":20.99,"txns":[{"d":"2026-06-25","q":200,"p":20.1,"v":0},{"d":"2026-07-02","q":200,"p":20.5,"v":0}]},{"name":"小米","code":"01810","section":"H SHARES","currency":"HKD","market":"港股","latest_price":13.54,"txns":[{"d":null,"q":1000,"p":12.23,"v":0},{"d":"2024-01-11","q":800,"p":14.52,"v":0},{"d":"2024-01-17","q":2000,"p":13,"v":0},{"d":"2024-01-30","q":600,"p":12.91,"v":0},{"d":"2024-01-31","q":600,"p":12.29,"v":0},{"d":"2024-02-16","q":-600,"p":13,"v":0},{"d":"2024-03-05","q":400,"p":12.79,"v":0},{"d":"2024-03-12","q":-800,"p":14.61,"v":0},{"d":"2024-04-02","q":-800,"p":16.61,"v":0},{"d":"2024-04-17","q":-400,"p":16,"v":0},{"d":"2024-04-26","q":-1000,"p":17.15,"v":0},{"d":"2024-05-10","q":-400,"p":19.4,"v":0},{"d":"2024-06-14","q":400,"p":17.3,"v":0},{"d":"2024-06-27","q":600,"p":16.6,"v":0},{"d":"2024-07-24","q":400,"p":16.7,"v":0},{"d":"2024-08-05","q":400,"p":15.6,"v":0},{"d":"2024-08-15","q":-400,"p":17.2,"v":0},{"d":"2024-08-21","q":-600,"p":17.4,"v":0},{"d":"2024-08-22","q":-400,"p":19,"v":0},{"d":"2024-09-26","q":-600,"p":24,"v":0},{"d":"2024-11-08","q":-200,"p":28.3,"v":0},{"d":"2024-12-11","q":-400,"p":30.2,"v":0},{"d":"2025-11-23","q":200,"p":47,"v":0},{"d":"2025-11-12","q":200,"p":43.79,"v":0},{"d":"2026-01-23","q":200,"p":36,"v":0},{"d":"2026-03-02","q":800,"p":33.2,"v":0},{"d":"2026-04-09","q":400,"p":31.59,"v":0},{"d":"2026-06-02","q":400,"p":28.89,"v":0},{"d":"2026-06-26","q":800,"p":21.58,"v":0},{"d":null,"q":1650,"p":8.28,"v":2.3},{"d":"2024-01-09","q":-500,"p":8,"v":2.3},{"d":"2024-01-31","q":-500,"p":8.22,"v":2.3},{"d":"2024-03-28","q":500,"p":8.2,"v":2.3},{"d":"2024-04-22","q":-500,"p":9.04,"v":2.3},{"d":"2024-04-30","q":-500,"p":9.94,"v":2.3},{"d":"2024-06-04","q":-100,"p":14,"v":2.3},{"d":"2024-09-16","q":500,"p":10.4,"v":2.3},{"d":"2024-10-02","q":500,"p":13,"v":2.3},{"d":"2024-11-07","q":-1000,"p":12.05,"v":1.73},{"d":"2025-03-14","q":1000,"p":12,"v":1.73},{"d":"2025-03-24","q":1000,"p":12.5,"v":1.73},{"d":"2025-05-12","q":-500,"p":12.82,"v":1.73},{"d":"2025-05-20","q":-500,"p":14.6,"v":1.73},{"d":"2025-10-03","q":500,"p":12,"v":0},{"d":"2025-10-14","q":500,"p":12.4,"v":0},{"d":"2025-11-07","q":-500,"p":14.1,"v":0},{"d":"2026-12-08","q":-500,"p":13.7,"v":0}]},{"name":"CNOOC","code":"00883","section":"H SHARES","currency":"HKD","market":"港股","latest_price":94.1,"txns":[{"d":null,"q":2000,"p":12.33,"v":0},{"d":"2024-01-12","q":-1000,"p":13.6,"v":0},{"d":"2024-01-26","q":-1000,"p":14.76,"v":0},{"d":null,"q":1200,"p":79.1,"v":0},{"d":"2024-01-17","q":100,"p":66,"v":0},{"d":"2024-01-24","q":-100,"p":71,"v":0},{"d":"2024-02-06","q":-100,"p":75,"v":0},{"d":"2024-02-08","q":100,"p":70,"v":0},{"d":"2024-02-26","q":-200,"p":73.8,"v":0},{"d":"2024-03-05","q":100,"p":69.9,"v":0},{"d":"2024-03-06","q":100,"p":72,"v":0},{"d":"2024-04-05","q":-200,"p":69.6,"v":0},{"d":"2024-04-10","q":-200,"p":74,"v":0},{"d":"2024-04-17","q":100,"p":68,"v":0},{"d":"2024-04-23","q":100,"p":69.5,"v":0},{"d":"2024-04-25","q":-200,"p":73,"v":0},{"d":"2024-05-03","q":-200,"p":78.6,"v":0},{"d":"2024-05-17","q":-100,"p":84.5,"v":0},{"d":"2024-05-23","q":100,"p":79,"v":0},{"d":"2024-07-08","q":-200,"p":71.5,"v":0},{"d":"2024-07-09","q":-100,"p":72.6,"v":0},{"d":"2024-09-27","q":-100,"p":101,"v":0},{"d":"2024-10-25","q":100,"p":95.7,"v":0},{"d":"2024-11-05","q":100,"p":97.5,"v":0},{"d":"2024-11-29","q":100,"p":83.5,"v":0},{"d":"2024-12-13","q":-100,"p":86.6,"v":0},{"d":"2024-12-16","q":-100,"p":84,"v":0},{"d":"2025-01-03","q":200,"p":83,"v":0},{"d":"2025-02-03","q":-200,"p":91.8,"v":0},{"d":"2025-02-13","q":-100,"p":120.9,"v":0},{"d":"2025-04-07","q":100,"p":104.95,"v":0},{"d":"2025-09-01","q":-100,"p":136,"v":0},{"d":"2026-03-20","q":200,"p":124,"v":0},{"d":"2026-04-01","q":100,"p":121.96,"v":0},{"d":"2026-06-30","q":100,"p":92.6,"v":0}]},{"name":"Tencent","code":"00700","section":"H SHARES","currency":"HKD","market":"港股","latest_price":137.7,"txns":[{"d":null,"q":100,"p":255,"v":0},{"d":"2024-01-19","q":100,"p":269,"v":0},{"d":"2024-02-15","q":-100,"p":285.4,"v":0},{"d":"2024-03-06","q":100,"p":276,"v":0},{"d":"2024-03-21","q":-100,"p":296.2,"v":0},{"d":"2024-04-23","q":-100,"p":331.7,"v":0},{"d":null,"q":460,"p":90,"v":0},{"d":null,"q":400,"p":100.5,"v":0},{"d":"2024-01-11","q":60,"p":86.9,"v":0},{"d":"2024-01-17","q":80,"p":76.4,"v":0},{"d":"2024-01-17","q":200,"p":75.2,"v":0},{"d":"2024-01-22","q":80,"p":69.1,"v":0},{"d":"2024-01-24","q":-100,"p":76,"v":0},{"d":"2024-01-24","q":-80,"p":80,"v":0},{"d":"2024-01-26","q":80,"p":75,"v":0},{"d":"2024-01-26","q":80,"p":73.7,"v":0},{"d":"2024-02-09","q":-60,"p":75,"v":0},{"d":"2024-02-16","q":-80,"p":80,"v":0},{"d":"2024-02-23","q":-100,"p":80.4,"v":0},{"d":"2024-02-29","q":80,"p":73.7,"v":0},{"d":"2024-03-05","q":-80,"p":81,"v":0},{"d":"2024-03-07","q":-80,"p":85,"v":0},{"d":"2024-03-11","q":-100,"p":92.1,"v":0},{"d":"2024-03-12","q":-80,"p":99,"v":0},{"d":"2024-03-13","q":-200,"p":103,"v":0},{"d":"2024-03-18","q":80,"p":95,"v":0},{"d":"2024-03-25","q":80,"p":87,"v":0},{"d":"2024-03-28","q":-60,"p":88,"v":0},{"d":"2024-04-10","q":-80,"p":95,"v":0},{"d":"2024-04-16","q":60,"p":88,"v":0},{"d":"2024-04-23","q":80,"p":90,"v":0},{"d":"2024-04-24","q":-80,"p":96,"v":0},{"d":"2024-04-29","q":-80,"p":107,"v":0},{"d":"2024-05-03","q":-200,"p":114.1,"v":0},{"d":"2024-05-06","q":-100,"p":113,"v":0},{"d":"2024-05-17","q":-120,"p":128,"v":0},{"d":"2024-05-21","q":60,"p":120,"v":0},{"d":"2024-05-24","q":60,"p":106,"v":0},{"d":"2024-05-31","q":-60,"p":115,"v":0},{"d":"2024-06-19","q":-80,"p":136.1,"v":0},{"d":"2024-07-04","q":60,"p":125,"v":0},{"d":"2024-07-15","q":-60,"p":124.9,"v":0},{"d":"2024-07-16","q":-80,"p":125.5,"v":0},{"d":"2024-08-05","q":60,"p":123.5,"v":0},{"d":null,"q":100,"p":109.95,"v":0},{"d":"2024-09-05","q":-60,"p":120,"v":0},{"d":"2024-09-26","q":-60,"p":147.1,"v":0},{"d":"2024-09-27","q":-40,"p":164,"v":0},{"d":"2024-10-02","q":-20,"p":225.2,"v":0},{"d":"2024-10-10","q":40,"p":179,"v":0},{"d":"2024-10-22","q":40,"p":158,"v":0},{"d":"2024-10-30","q":-40,"p":169,"v":0},{"d":"2024-11-15","q":60,"p":147,"v":0},{"d":"2024-12-03","q":-40,"p":157,"v":0},{"d":"2024-12-10","q":-20,"p":170.2,"v":0},{"d":"2025-01-20","q":100,"p":137,"v":0},{"d":"2025-02-07","q":-40,"p":146.1,"v":0},{"d":"2025-02-13","q":-40,"p":158,"v":0},{"d":"2025-02-21","q":-40,"p":178,"v":0},{"d":"2025-02-25","q":40,"p":164,"v":0},{"d":"2025-02-28","q":40,"p":156,"v":0},{"d":"2025-02-21","q":-40,"p":188,"v":0},{"d":"2025-03-12","q":40,"p":176,"v":0},{"d":"2025-03-17","q":80,"p":166,"v":0},{"d":"2025-04-02","q":60,"p":149.9,"v":0},{"d":"2025-04-03","q":80,"p":148.2,"v":0},{"d":"2025-04-07","q":80,"p":128.4,"v":0},{"d":"2025-04-08","q":120,"p":122,"v":0},{"d":"2025-04-24","q":-40,"p":132,"v":0},{"d":"2025-05-26","q":-40,"p":152,"v":0},{"d":"2025-06-06","q":40,"p":144.9,"v":0},{"d":"2025-06-11","q":-40,"p":166,"v":0},{"d":"2025-07-02","q":-120,"p":163,"v":0},{"d":"2025-07-15","q":-60,"p":181,"v":0},{"d":"2025-07-17","q":-60,"p":196,"v":0},{"d":"2025-08-11","q":40,"p":183,"v":0},{"d":"2025-09-12","q":-60,"p":204.2,"v":0},{"d":"2025-09-17","q":-40,"p":216,"v":0},{"d":"2025-10-09","q":-80,"p":233,"v":0},{"d":"2025-12-29","q":40,"p":195,"v":0},{"d":"2026-01-13","q":-40,"p":245,"v":0},{"d":"2026-01-29","q":-20,"p":276.2,"v":0},{"d":"2026-02-05","q":-20,"p":241.1,"v":0},{"d":"2026-03-04","q":40,"p":204,"v":0},{"d":"2026-03-17","q":40,"p":208,"v":0},{"d":"2026-03-23","q":100,"p":182,"v":0},{"d":"2026-04-10","q":40,"p":186,"v":0},{"d":"2026-05-04","q":60,"p":172,"v":0},{"d":"2026-05-15","q":100,"p":154,"v":0},{"d":"2026-05-21","q":60,"p":138,"v":0},{"d":"2026-06-23","q":60,"p":124.7,"v":0}]},{"name":"绿地香港","code":"00337","section":"H SHARES","currency":"HKD","market":"港股","latest_price":108.9,"txns":[{"d":"2023-11-23","q":20000,"p":0.335,"v":0},{"d":null,"q":20000,"p":0.315,"v":0},{"d":null,"q":30000,"p":0.29,"v":0},{"d":"2023-12-11","q":-35000,"p":0.28,"v":0},{"d":"2024-01-25","q":-15000,"p":0.308,"v":0},{"d":"2024-03-14","q":20000,"p":0.275,"v":0},{"d":"2024-04-09","q":20000,"p":0.2195,"v":0},{"d":"2024-04-25","q":5000,"p":0.193,"v":0},{"d":"2024-05-10","q":-20000,"p":0.2435,"v":0},{"d":"2024-05-16","q":-20000,"p":0.2935,"v":0},{"d":"2024-05-23","q":10000,"p":0.3025,"v":0},{"d":"2024-08-09","q":40000,"p":0.181,"v":0},{"d":"2024-09-25","q":45000,"p":0.152,"v":0},{"d":"2024-09-27","q":-30000,"p":0.196,"v":0},{"d":"2024-09-30","q":-30000,"p":0.284,"v":0},{"d":"2024-10-02","q":-30000,"p":0.3785,"v":0},{"d":"2024-10-02","q":-15000,"p":0.433,"v":0},{"d":"2024-10-02","q":-10000,"p":0.627,"v":0},{"d":"2024-10-08","q":20000,"p":0.3815,"v":0},{"d":"2024-10-30","q":16000,"p":0.317,"v":0},{"d":"2025-01-21","q":19000,"p":0.2965,"v":0},{"d":"2025-02-12","q":20000,"p":0.2765,"v":0},{"d":"2025-02-26","q":20000,"p":0.2414,"v":0},{"d":"2025-04-17","q":40000,"p":0.1788,"v":0},{"d":"2025-07-10","q":-20000,"p":0.227,"v":0},{"d":"2025-07-11","q":-20000,"p":0.2935,"v":0},{"d":"2025-07-14","q":-40000,"p":0.364,"v":0},{"d":"2025-07-15","q":-20000,"p":0.3285,"v":0},{"d":"2025-07-18","q":20000,"p":0.2664,"v":0},{"d":"2025-08-07","q":26000,"p":0.24,"v":0},{"d":"2025-11-06","q":30000,"p":0.213,"v":0},{"d":"2026-12-10","q":40000,"p":0.201,"v":0},{"d":"2026-01-05","q":-30000,"p":0.233,"v":0},{"d":"2026-01-09","q":-30000,"p":0.228,"v":0},{"d":"2026-01-29","q":-30000,"p":0.247,"v":0},{"d":"2026-02-09","q":30000,"p":0.229,"v":0},{"d":"2026-03-17","q":-30000,"p":0.244,"v":0},{"d":"2026-03-18","q":30000,"p":0.223,"v":0},{"d":"2026-05-04","q":30000,"p":0.195,"v":0},{"d":"2024-01-15","q":100,"p":89.8,"v":0},{"d":"2024-01-22","q":50,"p":86.9,"v":0},{"d":"2024-01-22","q":50,"p":82.3,"v":0},{"d":"2024-01-22","q":50,"p":74.5,"v":0},{"d":"2024-01-23","q":-50,"p":84,"v":0},{"d":"2024-01-24","q":-50,"p":91.5,"v":0},{"d":"2024-02-07","q":50,"p":86,"v":0},{"d":"2024-02-22","q":50,"p":91.9,"v":0},{"d":"2024-02-28","q":-50,"p":99,"v":0},{"d":"2024-03-05","q":-50,"p":112,"v":0},{"d":"2024-03-06","q":-100,"p":142.5,"v":0},{"d":"2024-03-06","q":-50,"p":168,"v":0},{"d":"2024-04-16","q":50,"p":165.9,"v":0},{"d":"2024-04-24","q":100,"p":173.5,"v":0},{"d":"2024-05-14","q":50,"p":176,"v":0},{"d":"2024-07-05","q":50,"p":130.5,"v":0},{"d":"2024-07-09","q":100,"p":106.1,"v":0},{"d":"2024-07-09","q":200,"p":107,"v":0},{"d":"2024-07-11","q":100,"p":111.6,"v":0},{"d":"2024-07-12","q":-200,"p":113.6,"v":0},{"d":"2024-08-08","q":100,"p":96.9,"v":0},{"d":"2024-08-26","q":100,"p":89,"v":0},{"d":"2024-09-25","q":100,"p":89.3,"v":0},{"d":"2024-10-02","q":100,"p":111,"v":0},{"d":"2024-10-09","q":50,"p":92,"v":0},{"d":"2024-10-10","q":50,"p":97,"v":0},{"d":"2024-10-18","q":200,"p":88,"v":0},{"d":"2024-10-22","q":-50,"p":114.4,"v":0},{"d":"2024-10-22","q":-50,"p":105,"v":0},{"d":"2024-10-23","q":-100,"p":114,"v":0},{"d":"2024-10-29","q":100,"p":98.95,"v":0},{"d":"2024-11-13","q":100,"p":106.9,"v":0},{"d":"2024-11-22","q":100,"p":91.9,"v":0},{"d":"2024-12-11","q":-100,"p":104,"v":0},{"d":"2024-12-13","q":200,"p":94.66,"v":0},{"d":"2024-12-30","q":400,"p":64.3,"v":0},{"d":"2025-01-02","q":200,"p":57,"v":0},{"d":"2025-02-07","q":-100,"p":84.6,"v":0},{"d":"2025-02-13","q":200,"p":77,"v":0},{"d":"2025-02-19","q":-100,"p":98,"v":0},{"d":"2025-04-25","q":100,"p":85.72,"v":0},{"d":"2025-04-03","q":200,"p":82.46,"v":0},{"d":"2025-04-07","q":100,"p":70,"v":0},{"d":"2025-04-07","q":200,"p":58,"v":0},{"d":"2025-04-23","q":-200,"p":84,"v":0},{"d":"2025-06-16","q":200,"p":79,"v":0},{"d":"2025-08-12","q":-100,"p":93,"v":0},{"d":"2025-09-04","q":-100,"p":110.05,"v":0},{"d":"2025-09-12","q":-100,"p":115.05,"v":0},{"d":"2025-09-17","q":-200,"p":128.3,"v":0},{"d":"2025-09-30","q":-200,"p":151,"v":0},{"d":"2025-10-09","q":50,"p":145,"v":0},{"d":"2025-10-13","q":50,"p":130,"v":0},{"d":"2025-11-20","q":100,"p":117.95,"v":0},{"d":"2025-12-19","q":200,"p":111.7,"v":0},{"d":"2025-12-30","q":-50,"p":128,"v":0},{"d":"2026-01-19","q":-50,"p":141,"v":0},{"d":"2026-02-13","q":-100,"p":136,"v":0},{"d":"2026-02-24","q":50,"p":128,"v":0},{"d":"2026-03-02","q":50,"p":116,"v":0},{"d":"2026-03-13","q":100,"p":102.93,"v":0},{"d":"2026-03-23","q":200,"p":92,"v":0},{"d":"2026-04-17","q":-50,"p":113,"v":0},{"d":"2026-05-07","q":-50,"p":108,"v":0},{"d":"2026-05-15","q":-100,"p":111.05,"v":0},{"d":"2026-05-21","q":-100,"p":116.05,"v":0},{"d":"2026-05-28","q":50,"p":110,"v":0},{"d":"2026-06-03","q":-100,"p":111.05,"v":0},{"d":"2026-06-11","q":50,"p":106,"v":0},{"d":"2026-06-23","q":100,"p":98,"v":0},{"d":"2026-06-30","q":-100,"p":108.05,"v":0},{"d":"2026-07-02","q":50,"p":96,"v":0},{"d":"2026-07-03","q":-50,"p":108,"v":0}]},{"name":"小鹏汽车","code":"09868","section":"H SHARES","currency":"HKD","market":"港股","latest_price":51.7,"txns":[{"d":"2024-02-20","q":200,"p":34.55,"v":0},{"d":"2024-02-27","q":200,"p":35.95,"v":0},{"d":"2024-03-11","q":200,"p":38,"v":0},{"d":"2024-03-12","q":-200,"p":41,"v":0},{"d":"2024-03-21","q":200,"p":38,"v":0},{"d":"2024-04-08","q":400,"p":28.3,"v":0},{"d":"2024-05-02","q":-300,"p":34.05,"v":0},{"d":"2024-06-12","q":200,"p":29.7,"v":0},{"d":"2024-06-17","q":200,"p":28.5,"v":0},{"d":"2024-07-04","q":-300,"p":32.4,"v":0},{"d":"2024-07-09","q":200,"p":28.8,"v":0},{"d":"2024-07-11","q":-200,"p":31.5,"v":0},{"d":"2024-07-12","q":-200,"p":34.3,"v":0},{"d":"2024-07-29","q":200,"p":32.7,"v":0},{"d":"2024-08-07","q":200,"p":28.3,"v":0},{"d":"2024-08-21","q":300,"p":27,"v":0},{"d":"2024-08-27","q":-200,"p":30,"v":0},{"d":"2024-09-05","q":-200,"p":33,"v":0},{"d":"2024-09-13","q":-300,"p":34.4,"v":0},{"d":"2024-09-24","q":-300,"p":39,"v":0},{"d":"2024-09-27","q":-200,"p":45.4,"v":0},{"d":"2024-09-30","q":-100,"p":51.5,"v":0},{"d":"2024-10-08","q":200,"p":48.6,"v":0},{"d":"2024-10-09","q":-100,"p":49,"v":0},{"d":"2024-10-22","q":200,"p":43,"v":0},{"d":"2024-11-01","q":-100,"p":45,"v":0},{"d":"2024-11-08","q":-100,"p":58,"v":0},{"d":"2024-11-28","q":200,"p":45.4,"v":0},{"d":"2024-12-09","q":-200,"p":49.2,"v":0},{"d":"2024-12-19","q":400,"p":48.8,"v":0},{"d":"2025-01-16","q":-200,"p":53.1,"v":0},{"d":"2025-02-04","q":-100,"p":66,"v":0},{"d":"2025-02-13","q":200,"p":45.4,"v":0},{"d":"2025-02-26","q":-100,"p":82.1,"v":0},{"d":"2025-02-27","q":-100,"p":86,"v":0},{"d":"2025-03-07","q":-200,"p":89.94,"v":0},{"d":"2025-04-03","q":100,"p":81.92,"v":0},{"d":"2025-04-07","q":200,"p":71.8,"v":0},{"d":"2025-04-08","q":400,"p":66.8,"v":0},{"d":"2025-04-11","q":-100,"p":74,"v":0},{"d":"2025-07-15","q":100,"p":68.9,"v":0},{"d":"2025-07-18","q":100,"p":71.9,"v":0},{"d":"2025-08-22","q":-100,"p":90.1,"v":0},{"d":"2025-09-29","q":-100,"p":90,"v":0},{"d":"2025-10-13","q":100,"p":81.9,"v":0},{"d":"2025-11-04","q":-100,"p":88.5,"v":0},{"d":"2025-11-11","q":-100,"p":102.5,"v":0},{"d":"2025-11-18","q":100,"p":85.9,"v":0},{"d":"2025-12-16","q":100,"p":70.9,"v":0},{"d":"2026-01-14","q":100,"p":80.9,"v":0},{"d":"2026-03-02","q":100,"p":66.9,"v":0},{"d":"2026-03-12","q":-100,"p":77.5,"v":0},{"d":"2026-04-01","q":100,"p":66.9,"v":0},{"d":"2026-05-19","q":100,"p":59,"v":0},{"d":"2026-05-29","q":-100,"p":65,"v":0},{"d":"2026-06-02","q":-100,"p":72,"v":0},{"d":"2026-06-25","q":200,"p":48,"v":0}]},{"name":"理想汽车","code":"02015","section":"H SHARES","currency":"HKD","market":"港股","latest_price":47.36,"txns":[{"d":"2024-04-09","q":100,"p":123.1,"v":0},{"d":"2024-04-19","q":100,"p":106.35,"v":0},{"d":"2024-05-06","q":100,"p":118,"v":0},{"d":"2024-05-10","q":100,"p":105.75,"v":0},{"d":"2024-05-20","q":200,"p":99.95,"v":0},{"d":"2024-05-21","q":200,"p":81.8,"v":0},{"d":"2024-06-24","q":100,"p":69.6,"v":0},{"d":"2024-06-28","q":100,"p":71,"v":0},{"d":"2024-07-03","q":-100,"p":75.5,"v":0},{"d":"2024-07-09","q":-100,"p":77.3,"v":0},{"d":"2024-07-17","q":-100,"p":80.3,"v":0},{"d":"2024-08-02","q":100,"p":75,"v":0},{"d":"2024-08-19","q":-100,"p":80.6,"v":0},{"d":"2024-08-29","q":100,"p":70.8,"v":0},{"d":"2024-09-03","q":100,"p":74.8,"v":0},{"d":"2024-07-17","q":-100,"p":80.3,"v":0},{"d":"2024-09-24","q":-100,"p":90,"v":0},{"d":"2024-09-27","q":-100,"p":100,"v":0},{"d":"2024-10-02","q":-100,"p":116.2,"v":0},{"d":"2024-10-08","q":-100,"p":111,"v":0},{"d":"2024-11-15","q":100,"p":87.9,"v":0},{"d":"2024-12-17","q":-200,"p":85.2,"v":0},{"d":"2024-12-19","q":-100,"p":91,"v":0},{"d":"2024-12-27","q":-100,"p":99.3,"v":0},{"d":"2025-01-09","q":100,"p":88,"v":0},{"d":"2025-01-24","q":100,"p":90,"v":0},{"d":"2025-02-05","q":100,"p":91,"v":0},{"d":"2025-02-07","q":-100,"p":100.45,"v":0},{"d":"2025-02-21","q":-100,"p":109.05,"v":0},{"d":"2025-02-27","q":-100,"p":128,"v":0},{"d":"2025-03-07","q":100,"p":114,"v":0},{"d":"2025-03-31","q":100,"p":99.94,"v":0},{"d":"2025-04-07","q":200,"p":87.63,"v":0},{"d":"2025-04-09","q":100,"p":75,"v":0},{"d":"2025-04-23","q":-100,"p":93,"v":0},{"d":"2025-04-25","q":-100,"p":92,"v":0},{"d":"2025-05-12","q":-100,"p":111.2,"v":0},{"d":"2025-06-19","q":100,"p":101.95,"v":0},{"d":"2025-07-04","q":100,"p":104.95,"v":0},{"d":"2025-07-15","q":-100,"p":115.05,"v":0},{"d":"2025-07-30","q":100,"p":105.9,"v":0},{"d":"2025-08-26","q":100,"p":92.9,"v":0},{"d":"2025-09-30","q":100,"p":98,"v":0},{"d":"2025-11-04","q":100,"p":77.7,"v":0},{"d":"2026-12-30","q":100,"p":66,"v":0},{"d":"2026-01-19","q":100,"p":62.9,"v":0},{"d":"2026-02-13","q":-100,"p":72,"v":0},{"d":"2026-03-05","q":100,"p":66.9,"v":0},{"d":"2026-04-29","q":100,"p":68.9,"v":0},{"d":"2026-05-22","q":100,"p":63.9,"v":0},{"d":"2026-06-29","q":200,"p":47,"v":1}]},{"name":"巨涛海洋石油","code":"03303","section":"H SHARES","currency":"HKD","market":"港股","latest_price":0.5,"txns":[{"d":"2024-06-25","q":8000,"p":0.715,"v":0},{"d":"2024-07-10","q":4000,"p":0.59,"v":0},{"d":"2024-09-25","q":30000,"p":0.6115,"v":0},{"d":"2024-10-09","q":-20000,"p":0.6183,"v":0},{"d":"2024-10-30","q":-8000,"p":0.656,"v":0},{"d":"2024-11-04","q":-8000,"p":0.777,"v":0},{"d":"2024-11-08","q":-4000,"p":0.734,"v":0},{"d":"2025-02-12","q":8000,"p":0.664,"v":0},{"d":"2025-02-26","q":20000,"p":0.622,"v":0},{"d":"2025-03-19","q":-10000,"p":0.677,"v":0},{"d":"2025-03-28","q":-10000,"p":0.717,"v":0},{"d":"2025-06-26","q":20000,"p":0.652,"v":0},{"d":"2025-09-19","q":18000,"p":0.542,"v":0},{"d":"2025-10-15","q":2000,"p":0.58,"v":0},{"d":"2026-03-02","q":-18000,"p":0.608,"v":0},{"d":"2026-03-04","q":8000,"p":0.543,"v":0},{"d":"2026-05-08","q":-10000,"p":0.547,"v":0},{"d":"2026-05-15","q":-10000,"p":0.577,"v":0},{"d":"2026-05-28","q":-14000,"p":0.538,"v":0}]},{"name":"华虹半导体","code":"01347","section":"H SHARES","currency":"HKD","market":"港股","latest_price":178,"txns":[{"d":"2024-08-30","q":1000,"p":17.3,"v":0},{"d":"2024-10-21","q":1000,"p":24.2,"v":0},{"d":null,"q":-2000,"p":19.37,"v":0}]},{"name":"龙湖地产","code":"00960","section":"H SHARES","currency":"HKD","market":"港股","latest_price":6.2,"txns":[{"d":"2024-10-07","q":500,"p":16.9,"v":0.35},{"d":"2024-10-08","q":500,"p":13.8,"v":0.35},{"d":"2024-10-23","q":500,"p":12.9,"v":0.35},{"d":"2024-11-27","q":500,"p":10.8,"v":0.35},{"d":"2025-01-20","q":1000,"p":10.095,"v":0.35},{"d":"2025-02-12","q":-500,"p":10.6,"v":0.35},{"d":"2025-04-10","q":1000,"p":9.9,"v":0.11},{"d":"2025-04-25","q":-500,"p":11.4,"v":0.11},{"d":"2025-06-24","q":500,"p":9.48,"v":0.11},{"d":"2025-08-04","q":500,"p":9.9,"v":0.11},{"d":"2025-09-12","q":-500,"p":11.8,"v":0},{"d":"2026-05-28","q":500,"p":7.55,"v":0},{"d":"2026-06-08","q":1000,"p":7.89,"v":0}]},{"name":"中兴通讯","code":"00763","section":"H SHARES","currency":"HKD","market":"港股","latest_price":22.84,"txns":[{"d":"2025-02-21","q":400,"p":29,"v":0.66},{"d":"2025-02-25","q":-200,"p":33.25,"v":0.66},{"d":"2025-03-03","q":200,"p":26.2,"v":0.66},{"d":"2025-03-05","q":200,"p":26.6,"v":0.66},{"d":"2025-03-06","q":200,"p":28,"v":0.66},{"d":"2025-04-02","q":400,"p":23.98,"v":0.66},{"d":"2025-04-08","q":400,"p":20,"v":0},{"d":"2025-07-03","q":-400,"p":23.82,"v":0},{"d":"2025-07-25","q":-200,"p":26,"v":0},{"d":"2025-08-20","q":-200,"p":29.52,"v":0},{"d":"2025-08-22","q":-200,"p":33.5,"v":0},{"d":"2025-08-27","q":-200,"p":35.51,"v":0},{"d":"2025-09-04","q":200,"p":31,"v":0},{"d":"2025-10-09","q":-200,"p":40,"v":0},{"d":"2025-10-14","q":-200,"p":44.5,"v":0},{"d":"2025-10-17","q":200,"p":37.5,"v":0},{"d":"2025-10-31","q":200,"p":34,"v":0},{"d":"2025-11-11","q":200,"p":32,"v":0},{"d":"2025-12-11","q":200,"p":28,"v":0},{"d":"2026-01-06","q":200,"p":28.4,"v":0},{"d":"2026-01-09","q":200,"p":29,"v":0},{"d":"2026-03-09","q":400,"p":24.2,"v":0},{"d":"2026-05-05","q":200,"p":26.2,"v":0},{"d":"2026-05-28","q":-200,"p":28,"v":0},{"d":"2026-06-02","q":-200,"p":26.5,"v":0},{"d":"2026-06-05","q":-400,"p":31.01,"v":0},{"d":"2026-06-08","q":-200,"p":29,"v":0},{"d":"2026-06-11","q":200,"p":26,"v":0},{"d":"2026-06-24","q":200,"p":24,"v":0}]},{"name":"浙商银行","code":"02016","section":"H SHARES","currency":"HKD","market":"港股","latest_price":84.1,"txns":[{"d":"2025-08-29","q":2000,"p":2.674,"v":0},{"d":"2025-09-04","q":100,"p":53.87,"v":0},{"d":"2025-09-11","q":100,"p":51.6,"v":0},{"d":"2025-10-08","q":100,"p":52.67,"v":0},{"d":"2026-03-11","q":200,"p":41.35,"v":0},{"d":"2026-03-26","q":200,"p":35.69,"v":0},{"d":"2026-06-05","q":200,"p":36.49,"v":0},{"d":"2025-09-25","q":100,"p":108.8,"v":0},{"d":"2025-10-17","q":100,"p":103.6,"v":0},{"d":"2025-11-21","q":100,"p":93.6,"v":0},{"d":"2026-01-22","q":100,"p":98.9,"v":0},{"d":"2026-02-04","q":100,"p":90.92,"v":0},{"d":"2026-03-10","q":100,"p":96.57,"v":0},{"d":"2026-04-15","q":-100,"p":108.4,"v":0},{"d":"2026-04-24","q":100,"p":99.9,"v":0},{"d":"2026-06-10","q":100,"p":85.9,"v":0},{"d":"2026-06-25","q":200,"p":77,"v":0}]},{"name":"CICT","code":"00981","section":"H SHARES","currency":"HKD","market":"港股","latest_price":77.6,"txns":[{"d":"2026-03-27","q":500,"p":52.62,"v":0},{"d":"2026-04-30","q":-500,"p":67.66,"v":0}]},{"name":"Capitaland","code":null,"section":"Sin Shares","currency":"SGD","market":"新加坡股票","latest_price":2.49,"txns":[{"d":null,"q":1000,"p":3,"v":0.48},{"d":"2024-04-16","q":3000,"p":2.54,"v":0.36},{"d":"2024-10-07","q":3000,"p":3.08,"v":0.24},{"d":"2025-07-02","q":-2000,"p":2.695,"v":0.12},{"d":"2026-01-12","q":-1500,"p":2.86,"v":0.12},{"d":"2026-02-04","q":-2000,"p":3.075,"v":0.12},{"d":"2026-03-13","q":3000,"p":2.85,"v":0.12}]},{"name":"China Aviation oil","code":null,"section":"Sin Shares","currency":"SGD","market":"新加坡股票","latest_price":1.87,"txns":[{"d":null,"q":16000,"p":0.855,"v":0.0877},{"d":"2024-02-15","q":-6000,"p":0.925,"v":0.0877},{"d":"2024-04-16","q":-4400,"p":0.91,"v":0.0877},{"d":"2024-05-30","q":2000,"p":0.89,"v":0.0372},{"d":"2024-07-01","q":-1800,"p":0.85,"v":0.0372},{"d":"2025-01-27","q":-3000,"p":0.885,"v":0.0372},{"d":"2025-07-29","q":-2000,"p":1.115,"v":null},{"d":"2025-11-28","q":-200,"p":1.5,"v":0},{"d":"2026-01-15","q":-600,"p":1.77,"v":0}]},{"name":"China Everbright water","code":null,"section":"Sin Shares","currency":"SGD","market":"新加坡股票","latest_price":0.225,"txns":[{"d":null,"q":35000,"p":0.22,"v":0.0474},{"d":"2024-05-31","q":-20000,"p":0.2435,"v":0.0375},{"d":"2025-03-07","q":60000,"p":0.2406,"v":0.027},{"d":"2026-03-02","q":30000,"p":0.231,"v":0.0069},{"d":"2026-06-26","q":30000,"p":0.221,"v":0}]},{"name":"Cosco","code":"momo","section":"Sin Shares","currency":"SGD","market":"新加坡股票","latest_price":0.113,"txns":[{"d":null,"q":160000,"p":0.165,"v":0},{"d":"2023-04-14","q":60000,"p":0.18,"v":0},{"d":"2023-11-20","q":120000,"p":0.1313,"v":0},{"d":"2024-01-08","q":-30000,"p":0.172,"v":0},{"d":"2024-01-09","q":-30000,"p":0.168,"v":0},{"d":"2024-01-15","q":6000,"p":0.163,"v":0},{"d":"2024-01-22","q":8000,"p":0.153,"v":0},{"d":"2024-02-01","q":30000,"p":0.138,"v":0},{"d":"2024-02-02","q":16000,"p":0.139,"v":0},{"d":"2024-02-13","q":-16000,"p":0.145,"v":0},{"d":"2024-02-23","q":6000,"p":0.14,"v":0},{"d":"2024-03-08","q":20000,"p":0.137,"v":0},{"d":"2024-03-15","q":-15000,"p":0.145,"v":0},{"d":"2024-04-02","q":-15000,"p":0.152,"v":0},{"d":"2024-02-23","q":10000,"p":0.143,"v":0},{"d":"2024-04-17","q":10000,"p":0.137,"v":0},{"d":"2024-04-19","q":30000,"p":0.133,"v":0},{"d":"2024-05-24","q":-10000,"p":0.147,"v":0},{"d":"2024-05-29","q":-10000,"p":0.154,"v":0},{"d":"2024-05-30","q":-30000,"p":0.161,"v":0},{"d":"2024-05-31","q":-40000,"p":0.155,"v":0},{"d":"2024-06-07","q":-40000,"p":0.164,"v":0},{"d":"2024-07-26","q":20000,"p":0.1525,"v":0},{"d":"2024-08-07","q":10000,"p":0.135,"v":0},{"d":"2024-08-22","q":20000,"p":0.123,"v":0},{"d":"2024-09-23","q":30000,"p":0.129,"v":0},{"d":"2024-09-30","q":-15000,"p":0.138,"v":0},{"d":"2024-11-08","q":-20000,"p":0.141,"v":0},{"d":"2024-12-09","q":-15000,"p":0.137,"v":0},{"d":"2025-01-27","q":-50000,"p":0.135,"v":0},{"d":"2025-02-12","q":20000,"p":0.137,"v":0},{"d":"2025-02-20","q":20000,"p":0.1423,"v":0},{"d":"2025-03-12","q":-20000,"p":0.133,"v":0},{"d":"2025-04-04","q":-20000,"p":0.131,"v":0},{"d":"2025-04-10","q":20000,"p":0.118,"v":0},{"d":"2025-04-15","q":20000,"p":0.1215,"v":0},{"d":"2025-04-25","q":-8000,"p":0.1247,"v":0},{"d":"2025-09-18","q":20000,"p":0.124,"v":0},{"d":"2026-02-09","q":-20000,"p":0.1188,"v":0},{"d":"2026-03-11","q":30000,"p":0.115,"v":0},{"d":"2026-03-19","q":20000,"p":0.1171,"v":0},{"d":"2026-05-07","q":-12000,"p":0.1228,"v":0},{"d":"2026-05-25","q":-10000,"p":0.1177,"v":0},{"d":"2026-05-29","q":-10000,"p":0.1177,"v":0}]},{"name":"Genting","code":null,"section":"Sin Shares","currency":"SGD","market":"新加坡股票","latest_price":0.615,"txns":[{"d":null,"q":10000,"p":0.985,"v":0.1},{"d":"2024-01-17","q":-8000,"p":0.981,"v":0.1},{"d":"2025-11-28","q":6000,"p":0.76,"v":0.02},{"d":"2026-02-26","q":6000,"p":0.725,"v":0.02},{"d":"2026-05-21","q":6000,"p":0.6,"v":0}]},{"name":"Golden Agr","code":null,"section":"Sin Shares","currency":"SGD","market":"新加坡股票","latest_price":0.265,"txns":[{"d":null,"q":12000,"p":0.26,"v":0.02367},{"d":"2025-01-28","q":-10000,"p":0.242,"v":0.01754},{"d":"2025-09-12","q":-6000,"p":0.3,"v":0.0095},{"d":"2026-05-07","q":-5000,"p":0.339,"v":0}]},{"name":"MM2 Asia","code":null,"section":"Sin Shares","currency":"SGD","market":"新加坡股票","latest_price":0.142,"txns":[{"d":null,"q":100000,"p":0.074,"v":0},{"d":null,"q":50000,"p":0.195,"v":0},{"d":"2024-01-19","q":10000,"p":0.174,"v":0},{"d":"2024-01-25","q":10000,"p":0.18,"v":0},{"d":"2024-01-30","q":10000,"p":0.183,"v":0},{"d":"2024-02-06","q":15000,"p":0.17,"v":0},{"d":"2024-02-29","q":15000,"p":0.159,"v":0},{"d":"2024-03-14","q":-15000,"p":0.171,"v":0},{"d":"2024-04-01","q":-15000,"p":0.182,"v":0},{"d":"2024-04-19","q":10000,"p":0.173,"v":0},{"d":"2024-05-16","q":20000,"p":0.164,"v":0},{"d":"2024-05-26","q":-15000,"p":0.172,"v":0},{"d":"2024-06-11","q":15000,"p":0.161,"v":0},{"d":"2024-06-21","q":15000,"p":0.149,"v":0},{"d":"2024-07-01","q":20000,"p":0.137,"v":0},{"d":"2024-07-29","q":20000,"p":0.13,"v":0},{"d":"2024-08-13","q":-40000,"p":0.15,"v":0},{"d":"2024-08-19","q":-14000,"p":0.145,"v":0},{"d":"2024-08-23","q":-20000,"p":0.152,"v":0},{"d":"2024-08-27","q":-20000,"p":0.164,"v":0},{"d":"2024-09-02","q":15000,"p":0.149,"v":0},{"d":"2024-10-02","q":-10000,"p":0.17,"v":0},{"d":"2024-10-04","q":-20000,"p":0.1875,"v":0},{"d":"2024-10-04","q":-10000,"p":0.2,"v":0},{"d":"2024-10-23","q":10000,"p":0.188,"v":0},{"d":"2024-11-11","q":10000,"p":0.154,"v":0},{"d":"2024-11-14","q":10000,"p":0.156,"v":0},{"d":"2024-12-03","q":-6000,"p":0.168,"v":0},{"d":"2024-12-09","q":-10000,"p":0.166,"v":0},{"d":"2024-12-23","q":10000,"p":0.1576,"v":0},{"d":"2025-01-07","q":-10000,"p":0.168,"v":0},{"d":"2025-01-27","q":-15000,"p":0.157,"v":0},{"d":"2025-01-31","q":20000,"p":0.159,"v":0},{"d":"2025-02-11","q":-10000,"p":0.177,"v":0},{"d":"2025-02-12","q":-10000,"p":0.192,"v":0},{"d":"2025-02-20","q":-20000,"p":0.1965,"v":0},{"d":"2025-02-21","q":10000,"p":0.1783,"v":0},{"d":"2025-02-27","q":5000,"p":0.1685,"v":0},{"d":"2025-03-12","q":10000,"p":0.1483,"v":0},{"d":"2025-03-17","q":10000,"p":0.1543,"v":0},{"d":"2025-04-07","q":10000,"p":0.1303,"v":0},{"d":"2025-04-21","q":10000,"p":0.1363,"v":0},{"d":"2025-04-22","q":-10000,"p":0.1457,"v":0},{"d":"2025-05-08","q":20000,"p":0.14,"v":0},{"d":"2025-06-10","q":-8000,"p":0.1477,"v":0},{"d":"2025-06-11","q":-20000,"p":0.1598,"v":0},{"d":"2025-06-12","q":-16000,"p":0.1778,"v":0},{"d":"2025-06-19","q":-12000,"p":0.1988,"v":0},{"d":"2025-06-24","q":12000,"p":0.1753,"v":0},{"d":"2025-07-21","q":6000,"p":0.1805,"v":0},{"d":"2025-08-21","q":8000,"p":0.1803,"v":0},{"d":"2025-10-14","q":16000,"p":0.1702,"v":0},{"d":"2025-11-28","q":20000,"p":0.1635,"v":0},{"d":"2025-12-02","q":18000,"p":0.1632,"v":0},{"d":"2026-01-14","q":-12000,"p":0.1697,"v":0},{"d":"2026-01-20","q":16000,"p":0.1582,"v":0},{"d":"2026-02-19","q":-16000,"p":0.1618,"v":0},{"d":"2026-02-20","q":-18000,"p":0.1698,"v":0},{"d":"2026-03-02","q":-24000,"p":0.1898,"v":0},{"d":"2026-03-03","q":-12000,"p":0.2147,"v":0},{"d":"2026-03-04","q":-10000,"p":0.2175,"v":0},{"d":"2026-03-09","q":-12000,"p":0.2447,"v":0},{"d":"2026-03-18","q":6000,"p":0.2054,"v":0},{"d":"2026-03-23","q":18000,"p":0.2152,"v":0},{"d":"2026-05-21","q":20000,"p":0.1755,"v":0},{"d":"2026-06-10","q":12000,"p":0.1573,"v":0},{"d":"2026-07-02","q":12000,"p":0.1442,"v":0}]},{"name":"Seastrium（Sembcor Marine","code":null,"section":"Sin Shares","currency":"SGD","market":"新加坡股票","latest_price":0.101,"txns":[{"d":null,"q":76000,"p":0.119,"v":0},{"d":"2020-12-16","q":30000,"p":0.148,"v":0},{"d":"2023-04-14","q":60000,"p":0.1185,"v":0},{"d":"2024-01-19","q":5000,"p":0.112,"v":0},{"d":"2024-01-22","q":10000,"p":0.109,"v":0},{"d":"2024-01-31","q":15000,"p":0.101,"v":0},{"d":"2024-02-02","q":60000,"p":0.1015,"v":0},{"d":"2024-02-06","q":20000,"p":0.098,"v":0},{"d":"2024-02-15","q":15000,"p":0.087,"v":0},{"d":"2024-02-20","q":-15000,"p":0.096,"v":0},{"d":"2024-03-18","q":20000,"p":0.084,"v":0},{"d":"2024-03-26","q":60000,"p":0.0825,"v":0},{"d":"2024-05-16","q":30000,"p":0.0805,"v":0},{"d":"2024-05-27","q":-20000,"p":0.085,"v":0},{"d":"2024-05-29","q":-20000,"p":0.093,"v":0},{"d":"2024-06-18","q":12000,"p":0.077,"v":0},{"d":"2024-06-27","q":12000,"p":0.069,"v":0},{"d":"2024-07-03","q":16000,"p":0.0705,"v":0},{"d":"2024-07-09","q":-20000,"p":0.0695,"v":0},{"d":"2024-07-11","q":40000,"p":0.0695,"v":0},{"d":"2024-07-18","q":-20000,"p":0.0735,"v":0},{"d":"2024-07-29","q":-20000,"p":0.08,"v":0},{"d":"2024-07-31","q":-20000,"p":0.0845,"v":0},{"d":"2024-08-13","q":40000,"p":0.071,"v":0},{"d":"2024-08-22","q":-20000,"p":0.074,"v":0},{"d":"2024-09-02","q":-20000,"p":0.077,"v":0},{"d":"2024-09-12","q":-36000,"p":0.0815,"v":0},{"d":"2024-09-20","q":-60000,"p":0.086,"v":0},{"d":"2024-10-07","q":-40000,"p":0.1035,"v":0},{"d":"2025-01-10","q":-60000,"p":0.1085,"v":0},{"d":"2025-01-22","q":-30000,"p":0.111,"v":0},{"d":"2025-02-14","q":-50000,"p":0.127,"v":0},{"d":"2025-04-04","q":8000,"p":0.097,"v":0},{"d":"2025-04-07","q":8000,"p":0.088,"v":0},{"d":"2025-04-22","q":-8000,"p":0.098,"v":0.0003},{"d":"2025-07-15","q":-8000,"p":0.108,"v":0.0003}]},{"name":"SIA","code":null,"section":"Sin Shares","currency":"SGD","market":"新加坡股票","latest_price":4.47,"txns":[{"d":"2026-03-18","q":1000,"p":6.68,"v":0},{"d":"2026-06-03","q":-500,"p":6.98,"v":0},{"d":null,"q":-400,"p":null,"v":0},{"d":"2020-11-30","q":6000,"p":0.72,"v":0.0422},{"d":"2021-04-07","q":8000,"p":0.76,"v":0.0422},{"d":"2023-07-17","q":30000,"p":0.492,"v":0.0164},{"d":"2023-11-29","q":-20000,"p":0.4485,"v":0.0124},{"d":"2024-12-10","q":-10000,"p":0.582,"v":0.009},{"d":"2025-07-02","q":-15000,"p":0.618,"v":0.009},{"d":"2025-10-23","q":15000,"p":0.417,"v":0},{"d":"2026-03-13","q":20000,"p":0.3415,"v":0},{"d":"2020-09-21","q":2000,"p":2.22,"v":0.493},{"d":"2020-10-21","q":2500,"p":2.13,"v":0.493},{"d":null,"q":-1000,"p":2.2,"v":0.493},{"d":"2020-11-17","q":-500,"p":2.31,"v":0.493},{"d":"2020-11-30","q":1000,"p":2.37,"v":0.493},{"d":"2024-01-17","q":-3000,"p":2.37,"v":0.15},{"d":"2025-01-28","q":-500,"p":3.21,"v":0}]},{"name":"Starhub","code":null,"section":"Sin Shares","currency":"SGD","market":"新加坡股票","latest_price":1.04,"txns":[{"d":null,"q":8000,"p":1.09,"v":0.164},{"d":"2021-04-05","q":4000,"p":1.32,"v":0.328},{"d":"2023-04-14","q":6000,"p":1.025,"v":0.214},{"d":"2023-11-30","q":10000,"p":1.084,"v":0.164},{"d":"2024-02-09","q":-6000,"p":1.145,"v":0.164},{"d":"2024-05-17","q":-6000,"p":1.255,"v":0.122},{"d":"2024-08-27","q":2000,"p":1.235,"v":0.092},{"d":"2025-01-28","q":-4000,"p":1.2,"v":0.092},{"d":"2025-08-18","q":2000,"p":1.195,"v":0.06}]},{"name":"Suntec reit","code":null,"section":"Sin Shares","currency":"SGD","market":"新加坡股票","latest_price":1.47,"txns":[{"d":"2023-11-30","q":10000,"p":1.154,"v":0.11201},{"d":"2024-02-27","q":-8000,"p":1.145,"v":0.09335},{"d":"2024-04-23","q":3000,"p":1.1,"v":0.09335},{"d":"2024-10-10","q":-3000,"p":1.27,"v":0.06305},{"d":"2025-02-03","q":10000,"p":1.183,"v":0.03155},{"d":"2025-08-20","q":-6000,"p":1.225,"v":0},{"d":"2025-10-23","q":-5000,"p":1.364,"v":0}]},{"name":"Wilmar","code":null,"section":"Sin Shares","currency":"SGD","market":"新加坡股票","latest_price":3.72,"txns":[{"d":"2024-05-27","q":2000,"p":3.145,"v":0.2},{"d":"2025-04-30","q":2000,"p":3.045,"v":0.04},{"d":"2025-09-30","q":4000,"p":2.848,"v":0},{"d":"2026-01-27","q":-1500,"p":3.47,"v":0},{"d":"2026-03-13","q":-2000,"p":3.765,"v":0},{"d":"2026-06-08","q":1500,"p":3.32,"v":0},{"d":"2026-06-23","q":-1500,"p":3.71,"v":0}]},{"name":"WinkingStudios","code":null,"section":"Sin Shares","currency":"SGD","market":"新加坡股票","latest_price":0.215,"txns":[{"d":"2023-11-17","q":9800,"p":0.2,"v":0},{"d":"2024-01-09","q":-5000,"p":0.21,"v":0},{"d":"2024-07-11","q":-4000,"p":0.27,"v":0},{"d":"2025-03-14","q":2000,"p":0.26,"v":0},{"d":"2025-05-13","q":300,"p":0.23,"v":0},{"d":"2025-08-01","q":4000,"p":0.266,"v":0}]},{"name":"Yangzijiang","code":null,"section":"Sin Shares","currency":"SGD","market":"新加坡股票","latest_price":3.56,"txns":[{"d":"2020-12-16","q":2000,"p":0.95,"v":0},{"d":"2024-02-02","q":-2000,"p":1.65,"v":0},{"d":"2025-02-27","q":900,"p":2.303,"v":0.12},{"d":"2025-03-03","q":900,"p":2.424,"v":0.12},{"d":"2025-03-04","q":1500,"p":2.37,"v":0.12},{"d":"2025-03-13","q":600,"p":2.294,"v":0.12},{"d":"2025-03-21","q":-800,"p":2.446,"v":0.12},{"d":"2025-04-02","q":400,"p":2.33,"v":0.12},{"d":"2025-04-07","q":400,"p":1.886,"v":0.12},{"d":"2025-04-10","q":400,"p":1.986,"v":0.12},{"d":"2025-04-21","q":-400,"p":2.294,"v":0.12},{"d":"2025-04-23","q":400,"p":2.226,"v":0.12},{"d":"2025-06-05","q":-400,"p":2.254,"v":0},{"d":"2025-07-18","q":-600,"p":2.395,"v":0},{"d":"2025-07-28","q":-400,"p":2.574,"v":0},{"d":"2025-08-08","q":-600,"p":2.86,"v":0},{"d":"2025-09-08","q":-500,"p":3.114,"v":0},{"d":"2025-10-27","q":-600,"p":3.5,"v":0},{"d":"2026-01-22","q":500,"p":3.406,"v":0},{"d":"2026-02-20","q":-400,"p":3.673,"v":0},{"d":"2026-02-26","q":-300,"p":3.951,"v":0},{"d":"2026-02-27","q":-500,"p":4.25,"v":0},{"d":"2026-05-20","q":1000,"p":3.83,"v":0},{"d":"2026-06-03","q":500,"p":3.646,"v":0}]},{"name":"Ying li","code":null,"section":"Sin Shares","currency":"SGD","market":"新加坡股票","latest_price":0.026,"txns":[{"d":"2020-12-08","q":25000,"p":0.074,"v":0},{"d":"2021-06-16","q":25000,"p":0.083,"v":0},{"d":"2025-07-10","q":40000,"p":0.0291,"v":0},{"d":"2020-06-30","q":10000,"p":0.096,"v":0}]}]
+</script>
+
+<script>
+/* =====================================================================
+   持仓总账 — data model & app logic
+   ===================================================================== */
+const RAW_DATA = JSON.parse(document.getElementById('stockData').textContent);
+const LS_KEY = 'sharesLedger_v1';
+
+const CURRENCIES = [
+  {key:'CNY', label:'A股', sub:'CNY · 人民币', symbol:'¥'},
+  {key:'HKD', label:'港股', sub:'HKD · 港元', symbol:'HK$'},
+  {key:'SGD', label:'新加坡股票', sub:'SGD · 新元', symbol:'S$'},
+];
+const MARKET_OPTIONS = ['A股(沪)','A股(深)','港股','新加坡股票'];
+const MARKET_TO_CCY = {'A股(沪)':'CNY','A股(深)':'CNY','港股':'HKD','新加坡股票':'SGD'};
+
+let state = {
+  activeTab: 'CNY',
+  search: '',
+};
+
+/* ---------------- local storage layer ---------------- */
+function loadLocal(){
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    if(!raw) return {userTxns:{}, latestOverrides:{}, newStocks:[], priceUpdatedAt:{}, codeOverrides:{}};
+    const parsed = JSON.parse(raw);
+    return Object.assign({userTxns:{}, latestOverrides:{}, newStocks:[], priceUpdatedAt:{}, codeOverrides:{}}, parsed);
+  }catch(e){ return {userTxns:{}, latestOverrides:{}, newStocks:[], priceUpdatedAt:{}, codeOverrides:{}}; }
+}
+function saveLocal(){
+  localStorage.setItem(LS_KEY, JSON.stringify(local));
+}
+let local = loadLocal();
+
+function stockKey(s){ return (s.code && String(s.code).trim()) ? 'code:'+s.code : 'name:'+s.name; }
+function quoteSymbolFor(key, fallbackCode){
+  if(local.codeOverrides[key]!==undefined && local.codeOverrides[key]!=='') return local.codeOverrides[key];
+  return fallbackCode || '';
+}
+
+/* ---------------- build merged stock list ---------------- */
+function buildMergedStocks(){
+  const merged = [];
+  RAW_DATA.forEach(s=>{
+    const key = stockKey(s);
+    const extra = local.userTxns[key] || [];
+    merged.push({
+      name:s.name, code:s.code, market:s.market, currency:s.currency,
+      key, isUser:false,
+      quoteSymbol: quoteSymbolFor(key, s.code),
+      updatedAt: local.priceUpdatedAt[key],
+      latestPrice: (local.latestOverrides[key] !== undefined) ? local.latestOverrides[key] : s.latest_price,
+      txns: s.txns.concat(extra),
+    });
+  });
+  (local.newStocks||[]).forEach(s=>{
+    const key = stockKey(s);
+    const extra = local.userTxns[key] || [];
+    merged.push({
+      name:s.name, code:s.code, market:s.market, currency:MARKET_TO_CCY[s.market],
+      key, isUser:true,
+      quoteSymbol: quoteSymbolFor(key, s.code),
+      updatedAt: local.priceUpdatedAt[key],
+      latestPrice: (local.latestOverrides[key] !== undefined) ? local.latestOverrides[key] : (s.latest_price||null),
+      txns: (s.txns||[]).concat(extra),
+    });
+  });
+  return merged;
+}
+
+/* ---------------- weighted-average cost engine ---------------- */
+function computePosition(stock){
+  // txns already in chronological entry order
+  let qty=0, totalCost=0, realized=0;
+  const ledger = []; // running snapshot after each txn
+  stock.txns.forEach(t=>{
+    const q = t.q;
+    const netPrice = (t.p!=null && t.v!=null) ? (t.p - t.v) : t.p;
+    if(q>0){
+      totalCost += q*netPrice;
+      qty += q;
+    } else {
+      const sellQty = -q;
+      const avg = qty>0 ? totalCost/qty : 0;
+      realized += sellQty*(netPrice-avg);
+      totalCost -= sellQty*avg;
+      qty -= sellQty;
+    }
+    ledger.push({...t, netPrice, qtyAfter:qty, avgCostAfter: qty>1e-9? totalCost/qty : 0});
+  });
+  const avgCost = qty>1e-9 ? totalCost/qty : 0;
+  const latestPrice = stock.latestPrice;
+  const mktValue = (latestPrice!=null) ? qty*latestPrice : null;
+  const unrealized = (mktValue!=null) ? mktValue-totalCost : null;
+  const unrealizedPct = (unrealized!=null && Math.abs(totalCost)>1e-9) ? unrealized/totalCost : null;
+  return {qty, avgCost, totalCost, latestPrice, mktValue, unrealized, unrealizedPct, realized, ledger};
+}
+
+/* ---------------- formatting helpers ---------------- */
+function fmtNum(n, d){
+  if(n===null||n===undefined||isNaN(n)) return '—';
+  d = (d===undefined) ? 2 : d;
+  const opt = {minimumFractionDigits:0, maximumFractionDigits:d};
+  return n.toLocaleString('en-US', opt);
+}
+function fmtQty(n){ return fmtNum(n,0); }
+function fmtPrice(n){
+  if(n===null||n===undefined||isNaN(n)) return '—';
+  const abs = Math.abs(n);
+  const d = abs<1 ? 4 : (abs<100?3:2);
+  return n.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+}
+function fmtMoney(n, ccySymbol){
+  if(n===null||n===undefined||isNaN(n)) return '—';
+  return (ccySymbol||'') + fmtNum(n,0);
+}
+function fmtPct(n){
+  if(n===null||n===undefined||isNaN(n)) return '—';
+  return (n>=0?'+':'') + (n*100).toFixed(1) + '%';
+}
+function gainClass(n){
+  if(n===null||n===undefined||isNaN(n)||n===0) return 'zero';
+  return n>0 ? 'pos':'neg';
+}
+function todayStr(){
+  const d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+
+/* ---------------- live price fetching (experimental, best-effort) ----------------
+   These rely on public quote endpoints that are not official APIs and are not
+   guaranteed to stay available or reachable from every browser/network. When a
+   fetch fails, the app silently keeps the previous price so nothing breaks. */
+function loadScriptOnce(url){
+  return new Promise((resolve, reject)=>{
+    const s = document.createElement('script');
+    s.src = url;
+    s.onload = ()=>{ resolve(); s.remove(); };
+    s.onerror = ()=>{ reject(new Error('script load failed')); s.remove(); };
+    document.body.appendChild(s);
+    setTimeout(()=>{ reject(new Error('timeout')); s.remove(); }, 6000);
+  });
+}
+
+// A股/港股: 腾讯行情接口（qt.gtimg.cn），以 <script> 标签方式加载，不受 CORS 限制。
+function tencentSymbolFor(stock){
+  const sym = (stock.quoteSymbol||'').trim();
+  if(!sym) return null;
+  if(stock.currency==='HKD'){
+    return 'hk' + sym.padStart(5,'0');
+  }
+  if(stock.currency==='CNY'){
+    if(/^[a-zA-Z]/.test(sym)) return sym.toLowerCase(); // already prefixed e.g. sh600519
+    const c = sym.padStart(6,'0');
+    const prefix = (c.charAt(0)==='6') ? 'sh' : 'sz';
+    return prefix + c;
+  }
+  return null;
+}
+async function fetchTencentQuotes(tSymbols){
+  if(tSymbols.length===0) return {};
+  const url = 'https://qt.gtimg.cn/q=' + tSymbols.join(',') + '&_r=' + Date.now();
+  await loadScriptOnce(url);
+  const result = {};
+  tSymbols.forEach(sym=>{
+    const raw = window['v_'+sym];
+    if(raw){
+      const parts = raw.split('~');
+      const price = parseFloat(parts[3]);
+      if(!isNaN(price) && price>0) result[sym] = price;
+    }
+  });
+  return result;
+}
+
+// 新加坡股票: 尝试雅虎财经的公开行情接口（非官方，可能因跨域限制而失败）。
+async function fetchYahooQuote(sgxSymbol){
+  try{
+    const url = 'https://query1.finance.yahoo.com/v8/finance/chart/' + encodeURIComponent(sgxSymbol) + '.SI';
+    const res = await fetch(url, {mode:'cors'});
+    if(!res.ok) return null;
+    const data = await res.json();
+    const price = data && data.chart && data.chart.result && data.chart.result[0] && data.chart.result[0].meta && data.chart.result[0].meta.regularMarketPrice;
+    return (typeof price === 'number' && price>0) ? price : null;
+  }catch(e){ return null; }
+}
+
+// 对一组已解析好 quoteSymbol 的股票尝试刷新最新价，返回 {ok, fail}
+async function refreshPricesFor(stocks){
+  let ok=0, fail=0;
+  const cnHk = stocks.filter(s=> (s.currency==='CNY'||s.currency==='HKD') && s.quoteSymbol);
+  const sg = stocks.filter(s=> s.currency==='SGD' && s.quoteSymbol);
+
+  if(cnHk.length){
+    const symMap = {}; // tencentSymbol -> stock
+    cnHk.forEach(s=>{ const t = tencentSymbolFor(s); if(t) symMap[t]=s; });
+    const tSymbols = Object.keys(symMap);
+    try{
+      const prices = await fetchTencentQuotes(tSymbols);
+      tSymbols.forEach(t=>{
+        const s = symMap[t];
+        if(prices[t]!==undefined){
+          local.latestOverrides[s.key] = prices[t];
+          local.priceUpdatedAt[s.key] = Date.now();
+          ok++;
+        } else fail++;
+      });
+    }catch(e){ fail += tSymbols.length; }
+  }
+
+  for(const s of sg){
+    const price = await fetchYahooQuote(s.quoteSymbol);
+    if(price!==null){
+      local.latestOverrides[s.key] = price;
+      local.priceUpdatedAt[s.key] = Date.now();
+      ok++;
+    } else fail++;
+  }
+
+  saveLocal();
+  return {ok, fail};
+}
+
+document.getElementById('btnRefreshPrices').addEventListener('click', async ()=>{
+  const btn = document.getElementById('btnRefreshPrices');
+  const merged = buildMergedStocks().filter(s=> Math.abs(computePosition(s).qty) > 1e-6 || s.quoteSymbol);
+  const withSymbol = merged.filter(s=>s.quoteSymbol);
+  const withoutSymbol = merged.filter(s=>!s.quoteSymbol);
+  if(withSymbol.length===0){
+    showToast('还没有股票设置「行情代码」，请在个股详情里设置');
+    return;
+  }
+  btn.textContent = '拉取中…';
+  btn.disabled = true;
+  const {ok, fail} = await refreshPricesFor(withSymbol);
+  btn.textContent = '⟳ 刷新最新价';
+  btn.disabled = false;
+  renderAll();
+  let msg = `已更新 ${ok} 只股票的最新价`;
+  if(fail>0) msg += `，${fail} 只拉取失败`;
+  if(withoutSymbol.length>0) msg += `，另有 ${withoutSymbol.length} 只未设置行情代码`;
+  showToast(msg);
+});
+
+
+function renderTabs(){
+  const tabsEl = document.getElementById('tabs');
+  tabsEl.innerHTML = CURRENCIES.map(c=>`
+    <div class="tab ${state.activeTab===c.key?'active':''}" data-ccy="${c.key}">
+      ${c.label}<span class="t-en">${c.sub}</span>
+    </div>`).join('');
+  tabsEl.querySelectorAll('.tab').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      state.activeTab = el.dataset.ccy;
+      renderAll();
+    });
+  });
+}
+
+function renderPanel(){
+  const merged = buildMergedStocks();
+  const ccy = CURRENCIES.find(c=>c.key===state.activeTab);
+  const list = merged.filter(s=>s.currency===ccy.key).map(s=>({stock:s, pos:computePosition(s)}));
+
+  let totalCost=0, totalMkt=0, haveMkt=false, count=0;
+  list.forEach(({pos})=>{
+    if(Math.abs(pos.qty) > 1e-6){
+      count++;
+      totalCost += pos.totalCost;
+      if(pos.mktValue!=null){ totalMkt += pos.mktValue; haveMkt=true; }
+    }
+  });
+  const totalGain = haveMkt ? (totalMkt-totalCost) : null;
+  const totalGainPct = (totalGain!=null && Math.abs(totalCost)>1e-6) ? totalGain/totalCost : null;
+
+  list.sort((a,b)=> (b.pos.mktValue||0) - (a.pos.mktValue||0));
+
+  const filtered = list.filter(({stock})=> matchesQuery(stock, state.search));
+
+  const panel = document.getElementById('tabPanel');
+  const closedCount = filtered.filter(({pos})=>Math.abs(pos.qty)<=1e-6).length;
+
+  panel.innerHTML = `
+    <div class="summary-strip">
+      <div class="sum-card"><div class="lbl">持仓只数</div><div class="val">${count}</div></div>
+      <div class="sum-card"><div class="lbl">总成本</div><div class="val">${fmtMoney(totalCost, ccy.symbol)}</div></div>
+      <div class="sum-card"><div class="lbl">总市值</div><div class="val">${fmtMoney(totalMkt, ccy.symbol)}</div></div>
+      <div class="sum-card"><div class="lbl">未实现盈亏</div><div class="val ${gainClass(totalGain)==='pos'?'pos':gainClass(totalGain)==='neg'?'neg':''}">${fmtMoney(totalGain, ccy.symbol)} <span style="font-size:12px;">${fmtPct(totalGainPct)}</span></div></div>
+    </div>
+    <div class="table-wrap">
+      <table class="holdings">
+        <thead><tr>
+          <th>名称</th><th>市场</th><th>持仓数量</th><th>持仓成本</th><th>最新价</th><th>市值</th><th>盈亏</th><th>盈亏率</th>
+        </tr></thead>
+        <tbody id="holdingsBody"></tbody>
+      </table>
+    </div>
+  `;
+
+  const body = document.getElementById('holdingsBody');
+  if(filtered.length===0){
+    body.innerHTML = `<tr class="empty-row"><td colspan="8">没有符合条件的持仓记录</td></tr>`;
+  } else {
+    body.innerHTML = filtered.map(({stock,pos})=>{
+      const closed = Math.abs(pos.qty)<=1e-6;
+      return `<tr data-key="${encodeURIComponent(stock.key)}">
+        <td><span class="stock-name">${escapeHtml(stock.name)}</span>${stock.code?`<span class="stock-code">${escapeHtml(stock.code)}</span>`:''}</td>
+        <td style="text-align:left;color:var(--muted);font-size:12px;">${displayMarket(stock)}${closed?'<span class="tag-closed">已清仓</span>':''}</td>
+        <td>${fmtQty(pos.qty)}</td>
+        <td>${closed?'—':fmtPrice(pos.avgCost)}</td>
+        <td>${fmtPrice(pos.latestPrice)}</td>
+        <td>${closed?'—':fmtMoney(pos.mktValue, ccy.symbol)}</td>
+        <td class="${gainClass(pos.unrealized)}">${closed?'—':fmtMoney(pos.unrealized, ccy.symbol)}</td>
+        <td class="${gainClass(pos.unrealizedPct)}">${closed?'—':fmtPct(pos.unrealizedPct)}</td>
+      </tr>`;
+    }).join('');
+    body.querySelectorAll('tr[data-key]').forEach(tr=>{
+      tr.addEventListener('click', ()=> openDetailByKey(decodeURIComponent(tr.dataset.key)));
+    });
+  }
+
+  document.getElementById('grandSeal').textContent = totalGainPct!=null ? (totalGainPct>=0?'盈 '+fmtPct(totalGainPct):'亏 '+fmtPct(totalGainPct)) : '总览';
+  document.getElementById('grandSeal').style.borderColor = totalGainPct==null? 'var(--brass)' : (totalGainPct>=0?'var(--red)':'var(--green)');
+  document.getElementById('grandSeal').style.color = totalGainPct==null? 'var(--brass)' : (totalGainPct>=0?'var(--red)':'var(--green)');
+}
+
+function matchesQuery(stock, q){
+  if(!q) return true;
+  q = q.trim().toLowerCase();
+  if(!q) return true;
+  return (stock.name||'').toLowerCase().includes(q) || (stock.code||'').toLowerCase().includes(q);
+}
+function displayMarket(stock){
+  if(stock.currency==='CNY' && stock.code && /^\d{5,6}$/.test(stock.code)){
+    return stock.code.charAt(0)==='6' ? 'A股(沪)' : 'A股(深)';
+  }
+  return stock.market;
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function renderAll(){
+  renderTabs();
+  renderPanel();
+  const dates = [];
+  RAW_DATA.forEach(s=>s.txns.forEach(t=>{ if(t.d) dates.push(t.d); }));
+  dates.sort();
+  document.getElementById('asOfDate').textContent = dates.length? dates[dates.length-1] : '—';
+}
+
+/* ---------------- global search dropdown ---------------- */
+const searchInput = document.getElementById('globalSearch');
+const searchResults = document.getElementById('searchResults');
+searchInput.addEventListener('input', ()=>{
+  const q = searchInput.value.trim().toLowerCase();
+  if(!q){ searchResults.style.display='none'; return; }
+  const merged = buildMergedStocks();
+  const hits = merged.filter(s=> (s.name||'').toLowerCase().includes(q) || (s.code||'').toLowerCase().includes(q)).slice(0,20);
+  if(hits.length===0){
+    searchResults.innerHTML = `<div class="sr-empty">未找到相关股票，可点击「添加交易」新增</div>`;
+  } else {
+    searchResults.innerHTML = hits.map(s=>`
+      <div class="sr-item" data-key="${encodeURIComponent(s.key)}">
+        <span class="sr-name">${escapeHtml(s.name)}</span>
+        <span class="sr-meta">${s.code?escapeHtml(s.code)+' · ':''}${s.market}</span>
+      </div>`).join('');
+  }
+  searchResults.style.display='block';
+  searchResults.querySelectorAll('.sr-item[data-key]').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      searchResults.style.display='none';
+      searchInput.value='';
+      openDetailByKey(decodeURIComponent(el.dataset.key));
+    });
+  });
+});
+document.addEventListener('click', (e)=>{
+  if(!e.target.closest('.search-box')) searchResults.style.display='none';
+});
+
+/* also let the search box filter the currently active tab table live via a separate debounce isn't needed;
+   we keep the tab table filtered by a lightweight in-panel filter using the same input for convenience */
+searchInput.addEventListener('input', ()=>{
+  state.search = searchInput.value;
+  renderPanel();
+});
+
+/* ---------------- detail modal ---------------- */
+function openDetailByKey(key){
+  const merged = buildMergedStocks();
+  const stock = merged.find(s=>s.key===key);
+  if(!stock) return;
+  // switch tab to match
+  if(state.activeTab !== stock.currency){ state.activeTab = stock.currency; renderTabs(); renderPanel(); }
+  const pos = computePosition(stock);
+  const ccy = CURRENCIES.find(c=>c.key===stock.currency);
+  const closed = Math.abs(pos.qty)<=1e-6;
+
+  const modal = document.getElementById('detailModal');
+  const updatedTxt = stock.updatedAt ? new Date(stock.updatedAt).toLocaleString('zh-CN', {hour12:false}) : null;
+  modal.innerHTML = `
+    <div class="modal-head">
+      <div>
+        <h2>${escapeHtml(stock.name)}</h2>
+        <div class="mh-meta">${stock.code?escapeHtml(stock.code)+' &middot; ':''}${displayMarket(stock)} &middot; ${ccy.sub}${closed?' &middot; 已清仓':''}</div>
+        <div class="mh-meta" style="margin-top:3px;">行情代码：<span id="quoteSymbolVal">${stock.quoteSymbol?escapeHtml(stock.quoteSymbol):'未设置'}</span>
+          <span id="editQuoteHint" style="color:var(--brass-soft);cursor:pointer;">(编辑)</span>
+        </div>
+      </div>
+      <button class="modal-close" id="closeDetail">✕</button>
+    </div>
+    <div class="detail-summary">
+      <div class="d-card"><div class="lbl">持仓数量</div><div class="val">${fmtQty(pos.qty)}</div></div>
+      <div class="d-card"><div class="lbl">持仓成本 (加权均价)</div><div class="val">${closed?'—':fmtPrice(pos.avgCost)}</div></div>
+      <div class="d-card">
+        <div class="lbl">最新价
+          <span id="editPriceHint" style="color:var(--brass-soft);cursor:pointer;font-size:10px;">(手动编辑)</span>
+          <span id="refreshOneHint" style="color:var(--brass-soft);cursor:pointer;font-size:10px;margin-left:6px;">(⟳ 拉取)</span>
+        </div>
+        <div class="val" id="latestPriceVal">${fmtPrice(pos.latestPrice)}</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:3px;">${updatedTxt ? '更新于 '+updatedTxt : '来自原始账本，未在线更新过'}</div>
+      </div>
+      <div class="d-card"><div class="lbl">持仓成本总额</div><div class="val">${fmtMoney(pos.totalCost, ccy.symbol)}</div></div>
+      <div class="d-card"><div class="lbl">市值</div><div class="val">${closed?'—':fmtMoney(pos.mktValue, ccy.symbol)}</div></div>
+      <div class="d-card"><div class="lbl">未实现盈亏</div><div class="val ${gainClass(pos.unrealized)}">${closed?'—':fmtMoney(pos.unrealized, ccy.symbol)+' ('+fmtPct(pos.unrealizedPct)+')'}</div></div>
+      <div class="d-card"><div class="lbl">累计已实现盈亏</div><div class="val ${gainClass(pos.realized)}">${fmtMoney(pos.realized, ccy.symbol)}</div></div>
+      <div class="d-card"><div class="lbl">历史交易笔数</div><div class="val">${pos.ledger.length}</div></div>
+    </div>
+    <div class="section-label">历史交易记录
+      <button class="btn btn-sm" id="addTxnForThis">＋ 为此股票添加交易</button>
+    </div>
+    <div class="table-wrap" style="max-height:340px;overflow-y:auto;">
+      <table class="txns">
+        <thead><tr><th>日期</th><th>数量变动</th><th>成交价</th><th>分红/股</th><th>净成本价</th><th>交易后持仓</th></tr></thead>
+        <tbody>
+          ${pos.ledger.map(t=>`<tr>
+            <td>${t.d || '（早期合并结转）'}</td>
+            <td class="${t.q>0?'pos':'neg'}">${t.q>0?'+':''}${fmtQty(t.q)}</td>
+            <td>${fmtPrice(t.p)}</td>
+            <td>${fmtPrice(t.v)}</td>
+            <td>${fmtPrice(t.netPrice)}</td>
+            <td>${fmtQty(t.qtyAfter)}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+  document.getElementById('closeDetail').addEventListener('click', closeDetail);
+  document.getElementById('addTxnForThis').addEventListener('click', ()=>{ closeDetail(); openAddForm(stock.key); });
+  document.getElementById('editQuoteHint').addEventListener('click', ()=>{
+    const cur = stock.quoteSymbol || '';
+    const val = prompt('设置「'+stock.name+'」的行情代码（用于自动拉取最新价）：\nA股/港股填数字代码（如 600519 / 00700）；新加坡股票填 SGX 交易代码（如 Z74、9CI）', cur);
+    if(val===null) return;
+    local.codeOverrides[stock.key] = val.trim();
+    saveLocal();
+    openDetailByKey(stock.key);
+    showToast('行情代码已保存');
+  });
+  document.getElementById('refreshOneHint').addEventListener('click', async ()=>{
+    if(!stock.quoteSymbol){ showToast('请先设置行情代码'); return; }
+    showToast('正在拉取…');
+    const r = await refreshPricesFor([stock]);
+    openDetailByKey(stock.key);
+    renderPanel();
+    showToast(r.ok>0 ? '已更新最新价' : '拉取失败，请检查行情代码或稍后再试');
+  });
+  document.getElementById('editPriceHint').addEventListener('click', ()=>{
+    const cur = pos.latestPrice;
+    const val = prompt('更新「'+stock.name+'」最新价：', cur!=null?cur:'');
+    if(val===null) return;
+    const num = parseFloat(val);
+    if(isNaN(num)){ showToast('请输入有效数字'); return; }
+    local.latestOverrides[stock.key] = num;
+    local.priceUpdatedAt[stock.key] = Date.now();
+    saveLocal();
+    openDetailByKey(stock.key);
+    renderPanel();
+    showToast('已更新最新价');
+  });
+  document.getElementById('detailOverlay').classList.add('show');
+}
+function closeDetail(){ document.getElementById('detailOverlay').classList.remove('show'); renderPanel(); }
+document.getElementById('detailOverlay').addEventListener('click', (e)=>{ if(e.target.id==='detailOverlay') closeDetail(); });
+
+/* ---------------- add transaction form ---------------- */
+function openAddForm(prefillKey){
+  const merged = buildMergedStocks();
+  const modal = document.getElementById('formModal');
+  const existingOptions = merged
+    .slice()
+    .sort((a,b)=>a.name.localeCompare(b.name))
+    .map(s=>`<option value="${encodeURIComponent(s.key)}" ${s.key===prefillKey?'selected':''}>${escapeHtml(s.name)}${s.code?' ('+escapeHtml(s.code)+')':''} — ${s.market}</option>`).join('');
+
+  modal.innerHTML = `
+    <div class="modal-head">
+      <div><h2>添加交易记录</h2><div class="mh-meta">录入后立即重新计算成本与持仓</div></div>
+      <button class="modal-close" id="closeForm">✕</button>
+    </div>
+    <div class="radio-toggle" style="margin-bottom:16px;">
+      <button type="button" id="modeExisting" class="active">已有股票</button>
+      <button type="button" id="modeNew">新增股票</button>
+    </div>
+    <form id="txnForm">
+      <div class="form-grid" id="existingBlock">
+        <div class="field full">
+          <label>选择股票</label>
+          <select id="fldExistingStock">${existingOptions}</select>
+        </div>
+      </div>
+      <div class="form-grid" id="newBlock" style="display:none;">
+        <div class="field">
+          <label>股票名称</label>
+          <input type="text" id="fldNewName" placeholder="例如：贵州茅台">
+        </div>
+        <div class="field">
+          <label>股票代码（可选）</label>
+          <input type="text" id="fldNewCode" placeholder="例如：600519">
+        </div>
+        <div class="field full">
+          <label>所属市场</label>
+          <select id="fldNewMarket">
+            ${MARKET_OPTIONS.map(m=>`<option value="${m}">${m}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      <div class="form-grid" style="margin-top:14px;">
+        <div class="field">
+          <label>交易日期</label>
+          <input type="date" id="fldDate" value="${todayStr()}">
+        </div>
+        <div class="field">
+          <label>数量（买入为正，卖出为负）</label>
+          <input type="number" id="fldQty" placeholder="例如：1000 或 -500" step="any">
+        </div>
+        <div class="field">
+          <label>成交价 / 每股</label>
+          <input type="number" id="fldPrice" placeholder="例如：12.50" step="any">
+        </div>
+        <div class="field">
+          <label>分红 / 每股（可选，默认0）</label>
+          <input type="number" id="fldDividend" placeholder="0" step="any" value="0">
+        </div>
+        <div class="field full">
+          <label>最新价（可选：同时更新该股票的最新价）</label>
+          <input type="number" id="fldLatest" placeholder="留空则不更新" step="any">
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn btn-ghost" id="cancelForm">取消</button>
+        <button type="submit" class="btn btn-brass">保存交易</button>
+      </div>
+    </form>
+  `;
+  const modeExisting = document.getElementById('modeExisting');
+  const modeNew = document.getElementById('modeNew');
+  const existingBlock = document.getElementById('existingBlock');
+  const newBlock = document.getElementById('newBlock');
+  modeExisting.addEventListener('click', ()=>{
+    modeExisting.classList.add('active'); modeNew.classList.remove('active');
+    existingBlock.style.display=''; newBlock.style.display='none';
+  });
+  modeNew.addEventListener('click', ()=>{
+    modeNew.classList.add('active'); modeExisting.classList.remove('active');
+    existingBlock.style.display='none'; newBlock.style.display='';
+  });
+  document.getElementById('closeForm').addEventListener('click', closeForm);
+  document.getElementById('cancelForm').addEventListener('click', closeForm);
+
+  document.getElementById('txnForm').addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const isNew = modeNew.classList.contains('active');
+    const date = document.getElementById('fldDate').value || null;
+    const qty = parseFloat(document.getElementById('fldQty').value);
+    const price = parseFloat(document.getElementById('fldPrice').value);
+    const div = parseFloat(document.getElementById('fldDividend').value)||0;
+    const latestRaw = document.getElementById('fldLatest').value;
+    const latest = latestRaw!=='' ? parseFloat(latestRaw) : undefined;
+
+    if(isNaN(qty) || qty===0){ showToast('请输入有效的交易数量'); return; }
+    if(isNaN(price)){ showToast('请输入有效的成交价'); return; }
+
+    let key;
+    if(isNew){
+      const name = document.getElementById('fldNewName').value.trim();
+      const code = document.getElementById('fldNewCode').value.trim();
+      const market = document.getElementById('fldNewMarket').value;
+      if(!name){ showToast('请输入股票名称'); return; }
+      const newStock = {name, code, market, txns:[]};
+      key = stockKey(newStock);
+      if(!(local.newStocks||[]).some(s=>stockKey(s)===key)){
+        local.newStocks = local.newStocks || [];
+        local.newStocks.push(newStock);
+      }
+    } else {
+      key = decodeURIComponent(document.getElementById('fldExistingStock').value);
+    }
+    local.userTxns[key] = local.userTxns[key] || [];
+    local.userTxns[key].push({d:date, q:qty, p:price, v:div});
+    if(latest!==undefined && !isNaN(latest)){
+      local.latestOverrides[key] = latest;
+    }
+    saveLocal();
+    closeForm();
+    renderAll();
+    showToast('交易已保存');
+  });
+
+  document.getElementById('formOverlay').classList.add('show');
+}
+function closeForm(){ document.getElementById('formOverlay').classList.remove('show'); }
+document.getElementById('formOverlay').addEventListener('click', (e)=>{ if(e.target.id==='formOverlay') closeForm(); });
+document.getElementById('btnAdd').addEventListener('click', ()=>openAddForm(null));
+
+/* ---------------- CSV import ---------------- */
+function openImportForm(){
+  const modal = document.getElementById('formModal');
+  modal.innerHTML = `
+    <div class="modal-head">
+      <div><h2>批量导入交易记录</h2><div class="mh-meta">支持 CSV 文件，UTF-8 编码</div></div>
+      <button class="modal-close" id="closeImport">✕</button>
+    </div>
+    <div class="field full" style="margin-bottom:12px;">
+      <label>CSV 格式说明（表头需完全一致，顺序不限）</label>
+      <div class="csv-tpl">市场,名称,代码,日期,数量,成交价,分红
+A股(沪),贵州茅台,600519,2026-03-01,100,1680.5,0
+港股,腾讯控股,00700,2026-03-05,-200,380.2,0
+新加坡股票,Wilmar,,2026-03-10,1000,3.5,0.04</div>
+      <div class="hint">市场取值：${MARKET_OPTIONS.join(' / ')}；数量正数为买入、负数为卖出；分红一栏可留空（默认0）。</div>
+    </div>
+    <div class="file-drop" id="fileDrop">
+      点击选择 CSV 文件，或将文件拖拽到此处
+      <input type="file" id="fileInput" accept=".csv" style="display:none;">
+    </div>
+    <div class="upload-result" id="uploadResult"></div>
+    <div class="form-actions">
+      <button type="button" class="btn btn-ghost" id="cancelImport">关闭</button>
+    </div>
+  `;
+  document.getElementById('closeImport').addEventListener('click', closeForm);
+  document.getElementById('cancelImport').addEventListener('click', closeForm);
+  const drop = document.getElementById('fileDrop');
+  const input = document.getElementById('fileInput');
+  drop.addEventListener('click', ()=>input.click());
+  drop.addEventListener('dragover', e=>{ e.preventDefault(); drop.classList.add('drag'); });
+  drop.addEventListener('dragleave', ()=> drop.classList.remove('drag'));
+  drop.addEventListener('drop', e=>{
+    e.preventDefault(); drop.classList.remove('drag');
+    if(e.dataTransfer.files.length) handleCsvFile(e.dataTransfer.files[0]);
+  });
+  input.addEventListener('change', ()=>{ if(input.files.length) handleCsvFile(input.files[0]); });
+  document.getElementById('formOverlay').classList.add('show');
+}
+document.getElementById('btnImport').addEventListener('click', openImportForm);
+
+function parseCsv(text){
+  const lines = text.replace(/\r/g,'').split('\n').filter(l=>l.trim().length);
+  if(lines.length<2) return {header:[], rows:[]};
+  const header = lines[0].split(',').map(h=>h.trim());
+  const rows = lines.slice(1).map(l=>{
+    const cells = l.split(',').map(c=>c.trim());
+    const obj = {};
+    header.forEach((h,i)=> obj[h]=cells[i]);
+    return obj;
+  });
+  return {header, rows};
+}
+
+function handleCsvFile(file){
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    const {rows} = parseCsv(reader.result);
+    const merged = buildMergedStocks();
+    let ok=0, errs=[];
+    rows.forEach((r, idx)=>{
+      const market = (r['市场']||'').trim();
+      const name = (r['名称']||'').trim();
+      const code = (r['代码']||'').trim();
+      const date = (r['日期']||'').trim() || null;
+      const qty = parseFloat(r['数量']);
+      const price = parseFloat(r['成交价']);
+      const div = parseFloat(r['分红']||'0')||0;
+      const rowNo = idx+2;
+      if(!MARKET_OPTIONS.includes(market)){ errs.push(`第${rowNo}行：市场「${market}」无效`); return; }
+      if(!name){ errs.push(`第${rowNo}行：缺少名称`); return; }
+      if(isNaN(qty)||qty===0){ errs.push(`第${rowNo}行：数量无效`); return; }
+      if(isNaN(price)){ errs.push(`第${rowNo}行：成交价无效`); return; }
+
+      let stock = merged.find(s=> (code && s.code===code) || (!code && s.name===name && s.market===market));
+      let key;
+      if(stock){
+        key = stock.key;
+      } else {
+        const newStock = {name, code, market, txns:[]};
+        key = stockKey(newStock);
+        if(!(local.newStocks||[]).some(s=>stockKey(s)===key)){
+          local.newStocks = local.newStocks || [];
+          local.newStocks.push(newStock);
+        }
+        merged.push({name, code, market, currency:MARKET_TO_CCY[market], key});
+      }
+      local.userTxns[key] = local.userTxns[key] || [];
+      local.userTxns[key].push({d:date, q:qty, p:price, v:div});
+      ok++;
+    });
+    saveLocal();
+    renderAll();
+    const resultEl = document.getElementById('uploadResult');
+    resultEl.innerHTML = `成功导入 <b style="color:var(--brass-soft)">${ok}</b> 条记录，失败 ${errs.length} 条。` +
+      errs.slice(0,10).map(e=>`<div class="err-item">${escapeHtml(e)}</div>`).join('');
+    showToast(`已导入 ${ok} 条交易记录`);
+  };
+  reader.readAsText(file, 'UTF-8');
+}
+
+/* ---------------- export / reset ---------------- */
+document.getElementById('btnExport').addEventListener('click', ()=>{
+  const merged = buildMergedStocks().map(s=>{
+    const pos = computePosition(s);
+    return {
+      name:s.name, code:s.code, market:s.market, currency:s.currency,
+      qty:pos.qty, avgCost:pos.avgCost, totalCost:pos.totalCost,
+      latestPrice:pos.latestPrice, mktValue:pos.mktValue,
+      unrealizedPL:pos.unrealized, unrealizedPct:pos.unrealizedPct, realizedPL:pos.realized,
+      transactions: s.txns,
+    };
+  });
+  const blob = new Blob([JSON.stringify(merged, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = '持仓总账_导出_'+todayStr()+'.json';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+document.getElementById('btnReset').addEventListener('click', ()=>{
+  if(confirm('确定要清除所有本地新增的交易记录、新增股票和最新价修改吗？此操作不可恢复（原始账本数据不受影响）。')){
+    local = {userTxns:{}, latestOverrides:{}, newStocks:[], priceUpdatedAt:{}, codeOverrides:{}};
+    saveLocal();
+    renderAll();
+    showToast('本地新增记录已清除');
+  }
+});
+
+/* ---------------- toast ---------------- */
+let toastTimer=null;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 2400);
+}
+
+/* ---------------- init ---------------- */
+renderAll();
+</script>
+</body>
+</html>
