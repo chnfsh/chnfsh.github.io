@@ -114,9 +114,50 @@
     .judge-btn { padding: 10px 18px; border-radius: 6px; border: none; font-size: 15px; font-weight: 600; cursor: pointer; }
     .correct-judge { background: #28a745; color: #fff; }
     .wrong-judge { background: #dc3545; color: #fff; }
+    .quiz-layout { display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap; margin-top: 10px; }
+    .quiz-main-col { flex: 1 1 480px; min-width: 0; }
+    .chat-side-col { flex: 0 1 320px; min-width: 260px; position: sticky; top: 20px; }
+    .chat-messages { background:#fafbfc; border:1px solid #dee2e6; border-radius:6px; padding:14px 16px; height:520px; overflow-y:auto; font-size:14px; }
+    @media (max-width: 860px) {
+        .chat-side-col { position: static; flex: 1 1 100%; }
+        .chat-messages { height: 280px; }
+    }
+    .stamp-overlay {
+        position: fixed; top: 40%; left: 50%;
+        transform: translate(-50%, -50%) rotate(-12deg) scale(0.6);
+        font-size: 40px; font-weight: 900; padding: 18px 46px;
+        border: 7px solid #999; border-radius: 14px;
+        opacity: 0; visibility: hidden; z-index: 999999; pointer-events: none;
+        text-transform: uppercase; letter-spacing: 2px;
+        background: #fff; box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+        transition: opacity 0.2s ease, transform 0.3s ease;
+        white-space: nowrap;
+    }
+    @media (max-width: 600px) {
+        .stamp-overlay { font-size: 26px; padding: 12px 26px; border-width: 5px; }
+    }
+    .activity-log {
+        background:#fafbfc; border:1px solid #dee2e6; border-radius:6px; padding:12px 18px;
+        font-size: 15px; column-count: 2; column-gap: 28px; max-height: 300px; overflow-y: auto;
+    }
+    .activity-log > div { break-inside: avoid; }
+    @media (max-width: 600px) {
+        .activity-log { column-count: 1; }
+    }
+    .option-btn {
+        text-align: left; padding: 12px 16px; border: 1.5px solid #0056b3; background: #f0f7ff;
+        border-radius: 6px; font-size: 16px; font-family: "Consolas", "Courier New", monospace;
+        cursor: pointer; transition: all 0.15s ease; color: #0056b3; font-weight: 600;
+    }
+    .option-btn:hover { background: #0056b3; color: #fff; }
+    .result-banner { margin-top: 14px; padding: 12px 18px; border-radius: 6px; font-size: 16px; font-weight: 700; }
+    .result-banner.correct { background: #e6f7ea; color: #1e7e34; border: 1px solid #28a745; }
+    .result-banner.wrong { background: #fdecea; color: #a71d2a; border: 1px solid #dc3545; }
 </style>
 </head>
 <body>
+
+<div id="stampOverlay" class="stamp-overlay"></div>
 
 <header>
     <h1>商务英语学习</h1>
@@ -124,14 +165,14 @@
 </header>
 
 <div class="nav-tabs">
-    <button class="tab-btn active" onclick="switchTab('vocab_words', event)">1. 核心进阶生词 (68个)</button>
-    <button class="tab-btn" onclick="switchTab('vocab', event)">2. 地道高级好词好句 (70组)</button>
-    <button class="tab-btn" onclick="switchTab('quiz', event)">3. 情景练习题</button>
+    <button class="tab-btn active" onclick="switchTab('vocab_words', event)">1. 核心进阶生词 (136个)</button>
+    <button class="tab-btn" onclick="switchTab('vocab', event)">2. 地道高级好词好句 (140组)</button>
+    <button class="tab-btn" onclick="switchTab('quiz', event)">3. 抢答聊天室</button>
 </div>
 
 <!-- TAB 1: CHALLENGING WORDS -->
 <div id="vocab_words" class="tab-content active">
-    <h2>精选核心进阶生词 (68个)</h2>
+    <h2>精选核心进阶生词 (136个)</h2>
     <p class="intro">以下精选 68 个高频进阶词汇，涵盖国际投行、企业并购、跨境合规等商务场景，是商务英语学习与实战应用中的核心词汇。</p>
     <table class="vocab-table">
         <thead>
@@ -209,13 +250,81 @@
             <tr><td>66. <span class="vocab-word">Entrust</span></td><td><strong>委托、托付</strong>。指将某项重大职责正式交由某团队或个人负责，如管理层将新市场拓展的重任托付给某个团队。</td></tr>
             <tr><td>67. <span class="vocab-word">Robustly</span></td><td><strong>稳健地、强劲有力地</strong>。常用于 "robustly build the business"，形容业务发展基础扎实、经得起检验。</td></tr>
             <tr><td>68. <span class="vocab-word">Incubate</span></td><td><strong>孵化培养</strong>。商务语境中常指从零开始培养人才或新业务条线，如 "incubate traders"（孵化培养交易员）。</td></tr>
+            <tr><td>69. <span class="vocab-word">Cover</span></td><td><strong>负责、对接（客户或业务领域）</strong>。金融/销售语境中比 "responsible for" 更地道的说法，如 "cover sales"（负责销售业务）。</td></tr>
+            <tr><td>70. <span class="vocab-word">Duty</span></td><td><strong>职责、职务</strong>。指某岗位需要承担的具体工作内容。</td></tr>
+            <tr><td>71. <span class="vocab-word">Junior</span></td><td><strong>初级的、资历较浅的</strong>。常用于职级描述，如 "junior broker"（初级经纪人）。</td></tr>
+            <tr><td>72. <span class="vocab-word">Dry bulk</span></td><td><strong>干散货</strong>。大宗商品分类术语，与能源、金属等品类相对。</td></tr>
+            <tr><td>73. <span class="vocab-word">Thermal</span></td><td><strong>动力煤/热力能源</strong>。大宗商品与电力行业常用词，指用于发电的煤炭品类。</td></tr>
+            <tr><td>74. <span class="vocab-word">Currency</span></td><td><strong>外币、货币</strong>。金融外汇领域基础词汇。</td></tr>
+            <tr><td>75. <span class="vocab-word">Index</span></td><td><strong>指数</strong>。如农业指数、股票指数等金融衍生品标的。</td></tr>
+            <tr><td>76. <span class="vocab-word">In-house</span></td><td><strong>自研的、内部的</strong>。指企业内部自主研发或自行维护，而非外包。</td></tr>
+            <tr><td>77. <span class="vocab-word">Connectivity</span></td><td><strong>平台/系统连接性</strong>。金融科技领域描述系统间互联互通能力的术语。</td></tr>
+            <tr><td>78. <span class="vocab-word">House account</span></td><td><strong>公司自有账户/自营账户</strong>。指机构自身持有、非客户名义下的交易账户。</td></tr>
+            <tr><td>79. <span class="vocab-word">Assess</span></td><td><strong>评估、衡量</strong>。如评估市场波动、评估风险敞口。</td></tr>
+            <tr><td>80. <span class="vocab-word">Movement</span></td><td><strong>市场价格走势/波动</strong>。描述价格变化趋势的常用词。</td></tr>
+            <tr><td>81. <span class="vocab-word">Pre-trade</span></td><td><strong>交易前（控制/风控）</strong>。指在订单实际成交前进行的风控检查环节。</td></tr>
+            <tr><td>82. <span class="vocab-word">Post-trade</span></td><td><strong>交易后（控制/复核/清算）</strong>。指订单成交后的复核、清算、对账等环节。</td></tr>
+            <tr><td>83. <span class="vocab-word">Bespoke</span></td><td><strong>定制的、按需定制的</strong>。金融商务场景中形容量身打造的产品或服务。</td></tr>
+            <tr><td>84. <span class="vocab-word">Reconciliation</span></td><td><strong>对账、平账</strong>。核对不同系统或账户间数据一致性的财务流程。</td></tr>
+            <tr><td>85. <span class="vocab-word">Format</span></td><td><strong>格式</strong>。如线报格式、电汇格式等数据传输的标准形式。</td></tr>
+            <tr><td>86. <span class="vocab-word">Overview</span></td><td><strong>概述、简要说明</strong>。商务会议中常用于开场引出话题。</td></tr>
+            <tr><td>87. <span class="vocab-word">Follow-the-sun</span></td><td><strong>24小时全球轮班/顺日模式</strong>。指跨时区团队接力提供全天候支持的运营模式。</td></tr>
+            <tr><td>88. <span class="vocab-word">Split</span></td><td><strong>拆分、分拆</strong>。指团队或业务架构上的分割调整。</td></tr>
+            <tr><td>89. <span class="vocab-word">Upgrade</span></td><td><strong>升级</strong>。如交易所系统升级、平台版本升级。</td></tr>
+            <tr><td>90. <span class="vocab-word">Onboarding</span></td><td><strong>入职/客户开户及接入流程</strong>。指新员工或新客户正式接入体系的完整流程。</td></tr>
+            <tr><td>91. <span class="vocab-word">High touch</span></td><td><strong>人工高触达服务</strong>。指需要人工/经纪人深度介入的交易服务，区别于纯电子化自动交易。</td></tr>
+            <tr><td>92. <span class="vocab-word">Native</span></td><td><strong>原生的</strong>。如交易所原生接口，指官方直接提供而非第三方中转的系统。</td></tr>
+            <tr><td>93. <span class="vocab-word">Sponsored access</span></td><td><strong>赞助接入/通道接入</strong>。指客户通过期货商的会员资格直接连接交易所的接入方式。</td></tr>
+            <tr><td>94. <span class="vocab-word">Clearer</span></td><td><strong>清算行/清算经纪商</strong>。Clearing Broker 的口语简称，负责交易的清算结算。</td></tr>
+            <tr><td>95. <span class="vocab-word">Completion</span></td><td><strong>完成、交割、迁移完成</strong>。项目或交易达成最终节点的常用词。</td></tr>
+            <tr><td>96. <span class="vocab-word">Pipe</span></td><td><strong>专线/数据通道</strong>。技术语境中形象地比喻系统间已建立的连接管道。</td></tr>
+            <tr><td>97. <span class="vocab-word">Sticky</span></td><td><strong>有粘性的、难以快速迁移的</strong>。形容难以在短期内处理或转移的存量业务/持仓。</td></tr>
+            <tr><td>98. <span class="vocab-word">Expire</span></td><td><strong>到期</strong>。指合约自然到期，无需人为干预平仓。</td></tr>
+            <tr><td>99. <span class="vocab-word">Net off</span></td><td><strong>净额对冲、轧差</strong>。清算风控术语，指多空头寸相互抵消。</td></tr>
+            <tr><td>100. <span class="vocab-word">Manageable</span></td><td><strong>可控的、易于处理的</strong>。项目管理中评估工作量或难度的常用词。</td></tr>
+            <tr><td>101. <span class="vocab-word">Legacy</span></td><td><strong>历史遗留的</strong>。形容旧系统、旧架构或历史遗留问题。</td></tr>
+            <tr><td>102. <span class="vocab-word">Predominantly</span></td><td><strong>主要地、占绝大多数地</strong>。比 "mainly" 更书面、更专业的表达。</td></tr>
+            <tr><td>103. <span class="vocab-word">Refinement</span></td><td><strong>细化、优化、精细调整</strong>。指对现有方案或流程做进一步打磨完善。</td></tr>
+            <tr><td>104. <span class="vocab-word">Aggregate</span></td><td><strong>聚合、汇总</strong>。数据或系统技术语境中，指将多源数据合并为一体。</td></tr>
+            <tr><td>105. <span class="vocab-word">Extensively</span></td><td><strong>广泛地、深度地</strong>。商务表达中强调使用范围或程度之广。</td></tr>
+            <tr><td>106. <span class="vocab-word">Normalize</span></td><td><strong>规范化、标准化</strong>。数据处理中将不同格式数据统一清洗为标准格式。</td></tr>
+            <tr><td>107. <span class="vocab-word">Algorithm</span></td><td><strong>算法</strong>。如算法交易、量化算法，金融科技核心词汇。</td></tr>
+            <tr><td>108. <span class="vocab-word">Regulatory</span></td><td><strong>监管的、法规要求的</strong>。合规语境高频形容词。</td></tr>
+            <tr><td>109. <span class="vocab-word">Plug in</span></td><td><strong>接入、套用、对接</strong>。技术整合中形象地比喻系统间"插入式"连接。</td></tr>
+            <tr><td>110. <span class="vocab-word">Enhancement</span></td><td><strong>功能提升、系统增强/优化</strong>。产品迭代中常用词，指在现有基础上做加强。</td></tr>
+            <tr><td>111. <span class="vocab-word">Integration</span></td><td><strong>系统集成、融合</strong>。技术领域描述多个系统整合为一体的过程。</td></tr>
+            <tr><td>112. <span class="vocab-word">Specification (Spec)</span></td><td><strong>规范说明书、技术文档</strong>。技术对接前必须获取的标准接口文档。</td></tr>
+            <tr><td>113. <span class="vocab-word">Facilitate</span></td><td><strong>促进、推动、协助安排</strong>。商务协调场景中表示"从中斡旋、协助促成"。</td></tr>
+            <tr><td>114. <span class="vocab-word">Coordinate</span></td><td><strong>协调、统筹</strong>。多方协作场景中的常用动词。</td></tr>
+            <tr><td>115. <span class="vocab-word">Neat</span></td><td><strong>简洁干练的、精妙的</strong>。形容界面设计或方案思路简洁高效。</td></tr>
+            <tr><td>116. <span class="vocab-word">Life cycle</span></td><td><strong>交易全生命周期</strong>。指从下单到结算完成的完整交易流程链条。</td></tr>
+            <tr><td>117. <span class="vocab-word">Comprehensive</span></td><td><strong>全面的、综合性的</strong>。评估或方案描述中强调覆盖面之广。</td></tr>
+            <tr><td>118. <span class="vocab-word">Surveillance</span></td><td><strong>市场监控、交易行为监管</strong>。合规部门用于监测异常交易行为的核心职能。</td></tr>
+            <tr><td>119. <span class="vocab-word">Admission</span></td><td><strong>承认、许可</strong>。商务语境中常用于"按其自身说法"这类表达。</td></tr>
+            <tr><td>120. <span class="vocab-word">Top day</span></td><td><strong>当日（即T+0实时数据，相对T+1而言）</strong>。交易员与风控人员对"实时当日数据"的地道口语称呼。</td></tr>
+            <tr><td>121. <span class="vocab-word">Asset class</span></td><td><strong>资产类别</strong>。如商品、外汇、股票等投资分类标准术语。</td></tr>
+            <tr><td>122. <span class="vocab-word">Undertaking</span></td><td><strong>重大任务、艰巨工程</strong>。形容工作量极大、极具挑战性的项目。</td></tr>
+            <tr><td>123. <span class="vocab-word">Acquisition</span></td><td><strong>公司收购、兼并</strong>。并购交易的通用词，指企业间的收购行为本身。</td></tr>
+            <tr><td>124. <span class="vocab-word">Insight</span></td><td><strong>洞察、内部情况/信息</strong>。商务分析中指对某事的深入理解或内部视角。</td></tr>
+            <tr><td>125. <span class="vocab-word">Dormant</span></td><td><strong>休眠的、不活跃的</strong>。账户运维场景中指长期无交易活动的账户。</td></tr>
+            <tr><td>126. <span class="vocab-word">FCM (Futures Commission Merchant)</span></td><td><strong>期货经纪商/期货商</strong>。接受客户委托买卖期货合约的持牌金融机构。</td></tr>
+            <tr><td>127. <span class="vocab-word">Underlying</span></td><td><strong>基础标的、底层</strong>。指衍生品对应的底层资产，或底层客户/系统。</td></tr>
+            <tr><td>128. <span class="vocab-word">Former</span></td><td><strong>前者</strong>。逻辑对比表达中与 "latter"（后者）相对。</td></tr>
+            <tr><td>129. <span class="vocab-word">Replicate</span></td><td><strong>复制、复刻</strong>。系统迁移中指将某套配置或模式完整复刻到新环境。</td></tr>
+            <tr><td>130. <span class="vocab-word">Retention (Retain)</span></td><td><strong>保留、维持</strong>。系统迁移中常指保留原有账号或历史数据。</td></tr>
+            <tr><td>131. <span class="vocab-word">Mapping</span></td><td><strong>映射表、对应关系</strong>。技术数据领域描述两套系统字段间的对应规则。</td></tr>
+            <tr><td>132. <span class="vocab-word">Identifier</span></td><td><strong>标识符、识别码</strong>。数据系统中用于唯一区分记录的编码。</td></tr>
+            <tr><td>133. <span class="vocab-word">Transparent</span></td><td><strong>透明的、对客户无感/不可见的</strong>。技术语境中常指后台处理对前端用户无感知。</td></tr>
+            <tr><td>134. <span class="vocab-word">Provisioning</span></td><td><strong>资源配置、权限开通</strong>。技术运维中指为账户或系统开通相应资源与权限。</td></tr>
+            <tr><td>135. <span class="vocab-word">Reconcile</span></td><td><strong>对账、对齐</strong>。财务风控语境中指核验系统间数据一致性。</td></tr>
+            <tr><td>136. <span class="vocab-word">Self-sufficient</span></td><td><strong>自给自足的、独立自主操作的</strong>。业务运营中形容客户可自助完成操作，减少人工依赖。</td></tr>
         </tbody>
     </table>
 </div>
 
 <!-- TAB 2: VOCABULARY PHRASES -->
 <div id="vocab" class="tab-content">
-    <h2>地道高级商务英语好词好句（共70组）</h2>
+    <h2>地道高级商务英语好词好句（共140组）</h2>
     <p class="intro">以下精选 70 组地道高级商务英语表达，涵盖企业并购、团队管理、跨国沟通等场景，包含高级动词、投行术语及地道高管表达，附精确的上下文中文翻译，非常适合应用在商务谈判、跨国汇报与写作中。</p>
     <table class="vocab-table">
         <thead>
@@ -295,15 +404,87 @@
             <tr><td>68. <span class="english-phrase">the mandate is a clear sheet of paper</span></td><td>被赋予的授权如同一张可以自由挥洒的白纸（喻指充分自主空间）</td></tr>
             <tr><td>69. <span class="english-phrase">we all deserve a pat on our back</span></td><td>我们所有人都值得为自己好好点赞鼓励一番</td></tr>
             <tr><td>70. <span class="english-phrase">bring you on this journey</span></td><td>带领大家一起踏上这段全新的征程</td></tr>
+            <tr><td>71. <span class="english-phrase">cover client accounts / cover sales</span></td><td>负责对接客户账户 / 负责销售业务</td></tr>
+            <tr><td>72. <span class="english-phrase">joined since day one</span></td><td>从公司成立第一天起就加入了</td></tr>
+            <tr><td>73. <span class="english-phrase">look after house accounts</span></td><td>管理、维护公司自营账户</td></tr>
+            <tr><td>74. <span class="english-phrase">start off as a dealer / junior broker</span></td><td>最初是从交易员/初级经纪人做起</td></tr>
+            <tr><td>75. <span class="english-phrase">run parallel things / write custom codes</span></td><td>同时并行推进多项工作、编写自定义代码</td></tr>
+            <tr><td>76. <span class="english-phrase">follow-the-sun model</span></td><td>全球日不落（24/7）接力运维模式</td></tr>
+            <tr><td>77. <span class="english-phrase">Level 1 / Level 2 support</span></td><td>一线（基础问答）与二线（故障排查）支持</td></tr>
+            <tr><td>78. <span class="english-phrase">FIX onboarding</span></td><td>新客户的FIX协议对接与开通流程</td></tr>
+            <tr><td>79. <span class="english-phrase">high-level overview</span></td><td>宏观概览、高层级概述</td></tr>
+            <tr><td>80. <span class="english-phrase">high touch orders vs. electronic execution</span></td><td>人工高触达订单 对比 电子化自动执行</td></tr>
+            <tr><td>81. <span class="english-phrase">exchange native feeds/APIs</span></td><td>交易所原生数据接口/直连通道</td></tr>
+            <tr><td>82. <span class="english-phrase">somewhere in the region of...</span></td><td>大约在……范围内</td></tr>
+            <tr><td>83. <span class="english-phrase">direct connections / direct access</span></td><td>低延迟直连通道/直接接入</td></tr>
+            <tr><td>84. <span class="english-phrase">get a brief overview of...</span></td><td>简要概述一下……情况</td></tr>
+            <tr><td>85. <span class="english-phrase">pipes are already in place</span></td><td>相关数据通道已经铺设就绪</td></tr>
+            <tr><td>86. <span class="english-phrase">move over remaining business</span></td><td>将剩余业务迁移过来</td></tr>
+            <tr><td>87. <span class="english-phrase">the sticky part of positions</span></td><td>最难处理（粘性最高）的持仓部分</td></tr>
+            <tr><td>88. <span class="english-phrase">net off existing positions</span></td><td>对存量持仓进行轧差对冲</td></tr>
+            <tr><td>89. <span class="english-phrase">relatively manageable</span></td><td>相对可控、易于处理</td></tr>
+            <tr><td>90. <span class="english-phrase">legacy issues</span></td><td>历史遗留问题</td></tr>
+            <tr><td>91. <span class="english-phrase">predominantly CME and ICE</span></td><td>绝大部分集中在CME和ICE交易所</td></tr>
+            <tr><td>92. <span class="english-phrase">small to moderate size positions</span></td><td>中小规模的持仓头寸</td></tr>
+            <tr><td>93. <span class="english-phrase">refinement of markets</span></td><td>对市场覆盖进行细化梳理</td></tr>
+            <tr><td>94. <span class="english-phrase">aggregate flow / full copies</span></td><td>汇聚数据流/获取完整成交副本</td></tr>
+            <tr><td>95. <span class="english-phrase">consume drop copies</span></td><td>接收并处理旁路成交数据流</td></tr>
+            <tr><td>96. <span class="english-phrase">from a support perspective</span></td><td>从技术支持的角度来看</td></tr>
+            <tr><td>97. <span class="english-phrase">regulatory requirements (MiFID)</span></td><td>如MiFID等监管合规要求</td></tr>
+            <tr><td>98. <span class="english-phrase">plug into a platform</span></td><td>无缝接入某个平台系统</td></tr>
+            <tr><td>99. <span class="english-phrase">feed into mid-office systems</span></td><td>将数据推送/喂入中台系统</td></tr>
+            <tr><td>100. <span class="english-phrase">middleware / clearing house feed</span></td><td>中间件架构/清算所数据接入</td></tr>
+            <tr><td>101. <span class="english-phrase">tight type of integration</span></td><td>紧密、深度的系统集成</td></tr>
+            <tr><td>102. <span class="english-phrase">direct line to C-level</span></td><td>与对方高管保持直接沟通渠道</td></tr>
+            <tr><td>103. <span class="english-phrase">get hold of the spec</span></td><td>拿到技术规范文档</td></tr>
+            <tr><td>104. <span class="english-phrase">facilitate a call</span></td><td>协助安排一次专题会议</td></tr>
+            <tr><td>105. <span class="english-phrase">whole life cycle of the trade</span></td><td>一笔交易的完整生命周期</td></tr>
+            <tr><td>106. <span class="english-phrase">trigger risk criteria</span></td><td>触发风控阈值/预警条件</td></tr>
+            <tr><td>107. <span class="english-phrase">stop clients in their tracks</span></td><td>立即阻断客户的风险操作</td></tr>
+            <tr><td>108. <span class="english-phrase">market surveillance module</span></td><td>市场监控/合规巡查模块</td></tr>
+            <tr><td>109. <span class="english-phrase">top day (T+0) vs. T+1 reporting</span></td><td>当日实时数据 对比 次日滞后上报</td></tr>
+            <tr><td>110. <span class="english-phrase">follow up on anomaly</span></td><td>对异常交易进行跟进调查</td></tr>
+            <tr><td>111. <span class="english-phrase">across certain asset classes</span></td><td>在特定资产类别范围内</td></tr>
+            <tr><td>112. <span class="english-phrase">regulatory responsibility</span></td><td>监督审查客户交易行为的监管责任</td></tr>
+            <tr><td>113. <span class="english-phrase">comprehensive offering</span></td><td>全面完善的综合服务方案</td></tr>
+            <tr><td>114. <span class="english-phrase">apply for OIA</span></td><td>申请海外机构投资者接入资格</td></tr>
+            <tr><td>115. <span class="english-phrase">replicate that same setup</span></td><td>复刻相同的系统环境配置</td></tr>
+            <tr><td>116. <span class="english-phrase">a big undertaking</span></td><td>一项浩大的工程/任务</td></tr>
+            <tr><td>117. <span class="english-phrase">migrate bigger customers</span></td><td>将大型客户平移至另一实体</td></tr>
+            <tr><td>118. <span class="english-phrase">stop trading for transition</span></td><td>为完成迁移而暂停交易</td></tr>
+            <tr><td>119. <span class="english-phrase">keep things simple</span></td><td>尽量保持流程简单明了</td></tr>
+            <tr><td>120. <span class="english-phrase">one environment serving two entities</span></td><td>一套系统环境同时服务两个法律实体</td></tr>
+            <tr><td>121. <span class="english-phrase">give a heads up</span></td><td>提前打招呼/预先通知</td></tr>
+            <tr><td>122. <span class="english-phrase">dormant vs. active accounts</span></td><td>休眠账户 对比 活跃账户</td></tr>
+            <tr><td>123. <span class="english-phrase">one-to-one mapping vs. one-to-many</span></td><td>一对一映射 对比 一对多映射</td></tr>
+            <tr><td>124. <span class="english-phrase">tapping on market data feeds</span></td><td>接入并利用市场行情数据源</td></tr>
+            <tr><td>125. <span class="english-phrase">rely on upstream parents</span></td><td>依赖上游母清算行/母公司</td></tr>
+            <tr><td>126. <span class="english-phrase">make a call on something</span></td><td>就某事做出明确决定</td></tr>
+            <tr><td>127. <span class="english-phrase">the former option</span></td><td>前者这个方案</td></tr>
+            <tr><td>128. <span class="english-phrase">sub-account level vs. group level</span></td><td>子账户层级 对比 集团层级</td></tr>
+            <tr><td>129. <span class="english-phrase">not transparent to clients</span></td><td>对客户而言无感/不可见</td></tr>
+            <tr><td>130. <span class="english-phrase">facing the exchange</span></td><td>直接面向交易所报送</td></tr>
+            <tr><td>131. <span class="english-phrase">central database for limits</span></td><td>集中追踪风控额度的中央数据库</td></tr>
+            <tr><td>132. <span class="english-phrase">Trade Provisioning System (TPS)</span></td><td>交易权限/额度配置系统</td></tr>
+            <tr><td>133. <span class="english-phrase">reconcile limits with platforms</span></td><td>将额度与各平台数据核验对齐</td></tr>
+            <tr><td>134. <span class="english-phrase">self-sufficient clients</span></td><td>能够自主操作、自助服务的客户</td></tr>
+            <tr><td>135. <span class="english-phrase">full audit trail</span></td><td>完整的合规审计追踪日志</td></tr>
+            <tr><td>136. <span class="english-phrase">open contract / termination</span></td><td>无固定期限合同/合同终止</td></tr>
+            <tr><td>137. <span class="english-phrase">on behalf of clients</span></td><td>代表客户（进行申报等）</td></tr>
+            <tr><td>138. <span class="english-phrase">get quite a bit of traction</span></td><td>获得相当不错的市场势头</td></tr>
+            <tr><td>139. <span class="english-phrase">perform a conformance test</span></td><td>完成与交易所的一致性测试</td></tr>
+            <tr><td>140. <span class="english-phrase">co-location / rack space</span></td><td>机房同址托管服务/机柜空间</td></tr>
         </tbody>
     </table>
 </div>
 
 <!-- TAB 3: LIVE BUZZ-IN GAME -->
 <div id="quiz" class="tab-content">
-    <h2>情景练习题 · 在线抢答</h2>
+    <h2>抢答聊天室</h2>
     <div class="notice-box">
         ⚠️ <strong>使用说明：</strong>本功能已接入腾讯云开发（CloudBase）实时数据库，只要大家打开的是<strong>同一个网址</strong>（例如你部署在 GitHub Pages 上的这个页面），无论各自在什么设备/地点（含中国大陆），抢答与排名榜都会实时同步。所有参与者输入的昵称与得分，对能访问该环境的所有人可见，请勿使用真实姓名之外的敏感信息。
+        <br><br>
+        🏁 <strong>计分规则：</strong>抢到后需在 <strong>15 秒</strong>内作答，超时自动重新开放抢答。答对按反应速度计分——<strong>3 秒内 +10 分，6 秒内 +8 分，9 秒内 +6 分，12 秒内 +4 分，15 秒内 +2 分</strong>；<strong>答错 −5 分</strong>。
     </div>
 
     <div id="joinGate" class="quiz-card">
@@ -320,26 +501,54 @@
             <button class="refresh-btn" onclick="nextQuestion()">🔀 下一题（随机换题）</button>
         </div>
 
-        <div class="quiz-card" id="questionCard">
-            <div class="quiz-zh" id="qZh">加载题目中…</div>
-            <div class="quiz-en" id="qEn"></div>
-            <div class="quiz-options" id="qOptions"></div>
-        </div>
+        <div class="quiz-layout">
+            <div class="quiz-main-col">
+                <div class="quiz-card" id="questionCard">
+                    <div class="quiz-zh" id="qZh">加载题目中…</div>
+                    <div class="quiz-en" id="qEn"></div>
+                    <div class="quiz-options" id="qOptions"></div>
+                </div>
 
-        <div id="buzzSection" style="text-align:center; margin: 20px 0;">
-            <button id="buzzBtn" class="buzz-btn" onclick="buzzIn()">🔔 抢 答！</button>
-            <div id="buzzStatus" class="buzz-status">等待有人抢答…</div>
-            <div id="judgeButtons" style="display:none; justify-content:center; gap:14px; margin-top:14px;">
-                <button class="judge-btn correct-judge" onclick="markResult(true)">✅ 回答正确 +10分</button>
-                <button class="judge-btn wrong-judge" onclick="markResult(false)">❌ 回答错误，重新抢答</button>
+                <div id="buzzSection" style="text-align:center; margin: 20px 0;">
+                    <button id="buzzBtn" class="buzz-btn" onclick="buzzIn()">🔔 抢 答！</button>
+                    <div id="buzzStatus" class="buzz-status">等待有人抢答…</div>
+                    <div id="resultBanner" style="display:none;"></div>
+                    <div style="margin-top:16px;">
+                        <a href="javascript:void(0);" onclick="forceResetBuzz()" style="font-size:13px; color:#888; text-decoration:underline;">
+                            如果长时间卡在"XXX 正在作答"，点这里强制解除
+                        </a>
+                    </div>
+                </div>
+
+                <h2 style="margin-top:35px;">📢 战况播报</h2>
+                <div id="activityLog" class="activity-log">
+                    <div style="color:#999;">暂无记录</div>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:35px;">
+                    <h2 style="margin-top:0;">🏆 实时排名榜</h2>
+                    <button class="refresh-btn" style="background:#dc3545; padding:8px 16px; font-size:14px;" onclick="resetLeaderboard()">🗑️ 清空排行榜</button>
+                </div>
+                <table class="vocab-table" id="leaderboardTable">
+                    <thead><tr><th style="width:15%;">排名</th><th style="width:55%;">昵称</th><th style="width:30%;">得分</th></tr></thead>
+                    <tbody id="leaderboardBody"><tr><td colspan="3">暂无数据</td></tr></tbody>
+                </table>
+            </div>
+
+            <div class="chat-side-col">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h2 style="margin-top:0;">💬 聊天室</h2>
+                    <button class="refresh-btn" style="background:#dc3545; padding:6px 12px; font-size:13px;" onclick="clearChat()">🗑️ 清空聊天</button>
+                </div>
+                <div id="chatMessages" class="chat-messages">
+                    <div style="color:#999;">暂无消息</div>
+                </div>
+                <div style="display:flex; gap:8px; margin-top:10px;">
+                    <input id="chatInput" type="text" placeholder="输入消息，按回车发送" style="flex:1; padding:10px; font-size:15px; border:1.5px solid #cdd5df; border-radius:6px;" onkeydown="if(event.key==='Enter'){sendChatMessage();}">
+                    <button class="refresh-btn" style="padding:10px 16px; font-size:14px;" onclick="sendChatMessage()">发送</button>
+                </div>
             </div>
         </div>
-
-        <h2 style="margin-top:35px;">🏆 实时排名榜</h2>
-        <table class="vocab-table" id="leaderboardTable">
-            <thead><tr><th style="width:15%;">排名</th><th style="width:55%;">昵称</th><th style="width:30%;">得分</th></tr></thead>
-            <tbody id="leaderboardBody"><tr><td colspan="3">暂无数据</td></tr></tbody>
-        </table>
     </div>
 
     <noscript>
@@ -347,10 +556,8 @@
     </noscript>
 </div>
 
-<!-- CloudBase (腾讯云开发) SDK, loaded via CDN -->
-<script src="https://static.cloudbase.net/cloudbase-js-sdk/2.15.1/cloudbase.js"></script>
-<script src="https://static.cloudbase.net/cloudbase-js-sdk/2.15.1/cloudbase.auth.js"></script>
-<script src="https://static.cloudbase.net/cloudbase-js-sdk/2.15.1/cloudbase.database.js"></script>
+<!-- CloudBase (腾讯云开发) SDK, loaded via CDN (full bundle: app + auth + database + realtime, etc.) -->
+<script src="https://static.cloudbase.net/cloudbase-js-sdk/2.15.1/cloudbase.full.js"></script>
 
 <script>
 function switchTab(tabId, evt) {
@@ -362,66 +569,558 @@ function switchTab(tabId, evt) {
 
 // ---- Quiz question bank ----
 const quizBank = [
+    { zh: "这个行业正在经历快速的整合兼并阶段。", en: "This industry is going through a phase of rapid {blank}.",
+      answer: "Consolidating", options: ["Consolidating", "Contingent", "Binding agreement"] },
+    { zh: "公司选择通过外延式并购而非自身业务增长来扩张。", en: "The company chose to grow {blank} rather than organically.",
+      answer: "Inorganically", options: ["Inorganically", "Trajectory", "Regulatory approval"] },
+    { zh: "这两块业务在很多方面能够相互补充。", en: "These two business lines {blank} each other in many ways.",
+      answer: "Complement", options: ["Complement", "Embargoed", "Full completion"] },
+    { zh: "新产品在年轻客户群体中获得了很强的市场吸引力。", en: "The new product has gained strong {blank} among younger customers.",
+      answer: "Traction", options: ["Traction", "Retrenchment", "Vendor"] },
+    { zh: "公司一直未能在这个新市场站稳脚跟。", en: "The company has struggled to find its {blank} in this new market.",
+      answer: "Footing", options: ["Footing", "Redundant", "Front office / back office"] },
+    { zh: "董事会授权管理层去探索任何可行的扩张方案。", en: "The board gave management a clear {blank} to explore any viable expansion plan.",
+      answer: "Mandate", options: ["Mandate", "Succession planning", "Market cap"] },
+    { zh: "在签署最终协议前，买方进行了为期三个月的尽职调查。", en: "The buyer conducted three months of {blank} before signing the final agreement.",
+      answer: "Due diligence", options: ["Due diligence", "Controllership", "Clearing member"] },
+    { zh: "目前的报价只是一个初步的意向性估值。", en: "The current offer is only a {blank} valuation.",
+      answer: "Tentative", options: ["Tentative", "Disclosure", "Agency business"] },
+    { zh: "双方已经正式签署协议，使其生效。", en: "Both parties have officially {blank} the agreement.",
+      answer: "Executed", options: ["Executed", "Prime brokerage", "Litigation"] },
+    { zh: "这笔交易涉及公司股权的完全转移。", en: "The deal involves a full transfer of company {blank}.",
+      answer: "Ownership", options: ["Ownership", "Market making", "Consideration"] },
+    { zh: "大客户在决定合作前，通常会先看对方的资产负债表规模。", en: "Big clients often check the counterparty's {blank} before agreeing to work together.",
+      answer: "Balance sheet", options: ["Balance sheet", "Structured products", "Indicative value"] },
+    { zh: "这家集团近年来一直处于密集收购的状态。", en: "This group has been on an {blank} in recent years.",
+      answer: "Acquisition spree", options: ["Acquisition spree", "Credit rated", "Book value"] },
+    { zh: "不同国家有各自独立的监管辖区。", en: "Different countries have their own regulatory {blank}.",
+      answer: "Jurisdiction", options: ["Jurisdiction", "Migrate", "Retained earnings"] },
+    { zh: "合并后双方业务互补带来了显著的协同效应。", en: "The merger created significant {blank} thanks to complementary businesses.",
+      answer: "Synergy", options: ["Synergy", "Carve out", "P&L (Profit and Loss)"] },
+    { zh: "扩大业务规模有助于降低单位成本，实现规模经济。", en: "Growing the business helps achieve {blank} and lower unit costs.",
+      answer: "Economies of scale", options: ["Economies of scale", "Rationalize", "Stretch target"] },
+    { zh: "公司计划精简重复的系统和流程以降低成本。", en: "The company plans to {blank} duplicate systems and processes to cut costs.",
+      answer: "Streamline", options: ["Streamline", "Status quo", "Compressed target"] },
+    { zh: "买方为了收购核心团队支付了远高于账面价值的溢价。", en: "The buyer paid a large {blank} well above book value to acquire the core team.",
+      answer: "Premium", options: ["Premium", "Onboard", "Move the needle"] },
+    { zh: "交易的生效以核心团队集体加入为前提条件。", en: "The deal is {blank} on the core team agreeing to join.",
+      answer: "Contingent", options: ["Contingent", "Papered", "Counterpart"] },
+    { zh: "大平台能为员工提供更清晰的职业发展路径。", en: "A larger platform can offer a clearer career {blank} for employees.",
+      answer: "Trajectory", options: ["Trajectory", "Handful", "Moving parts"] },
+    { zh: "这条消息目前处于保密期，还不能对外公开。", en: "This piece of news is currently {blank} and cannot be disclosed yet.",
+      answer: "Embargoed", options: ["Embargoed", "Mutually exclusive", "Nail down"] },
+    { zh: "公司承诺这次整合不会进行裁员。", en: "The company promised there would be no {blank} as part of this integration.",
+      answer: "Retrenchment", options: ["Retrenchment", "Objectively", "Vehicle (corporate)"] },
+    { zh: "由于业务调整，部分岗位被裁减。", en: "Some positions were made {blank} due to the business restructuring.",
+      answer: "Redundant", options: ["Redundant", "Pragmatic", "Jump start"] },
+    { zh: "公司提前部署了管理层继任计划，避免过度依赖一个人。", en: "The company has a clear {blank} in place to avoid relying on one leader.",
+      answer: "Succession planning", options: ["Succession planning", "Qualms", "Acquainted"] },
+    { zh: "此次股权变更需要向监管机构申报实际控制权的变化。", en: "This share transfer requires reporting a change in {blank} to the regulator.",
+      answer: "Controllership", options: ["Controllership", "Originating", "Transition team"] },
+    { zh: "上市公司必须按时履行强制性信息披露义务。", en: "Listed companies must fulfill mandatory {blank} obligations on time.",
+      answer: "Disclosure", options: ["Disclosure", "Binding agreement", "Entrust"] },
+    { zh: "这家机构为对冲基金提供全套的主经纪商服务。", en: "This institution offers full {blank} services to hedge funds.",
+      answer: "Prime brokerage", options: ["Prime brokerage", "Regulatory approval", "Robustly"] },
+    { zh: "集团拥有强大的做市业务能力，能主动双向报价。", en: "The group has a strong {blank} capability, quoting both sides of the market.",
+      answer: "Market making", options: ["Market making", "Full completion", "Incubate"] },
+    { zh: "结构化产品可以满足机构客户的定制化风险需求。", en: "{blank} can be tailored to meet institutional clients' specific risk needs.",
+      answer: "Structured products", options: ["Structured products", "Vendor", "Consolidating"] },
+    { zh: "只有具备信用评级的机构才能对接大型银行客户。", en: "Only institutions that are {blank} can work with large banking clients.",
+      answer: "Credit rated", options: ["Credit rated", "Front office / back office", "Inorganically"] },
+    { zh: "客户账户将在交割完成后迁移到新的平台。", en: "Client accounts will {blank} to the new platform after completion.",
+      answer: "Migrate", options: ["Migrate", "Market cap", "Complement"] },
+    { zh: "存在未决诉讼的实体被从本次收购范围中剥离出来。", en: "The entity with pending litigation was {blank} from the scope of this deal.",
+      answer: "Carve out", options: ["Carve out", "Clearing member", "Traction"] },
+    { zh: "监管机构不允许两个重复的持牌实体长期并存，需要合理化整合。", en: "Regulators require the group to {blank} the two overlapping licensed entities.",
+      answer: "Rationalize", options: ["Rationalize", "Agency business", "Footing"] },
+    { zh: "在交割完成前，公司股东、品牌和日常运营都保持现状。", en: "Until completion, shareholders, branding and daily operations remain {blank}.",
+      answer: "Status quo", options: ["Status quo", "Litigation", "Mandate"] },
+    { zh: "销售团队正在为新客户完成开户手续。", en: "The sales team is in the process of {blank} a new client.",
+      answer: "Onboard", options: ["Onboard", "Consideration", "Due diligence"] },
+    { zh: "这位客户已经在我们的实体名下完成了开户签约。", en: "This client is already {blank} under our entity.",
+      answer: "Papered", options: ["Papered", "Indicative value", "Tentative"] },
+    { zh: "同时拥有双方账户的重叠客户只是极少数几个。", en: "Only a {blank} of clients hold accounts with both sides.",
+      answer: "Handful", options: ["Handful", "Book value", "Executed"] },
+    { zh: "双方的客户群体基本没有交集。", en: "The two client bases are almost entirely {blank}.",
+      answer: "Mutually exclusive", options: ["Mutually exclusive", "Retained earnings", "Ownership"] },
+    { zh: "我们需要客观地比较两个方案的实际效果。", en: "We need to {blank} compare the real impact of the two options.",
+      answer: "Objectively", options: ["Objectively", "P&L (Profit and Loss)", "Balance sheet"] },
+    { zh: "管理层在决策时展现出非常务实高效的风格。", en: "Management showed a very {blank} and efficiency-first style in decision making.",
+      answer: "Pragmatic", options: ["Pragmatic", "Stretch target", "Acquisition spree"] },
+    { zh: "对于是否要合并这个部门，他毫无迟疑和顾虑。", en: "He had no {blank} about merging the department.",
+      answer: "Qualms", options: ["Qualms", "Compressed target", "Jurisdiction"] },
+    { zh: "这位高管出身于一家被收购的公司，如今晋升为全球负责人。", en: "This executive, {blank} from an acquired firm, is now a global head.",
+      answer: "Originating", options: ["Originating", "Move the needle", "Synergy"] },
+    { zh: "双方一旦签署这份具有法律约束力的协议，就不能随意退出。", en: "Once signed, this {blank} cannot be walked away from casually.",
+      answer: "Binding agreement", options: ["Binding agreement", "Counterpart", "Economies of scale"] },
+    { zh: "跨境并购交割前必须取得多个司法辖区的监管审批。", en: "Cross-border deals require {blank} from multiple jurisdictions before completion.",
+      answer: "Regulatory approval", options: ["Regulatory approval", "Moving parts", "Streamline"] },
+    { zh: "交易将在获得全部监管批准后正式完成交割。", en: "The deal will reach {blank} once all regulatory approvals are obtained.",
+      answer: "Full completion", options: ["Full completion", "Nail down", "Premium"] },
+    { zh: "合并后可以整合重复的第三方系统供应商以降低成本。", en: "After the merger, duplicate third-party {blank} can be consolidated to cut costs.",
+      answer: "Vendor", options: ["Vendor", "Vehicle (corporate)", "Contingent"] },
+    { zh: "前台团队负责创收，后台团队负责结算与风控支持。", en: "The {blank} team handles execution while operations and risk sit in the back.",
+      answer: "Front office / back office", options: ["Front office / back office", "Jump start", "Trajectory"] },
+    { zh: "这家上市公司的市值约为四十四亿美元。", en: "The listed company has a {blank} of about four point four billion dollars.",
+      answer: "Market cap", options: ["Market cap", "Acquainted", "Embargoed"] },
+    { zh: "申请交易所清算会员资格的流程通常又长又复杂。", en: "Applying for {blank} status at an exchange is usually a long, complex process.",
+      answer: "Clearing member", options: ["Clearing member", "Transition team", "Retrenchment"] },
+    { zh: "这条业务线的核心是代表客户执行买卖指令的代理经纪业务。", en: "The core of this business line is traditional {blank}, executing orders on behalf of clients.",
+      answer: "Agency business", options: ["Agency business", "Entrust", "Redundant"] },
+    { zh: "因为存在未决诉讼，这个实体被排除在收购范围之外。", en: "This entity was excluded from the deal because of pending {blank}.",
+      answer: "Litigation", options: ["Litigation", "Robustly", "Succession planning"] },
+    { zh: "双方最终商定的交易对价约为一点六七亿美元。", en: "The final {blank} agreed by both parties was about one hundred sixty-seven million dollars.",
+      answer: "Consideration", options: ["Consideration", "Incubate", "Controllership"] },
+    { zh: "目前的报价只是一个参考性质的指示性估值。", en: "The current offer is only an {blank}, not a final price.",
+      answer: "Indicative value", options: ["Indicative value", "Consolidating", "Disclosure"] },
+    { zh: "交易对价是基于五月末的账面价值加上溢价计算出来的。", en: "The consideration was calculated based on the {blank} as of end of May plus a premium.",
+      answer: "Book value", options: ["Book value", "Inorganically", "Prime brokerage"] },
+    { zh: "在交割完成前，标的公司产生的所有收益仍归原股东所有，计作留存收益。", en: "Until completion, all earnings generated remain as {blank} of the current shareholders.",
+      answer: "Retained earnings", options: ["Retained earnings", "Complement", "Market making"] },
+    { zh: "五年前，这家集团的年度损益大约是四千万美元的利润。", en: "Five years ago, the group's annual {blank} was about forty million dollars in profit.",
+      answer: "P&L (Profit and Loss)", options: ["P&L (Profit and Loss)", "Traction", "Structured products"] },
+    { zh: "管理层为团队设定了一个更具挑战性的跳跃式增长目标。", en: "Management set the team a more challenging {blank} for growth.",
+      answer: "Stretch target", options: ["Stretch target", "Footing", "Credit rated"] },
+    { zh: "收购方给团队设定的是压缩式的加速增长目标，而不是维持现状。", en: "The acquirer set the team a {blank} rather than a status-quo goal.",
+      answer: "Compressed target", options: ["Compressed target", "Mandate", "Migrate"] },
+    { zh: "对于这么大规模的集团来说，个人的薪资根本不足以撼动大局。", en: "For a group this size, one person's salary really doesn't {blank}.",
+      answer: "Move the needle", options: ["Move the needle", "Due diligence", "Carve out"] },
+    { zh: "双方团队安排了每周例会，方便对口负责人互相对接。", en: "The two teams scheduled weekly calls so that {blank} could stay in sync.",
+      answer: "Counterpart", options: ["Counterpart", "Tentative", "Rationalize"] },
+    { zh: "整合方案里还有不少细节尚未最终确定，仍在变动中。", en: "Several details of the integration plan are still {blank}.",
+      answer: "Moving parts", options: ["Moving parts", "Executed", "Status quo"] },
+    { zh: "双方需要坐下来把交易的具体条款最终敲定。", en: "Both sides need to sit down and {blank} the exact terms of the deal.",
+      answer: "Nail down", options: ["Nail down", "Ownership", "Onboard"] },
+    { zh: "为了快速启动商务业务，收购方连同一个特殊目的载体公司一并买下。", en: "To jump-start the commercial business, the buyer also acquired a special-purpose {blank}.",
+      answer: "Vehicle (corporate)", options: ["Vehicle (corporate)", "Balance sheet", "Papered"] },
+    { zh: "借助现成的资源和平台，可以让新业务迅速运转起来。", en: "Leaning on existing resources can really help {blank} a new business.",
+      answer: "Jump start", options: ["Jump start", "Acquisition spree", "Handful"] },
+    { zh: "整合初期，双方团队被安排先互相熟悉、建立联系。", en: "In the early stage of integration, the two teams were {blank} with each other.",
+      answer: "Acquainted", options: ["Acquainted", "Jurisdiction", "Mutually exclusive"] },
+    { zh: "收购方专门配备了一支有丰富经验的过渡团队来对接。", en: "The acquirer assigned an experienced {blank} to handle the handover.",
+      answer: "Transition team", options: ["Transition team", "Synergy", "Objectively"] },
+    { zh: "集团把开拓中国市场这项重大职责正式交给了现有团队。", en: "The group formally {blank} the responsibility of growing China to the existing team.",
+      answer: "Entrust", options: ["Entrust", "Economies of scale", "Pragmatic"] },
+    { zh: "过去几年，这家公司一直在稳健地扩大自己的业务。", en: "Over the past few years, the company has been {blank} growing its business.",
+      answer: "Robustly", options: ["Robustly", "Streamline", "Qualms"] },
+    { zh: "公司希望从零开始培养一批本地交易员。", en: "The company hopes to {blank} a group of local traders from scratch.",
+      answer: "Incubate", options: ["Incubate", "Premium", "Originating"] },
     { zh: "这笔交易将标志着公司发展历史上最具里程碑意义的时刻。", en: "This deal will {blank} in our company's history.",
-      answer: "mark the most significant milestone", options: ["mark the most significant milestone", "grow by leaps and bounds", "play to our disadvantage"] },
+      answer: "mark the most significant milestone", options: ["mark the most significant milestone", "unable to find our footing", "play to our disadvantage"] },
     { zh: "这次合并将从结构上彻底改变整个行业的竞争格局。", en: "This merger will {blank} of the entire industry.",
-      answer: "structurally change the landscape", options: ["structurally change the landscape", "achieve economies of scale", "provide a clear career trajectory"] },
+      answer: "structurally change the landscape", options: ["structurally change the landscape", "unlock key milestones", "provide competitive pricing"] },
     { zh: "过去三年，公司的业务实现了突飞猛进的增长。", en: "Over the past three years, our business has {blank}.",
-      answer: "grown by leaps and bounds", options: ["grown by leaps and bounds", "gone on an acquisition spree", "found our footing"] },
+      answer: "grown by leaps and bounds", options: ["grown by leaps and bounds", "Hand to heart", "opened up a massive toolbox"] },
     { zh: "在过去两年里，我们的团队一直处于业绩的巅峰状态。", en: "Over the last two years, our team has {blank}.",
-      answer: "performed at our peak", options: ["performed at our peak", "moved the needle", "streamlined and collapsed vendors"] },
+      answer: "performed at our peak", options: ["performed at our peak", "exhibit growth in the region", "lean on a very large balance sheet"] },
     { zh: "这次交易能让我们自己拥有更充沛的资源去武装团队。", en: "This deal allows us to {blank}.",
-      answer: "equip ourselves with more resources", options: ["equip ourselves with more resources", "acquire core expertise rather than a client list", "open up a massive toolbox"] },
+      answer: "equip ourselves with more resources", options: ["equip ourselves with more resources", "aligned into one pivotal point", "investment grade credit rating"] },
     { zh: "我们希望持续为客户提供叠加的增量价值。", en: "We hope to consistently {blank} for our clients.",
-      answer: "offer incremental value", options: ["offer incremental value", "provide competitive pricing", "share our strategic rationale"] },
+      answer: "offer incremental value", options: ["offer incremental value", "agreed on a tentative pricing", "opened up a whole realm of opportunities"] },
+    { zh: "行业目前处于高度竞争、快速整合并购的状态。", en: "The industry is currently {blank}.",
+      answer: "highly competitive and consolidating", options: ["highly competitive and consolidating", "nothing short of extraordinary", "target clients we did not dare to think about"] },
     { zh: "行业里的小型机构正逐渐被大型企业兼并吸收。", en: "The smaller players in the industry are gradually getting {blank}.",
-      answer: "absorbed", options: ["absorbed", "rationalized", "entrusted"] },
+      answer: "absorbed", options: ["absorbed", "high intensity due diligence", "low-hanging fruit"] },
     { zh: "管理团队已经从董事会获得了正式的扩张授权。", en: "The management team has {blank} to expand the business.",
-      answer: "secured a mandate from the board", options: ["secured a mandate from the board", "executed the SPA", "taken over 100% of the ownership"] },
+      answer: "secured a mandate from the board", options: ["secured a mandate from the board", "executed the SPA (Share Purchase Agreement)", "realize good synergy immediately"] },
     { zh: "企业既可以通过自身内生增长，也可以通过外延并购来扩张。", en: "A company can choose to {blank}.",
-      answer: "grow organically or inorganically", options: ["grow organically or inorganically", "streamline and collapse vendors", "achieve economies of scale"] },
+      answer: "grow organically or inorganically", options: ["grow organically or inorganically", "take over 100% of the ownership", "achieve economies of scale"] },
+    { zh: "双方从最开始就一直在共同探讨合作的可能性。", en: "The two teams have been {blank} from the very start.",
+      answer: "explore ideas collaboratively", options: ["explore ideas collaboratively", "share our strategic rationale", "streamline and collapse vendors"] },
     { zh: "双方的业务在很多方面能够形成很强的互补效应。", en: "The two businesses {blank} in many ways.",
-      answer: "complement each other in the businesses", options: ["complement each other in the businesses", "align into one pivotal point", "blend the best practices of both sides"] },
+      answer: "complement each other in the businesses", options: ["complement each other in the businesses", "a one-way communication street", "targeting systems, not staff"] },
     { zh: "新产品在客户群体中已经获得了很强的市场吸引力。", en: "The new product has {blank}.",
-      answer: "gained strong traction with clients", options: ["gained strong traction with clients", "played to our disadvantage", "been contingent on core staff joining"] },
+      answer: "gained strong traction with clients", options: ["gained strong traction with clients", "main bread and butter business", "paid a substantial valuation premium"] },
     { zh: "公司在那个新市场一直未能真正站稳脚跟。", en: "The company was {blank} in that new market.",
-      answer: "unable to find our footing", options: ["unable to find our footing", "nothing short of extraordinary", "on the back of a weak balance sheet"] },
+      answer: "unable to find our footing", options: ["unable to find our footing", "thanks but no thanks", "acquire core expertise rather than a client list"] },
+    { zh: "团队希望在未来两三年攻克几个关键的里程碑目标。", en: "The team hopes to {blank} over the next two or three years.",
+      answer: "unlock key milestones", options: ["unlock key milestones", "on the back of a weak balance sheet", "contingent on core staff joining"] },
     { zh: "坦白地说，我们确实经过了非常艰难的一段时期。", en: "{blank}, we did go through a very tough period.",
-      answer: "Hand to heart", options: ["Hand to heart", "Thanks but no thanks", "Low-hanging fruit"] },
+      answer: "Hand to heart", options: ["Hand to heart", "gone on an acquisition spree", "provide a clear career trajectory"] },
+    { zh: "公司在这个地区展现出了非常显著的业务增长。", en: "The company has continued to {blank}.",
+      answer: "exhibit growth in the region", options: ["exhibit growth in the region", "play to our disadvantage", "rationalization of parallel entities"] },
+    { zh: "双方管理层很快就在核心问题上达成了一致意见。", en: "Both management teams quickly {blank}.",
+      answer: "aligned into one pivotal point", options: ["aligned into one pivotal point", "provide competitive pricing", "is embargoed until 7 PM"] },
+    { zh: "双方就一个初步的意向性估值达成了一致。", en: "Both sides {blank}.",
+      answer: "agreed on a tentative pricing", options: ["agreed on a tentative pricing", "opened up a massive toolbox", "be as upfront and transparent as possible"] },
     { zh: "这样的增长速度完全称得上是一场奇迹。", en: "Growth at this pace is {blank}.",
-      answer: "nothing short of extraordinary", options: ["nothing short of extraordinary", "a huge responsibility entrusted to us", "an extraordinary growth"] },
+      answer: "nothing short of extraordinary", options: ["nothing short of extraordinary", "lean on a very large balance sheet", "hear about this from news"] },
+    { zh: "过去三个月，团队完成了一次高强度、全方位的尽职调查。", en: "The team completed three months of {blank}.",
+      answer: "high intensity due diligence", options: ["high intensity due diligence", "investment grade credit rating", "blend the best practices of both sides"] },
     { zh: "双方已经正式签署了股权购买协议。", en: "Both parties have officially {blank}.",
-      answer: "executed the SPA (Share Purchase Agreement)", options: ["executed the SPA (Share Purchase Agreement)", "secured a mandate from the board", "agreed on a tentative pricing"] },
+      answer: "executed the SPA (Share Purchase Agreement)", options: ["executed the SPA (Share Purchase Agreement)", "opened up a whole realm of opportunities", "buy the people, not just the business"] },
     { zh: "买方将全资接管标的公司100%的股权。", en: "The buyer will {blank} of the target company.",
-      answer: "take over 100% of the ownership", options: ["take over 100% of the ownership", "carve out the litigation entity", "rationalize parallel entities"] },
+      answer: "take over 100% of the ownership", options: ["take over 100% of the ownership", "target clients we did not dare to think about", "you guys would probably double your money"] },
+    { zh: "管理层认为有责任向全体员工分享这次交易的战略考量。", en: "Management felt it was their duty to {blank} with all staff.",
+      answer: "share our strategic rationale", options: ["share our strategic rationale", "low-hanging fruit", "an extraordinary growth"] },
+    { zh: "这次沟通不应该是管理层单向灌输的一言堂。", en: "This should not be {blank}.",
+      answer: "a one-way communication street", options: ["a one-way communication street", "realize good synergy immediately", "make you redundant to save that cost"] },
     { zh: "清算经纪业务是公司最核心的顶梁柱业务。", en: "Clearing and brokerage is our {blank}.",
-      answer: "main bread and butter business", options: ["main bread and butter business", "investment grade credit rating", "low-hanging fruit"] },
+      answer: "main bread and butter business", options: ["main bread and butter business", "achieve economies of scale", "they are in an acquisition spree"] },
     { zh: "很抱歉，由于对方规模不足，我们只能委婉谢绝这次合作。", en: "Given their balance sheet, it was often a case of {blank}.",
-      answer: "thanks but no thanks", options: ["thanks but no thanks", "hand to heart", "nothing short of extraordinary"] },
+      answer: "thanks but no thanks", options: ["thanks but no thanks", "streamline and collapse vendors", "the mandate is to keep growing"] },
+    { zh: "很多合作机会都是因为我们资产负债表规模薄弱而错失的。", en: "Many opportunities were lost {blank}.",
+      answer: "on the back of a weak balance sheet", options: ["on the back of a weak balance sheet", "targeting systems, not staff", "doesn't really move the needle"] },
     { zh: "近几年，行业头部机构一直在掀起一轮又一轮的收购潮。", en: "In recent years, the industry leaders have {blank}.",
-      answer: "gone on an acquisition spree", options: ["gone on an acquisition spree", "streamlined and collapsed vendors", "achieved economies of scale"] },
+      answer: "gone on an acquisition spree", options: ["gone on an acquisition spree", "paid a substantial valuation premium", "using the economies of scale"] },
     { zh: "规模上的劣势最终会转化为我们的竞争劣势。", en: "Our lack of scale will eventually {blank}.",
-      answer: "play to our disadvantage", options: ["play to our disadvantage", "open up a whole realm of opportunities", "realize good synergy immediately"] },
+      answer: "play to our disadvantage", options: ["play to our disadvantage", "acquire core expertise rather than a client list", "increasing our profit margin"] },
+    { zh: "合并后公司能够为客户提供极具竞争力的报价。", en: "After the merger, the company can {blank} to clients.",
+      answer: "provide competitive pricing", options: ["provide competitive pricing", "contingent on core staff joining", "get everybody acquainted with your counterparts"] },
+    { zh: "这次交易为我们的销售团队打开了一整套全新的工具箱。", en: "This deal has {blank} for our sales team.",
+      answer: "opened up a massive toolbox", options: ["opened up a massive toolbox", "provide a clear career trajectory", "they have done many acquisitions"] },
     { zh: "公司可以依靠对方雄厚的资产负债表来拓展大客户。", en: "The company can {blank} to win over larger clients.",
-      answer: "lean on a very large balance sheet", options: ["lean on a very large balance sheet", "provide competitive pricing", "open up a massive toolbox"] },
+      answer: "lean on a very large balance sheet", options: ["lean on a very large balance sheet", "rationalization of parallel entities", "we will get more clarity as we move along"] },
     { zh: "这家机构拥有投资级的信用评级，是实力的证明。", en: "The firm holds an {blank}, a proof of its strength.",
-      answer: "investment grade credit rating", options: ["investment grade credit rating", "acquisition spree", "economies of scale"] },
+      answer: "investment grade credit rating", options: ["investment grade credit rating", "is embargoed until 7 PM", "hunting for a big home for everybody"] },
+    { zh: "这次合作为公司开辟出了一片前所未有的机会新天地。", en: "This partnership has {blank} for the company.",
+      answer: "opened up a whole realm of opportunities", options: ["opened up a whole realm of opportunities", "be as upfront and transparent as possible", "make sure nothing gets interrupted"] },
+    { zh: "现在公司可以去争取那些过去连想都不敢想的顶级大客户了。", en: "The company can now {blank}.",
+      answer: "target clients we did not dare to think about", options: ["target clients we did not dare to think about", "hear about this from news", "I want to be as transparent as I can"] },
     { zh: "这些新客户对我们来说，是唾手可得的现成机会。", en: "These new clients are {blank} for us.",
-      answer: "low-hanging fruit", options: ["low-hanging fruit", "main bread and butter business", "a huge responsibility entrusted to us"] },
+      answer: "low-hanging fruit", options: ["low-hanging fruit", "blend the best practices of both sides", "grow your confidence and your comfort"] },
+    { zh: "双方业务高度互补，几乎立刻就能释放出良好的协同效应。", en: "The complementary businesses {blank}.",
+      answer: "realize good synergy immediately", options: ["realize good synergy immediately", "buy the people, not just the business", "a huge responsibility entrusted to us"] },
     { zh: "合并后，公司很快就能实现规模经济效益。", en: "After the merger, the company will quickly {blank}.",
-      answer: "achieve economies of scale", options: ["achieve economies of scale", "grow organically or inorganically", "provide a clear career trajectory"] },
+      answer: "achieve economies of scale", options: ["achieve economies of scale", "you guys would probably double your money", "a clear sheet of paper"] },
     { zh: "公司计划精简并合并重复的供应商合同以降低成本。", en: "The company plans to {blank} to cut costs.",
-      answer: "streamline and collapse vendors", options: ["streamline and collapse vendors", "carve out the litigation entity", "rationalize parallel entities"] },
+      answer: "streamline and collapse vendors", options: ["streamline and collapse vendors", "an extraordinary growth", "we all deserve a pat on our back"] },
+    { zh: "这次成本裁减完全针对系统和采购，绝不涉及裁员。", en: "This cost reduction is {blank}.",
+      answer: "targeting systems, not staff", options: ["targeting systems, not staff", "make you redundant to save that cost", "bring you on this journey"] },
+    { zh: "买方为了这笔交易支付了极为丰厚昂贵的估值溢价。", en: "The buyer {blank} for this deal.",
+      answer: "paid a substantial valuation premium", options: ["paid a substantial valuation premium", "they are in an acquisition spree", "mark the most significant milestone"] },
     { zh: "买家看重的是核心团队的专业能力，而不仅仅是一张客户名单。", en: "The buyer wants to {blank}.",
-      answer: "acquire core expertise rather than a client list", options: ["acquire core expertise rather than a client list", "buy the people, not just the business", "pay a substantial valuation premium"] },
+      answer: "acquire core expertise rather than a client list", options: ["acquire core expertise rather than a client list", "the mandate is to keep growing", "structurally change the landscape"] },
+    { zh: "这笔交易能否生效，取决于核心团队是否愿意整体加入。", en: "The deal is {blank}.",
+      answer: "contingent on core staff joining", options: ["contingent on core staff joining", "doesn't really move the needle", "grown by leaps and bounds"] },
     { zh: "管理层承诺为员工提供清晰可见的职业发展路径。", en: "Management has promised to {blank}.",
-      answer: "provide a clear career trajectory", options: ["provide a clear career trajectory", "provide competitive pricing", "blend the best practices of both sides"] },
+      answer: "provide a clear career trajectory", options: ["provide a clear career trajectory", "using the economies of scale", "performed at our peak"] },
+    { zh: "监管不允许两个平行重复的持牌实体长期共存，需要合理化整合。", en: "Regulators require the {blank}.",
+      answer: "rationalization of parallel entities", options: ["rationalization of parallel entities", "increasing our profit margin", "equip ourselves with more resources"] },
+    { zh: "这条消息设有保密期，必须等到今晚七点才能对外公开。", en: "This information {blank}.",
+      answer: "is embargoed until 7 PM", options: ["is embargoed until 7 PM", "get everybody acquainted with your counterparts", "offer incremental value"] },
+    { zh: "管理层希望在沟通中尽可能做到公开、坦诚、极度透明。", en: "Management wants to {blank} in this communication.",
+      answer: "be as upfront and transparent as possible", options: ["be as upfront and transparent as possible", "they have done many acquisitions", "highly competitive and consolidating"] },
+    { zh: "公司不希望员工从冰冷的新闻媒体上被动得知这个消息。", en: "The company doesn't want staff to {blank}.",
+      answer: "hear about this from news", options: ["hear about this from news", "we will get more clarity as we move along", "absorbed"] },
+    { zh: "整合的原则是融合双方最完美的管理与实操体系，而非照搬一方。", en: "The integration principle is to {blank}.",
+      answer: "blend the best practices of both sides", options: ["blend the best practices of both sides", "hunting for a big home for everybody", "secured a mandate from the board"] },
     { zh: "他们收购的核心价值是买下团队本身，而非仅仅是一门生意。", en: "The core value of the deal is to {blank}.",
-      answer: "buy the people, not just the business", options: ["buy the people, not just the business", "make you redundant to save that cost", "acquire core expertise rather than a client list"] },
+      answer: "buy the people, not just the business", options: ["buy the people, not just the business", "make sure nothing gets interrupted", "grow organically or inorganically"] },
+    { zh: "如果时机选得好，大家很可能实现投入资金翻倍的收益。", en: "With good timing, {blank}.",
+      answer: "you guys would probably double your money", options: ["you guys would probably double your money", "I want to be as transparent as I can", "explore ideas collaboratively"] },
+    { zh: "回顾过去几年，这确实堪称一段非凡卓越的增长历程。", en: "Looking back, this has truly been {blank}.",
+      answer: "an extraordinary growth", options: ["an extraordinary growth", "grow your confidence and your comfort", "complement each other in the businesses"] },
+    { zh: "收购方绝不会仅仅为了节省你的基础薪资就把你辞退。", en: "The acquirer would never {blank}.",
+      answer: "make you redundant to save that cost", options: ["make you redundant to save that cost", "a huge responsibility entrusted to us", "gained strong traction with clients"] },
+    { zh: "对方近年来一直处于密集连续收购的扩张期。", en: "In recent years, {blank}.",
+      answer: "they are in an acquisition spree", options: ["they are in an acquisition spree", "a clear sheet of paper", "unable to find our footing"] },
+    { zh: "集团给团队的核心使命就是持续做大做强，而不是止步不前。", en: "The core mission given to the team is that {blank}.",
+      answer: "the mandate is to keep growing", options: ["the mandate is to keep growing", "we all deserve a pat on our back", "unlock key milestones"] },
     { zh: "对于这样规模的集团来说，我们个人的薪资根本不足以撼动大局。", en: "For a group of this size, our salary {blank}.",
-      answer: "doesn't really move the needle", options: ["doesn't really move the needle", "is a huge responsibility entrusted to us", "is nothing short of extraordinary"] },
-    { zh: "我认为我们所有人都值得为自己好好点赞鼓励一番。", en: "I think {blank}.",
-      answer: "we all deserve a pat on our back", options: ["we all deserve a pat on our back", "we will get more clarity as we move along", "we want to be as transparent as we can"] }
+      answer: "doesn't really move the needle", options: ["doesn't really move the needle", "bring you on this journey", "Hand to heart"] },
+    { zh: "公司希望能充分借助规模经济效应来降本增效。", en: "The company hopes to keep {blank}.",
+      answer: "using the economies of scale", options: ["using the economies of scale", "mark the most significant milestone", "exhibit growth in the region"] },
+    { zh: "接下来几个月的核心工作是持续稳步地提升整体利润率。", en: "The core focus for the coming months is {blank}.",
+      answer: "increasing our profit margin", options: ["increasing our profit margin", "structurally change the landscape", "aligned into one pivotal point"] },
+    { zh: "整合初期最重要的一步，是让大家和各自的对接窗口相互熟悉。", en: "The first key step is to {blank}.",
+      answer: "get everybody acquainted with your counterparts", options: ["get everybody acquainted with your counterparts", "grown by leaps and bounds", "agreed on a tentative pricing"] },
+    { zh: "对方拥有极为丰富的历次并购整合经验，值得信赖。", en: "It's reassuring that {blank}.",
+      answer: "they have done many acquisitions", options: ["they have done many acquisitions", "performed at our peak", "nothing short of extraordinary"] },
+    { zh: "随着整合逐步推进，很多细节会变得越来越清晰。", en: "As things move forward, {blank}.",
+      answer: "we will get more clarity as we move along", options: ["we will get more clarity as we move along", "equip ourselves with more resources", "high intensity due diligence"] },
+    { zh: "收购方正在为合并后的全体团队物色一个宽敞的新办公场地。", en: "The acquirer is {blank}.",
+      answer: "hunting for a big home for everybody", options: ["hunting for a big home for everybody", "offer incremental value", "executed the SPA (Share Purchase Agreement)"] },
+    { zh: "搬迁计划会提前做好安排，确保核心业务运转不受任何干扰。", en: "The relocation plan will {blank}.",
+      answer: "make sure nothing gets interrupted", options: ["make sure nothing gets interrupted", "highly competitive and consolidating", "take over 100% of the ownership"] },
+    { zh: "管理层希望在沟通中尽己所能做到公开透明。", en: "Management said, \"{blank}.\"",
+      answer: "I want to be as transparent as I can", options: ["I want to be as transparent as I can", "absorbed", "share our strategic rationale"] },
+    { zh: "管理层希望不断增强大家对团队的信心与内心的安全感。", en: "Management wants to continue to {blank}.",
+      answer: "grow your confidence and your comfort", options: ["grow your confidence and your comfort", "secured a mandate from the board", "a one-way communication street"] },
+    { zh: "集团把开拓中国市场这项重大责任郑重托付给了现有团队。", en: "This is {blank}.",
+      answer: "a huge responsibility entrusted to us", options: ["a huge responsibility entrusted to us", "grow organically or inorganically", "main bread and butter business"] },
+    { zh: "被赋予的授权就像一张可以自由挥洒的白纸，充分自主。", en: "The mandate is like {blank}.",
+      answer: "a clear sheet of paper", options: ["a clear sheet of paper", "explore ideas collaboratively", "thanks but no thanks"] },
+    { zh: "经过这么长时间的努力，大家都值得为自己好好点赞鼓励一番。", en: "After all this effort, {blank}.",
+      answer: "we all deserve a pat on our back", options: ["we all deserve a pat on our back", "complement each other in the businesses", "on the back of a weak balance sheet"] },
+    { zh: "管理层希望带领整个团队一起踏上这段全新的征程。", en: "Management hopes to {blank}.",
+      answer: "bring you on this journey", options: ["bring you on this journey", "gained strong traction with clients", "gone on an acquisition spree"] },
+    { zh: "他是销售负责人之一，主要负责对接客户业务。", en: "He is one of the sales leads, mainly {blank} client accounts.",
+      answer: "covering", options: ["covering", "overview", "enhancement"] },
+    { zh: "这是这个岗位需要承担的具体职责之一。", en: "This is one of the {blank} of this role.",
+      answer: "duties", options: ["duties", "follow-the-sun", "integration"] },
+    { zh: "他是团队里资历较浅的初级经纪人。", en: "He is a {blank} broker on the team, still fairly new.",
+      answer: "junior", options: ["junior", "split", "specification"] },
+    { zh: "干散货是与能源、金属并列的大宗商品类别。", en: "{blank} is a major commodity category alongside energy and metals.",
+      answer: "Dry bulk", options: ["Dry bulk", "upgrade", "facilitate"] },
+    { zh: "动力煤是电力行业最核心的能源品类之一。", en: "{blank} coal is one of the core fuel types for the power industry.",
+      answer: "Thermal", options: ["Thermal", "onboarding", "coordinate"] },
+    { zh: "外汇部门每天处理大量的货币兑换业务。", en: "The FX desk handles a large volume of {blank} exchange every day.",
+      answer: "currency", options: ["currency", "high touch", "neat"] },
+    { zh: "这个指数涵盖了农业和金融两大板块。", en: "This {blank} covers both agricultural and financial sectors.",
+      answer: "index", options: ["index", "native", "life cycle"] },
+    { zh: "公司选择自研交易系统，而不是外部采购。", en: "The company chose an {blank} trading system instead of buying one externally.",
+      answer: "in-house", options: ["in-house", "sponsored access", "comprehensive"] },
+    { zh: "平台之间的连接性直接影响数据传输效率。", en: "{blank} between platforms directly affects data transmission efficiency.",
+      answer: "Connectivity", options: ["Connectivity", "clearer", "surveillance"] },
+    { zh: "这是公司自己的自营账户，不属于任何客户。", en: "This is a {blank}, not belonging to any client.",
+      answer: "house account", options: ["house account", "completion", "admission"] },
+    { zh: "风控团队需要评估市场波动带来的潜在风险。", en: "The risk team needs to {blank} the potential risk from market volatility.",
+      answer: "assess", options: ["assess", "pipe", "top day"] },
+    { zh: "交易员密切关注着当天的市场价格走势。", en: "Traders are closely watching the market {blank} today.",
+      answer: "movement", options: ["movement", "sticky", "asset classes"] },
+    { zh: "交易前风控是订单成交前的重要一环。", en: "{blank} controls are a critical step before an order is executed.",
+      answer: "Pre-trade", options: ["Pre-trade", "expire", "undertaking"] },
+    { zh: "交易后复核确保成交数据准确无误。", en: "{blank} controls make sure the executed data is accurate.",
+      answer: "Post-trade", options: ["Post-trade", "netted off", "acquisition"] },
+    { zh: "这家机构为大客户提供定制化的服务方案。", en: "The firm offers a {blank} service plan for major clients.",
+      answer: "bespoke", options: ["bespoke", "manageable", "insight"] },
+    { zh: "对账工作确保两套系统间的数据完全一致。", en: "{blank} ensures the data between the two systems fully matches.",
+      answer: "Reconciliation", options: ["Reconciliation", "legacy", "dormant"] },
+    { zh: "请按照标准格式发送电汇确认文件。", en: "Please send the wire confirmation in the standard {blank}.",
+      answer: "format", options: ["format", "predominantly", "FCM"] },
+    { zh: "会议一开始，他先给出了一个简要概述。", en: "At the start of the meeting, he gave a brief {blank}.",
+      answer: "overview", options: ["overview", "refinement", "underlying"] },
+    { zh: "这个团队采用24小时轮班的日不落模式运作。", en: "The team runs a {blank} model, covering operations around the clock.",
+      answer: "follow-the-sun", options: ["follow-the-sun", "aggregate", "former"] },
+    { zh: "几年前，管理层把这个团队拆分成了两组。", en: "A few years ago, management decided to {blank} the team into two groups.",
+      answer: "split", options: ["split", "extensively", "replicate"] },
+    { zh: "交易所系统升级后，接口需要重新对接。", en: "After the exchange {blank}, the interface needs to be reconnected.",
+      answer: "upgrade", options: ["upgrade", "normalizes", "retain"] },
+    { zh: "新客户的开户接入流程通常需要几天时间。", en: "The client {blank} process usually takes a few days.",
+      answer: "onboarding", options: ["onboarding", "algorithm", "mapping"] },
+    { zh: "这类订单需要人工高触达式的服务介入。", en: "This type of order requires {blank} service intervention.",
+      answer: "high touch", options: ["high touch", "regulatory", "identifier"] },
+    { zh: "这是交易所官方提供的原生数据接口。", en: "This is the exchange's {blank} data feed.",
+      answer: "native", options: ["native", "plug in", "transparent"] },
+    { zh: "客户可以通过赞助接入的方式直连交易所。", en: "Clients can connect directly to the exchange via {blank}.",
+      answer: "sponsored access", options: ["sponsored access", "enhancement", "provisioning"] },
+    { zh: "这家清算行负责处理我们全部的清算业务。", en: "This {blank} handles all of our clearing business.",
+      answer: "clearer", options: ["clearer", "integration", "reconcile"] },
+    { zh: "项目预计将在下个月完成交割。", en: "The project is expected to reach {blank} next month.",
+      answer: "completion", options: ["completion", "specification", "self-sufficient"] },
+    { zh: "这两个平台之间的数据通道已经铺设完毕。", en: "The data {blank} between the two platforms is already in place.",
+      answer: "pipe", options: ["pipe", "facilitate", "covering"] },
+    { zh: "这批存量持仓非常有粘性，短期内难以迁移。", en: "This batch of positions is quite {blank}, hard to migrate quickly.",
+      answer: "sticky", options: ["sticky", "coordinate", "duties"] },
+    { zh: "与其强制平仓，不如让合约自然到期。", en: "Instead of forcing a close-out, we could just let the contract {blank}.",
+      answer: "expire", options: ["expire", "neat", "junior"] },
+    { zh: "这些多空头寸已经完成了净额轧差处理。", en: "These long and short positions have already been {blank}.",
+      answer: "netted off", options: ["netted off", "life cycle", "Dry bulk"] },
+    { zh: "整体来看，这项工作量是相对可控的。", en: "Overall, the workload is relatively {blank}.",
+      answer: "manageable", options: ["manageable", "comprehensive", "Thermal"] },
+    { zh: "这套旧系统的问题主要是历史遗留原因造成的。", en: "The issues with this old system are mostly due to {blank} reasons.",
+      answer: "legacy", options: ["legacy", "surveillance", "currency"] },
+    { zh: "公司的收入绝大多数来自这两个交易所。", en: "The company's revenue comes {blank} from these two exchanges.",
+      answer: "predominantly", options: ["predominantly", "admission", "index"] },
+    { zh: "团队正在对市场覆盖范围做进一步细化梳理。", en: "The team is working on a {blank} of the market coverage.",
+      answer: "refinement", options: ["refinement", "top day", "in-house"] },
+    { zh: "这个平台能把多个数据源汇聚聚合成一个视图。", en: "This platform can {blank} multiple data sources into one view.",
+      answer: "aggregate", options: ["aggregate", "asset classes", "Connectivity"] },
+    { zh: "公司在这个系统上的使用非常广泛深入。", en: "The company uses this system quite {blank}.",
+      answer: "extensively", options: ["extensively", "undertaking", "house account"] },
+    { zh: "系统会自动将杂乱的数据进行标准化处理。", en: "The system automatically {blank} the messy data into a standard format.",
+      answer: "normalizes", options: ["normalizes", "acquisition", "assess"] },
+    { zh: "量化团队正在开发一套全新的算法交易策略。", en: "The quant team is developing a new {blank} trading strategy.",
+      answer: "algorithm", options: ["algorithm", "insight", "movement"] },
+    { zh: "这些都是监管机构提出的强制性合规要求。", en: "These are mandatory {blank} requirements from the authorities.",
+      answer: "regulatory", options: ["regulatory", "dormant", "Pre-trade"] },
+    { zh: "我们计划把这个新系统接入现有平台。", en: "We plan to {blank} this new system to the existing platform.",
+      answer: "plug in", options: ["plug in", "FCM", "Post-trade"] },
+    { zh: "这次系统升级主要是针对功能的增强优化。", en: "This upgrade is mainly a functional {blank}.",
+      answer: "enhancement", options: ["enhancement", "underlying", "bespoke"] },
+    { zh: "两个系统之间需要做深度的集成对接。", en: "The two systems need a deep {blank}.",
+      answer: "integration", options: ["integration", "former", "Reconciliation"] },
+    { zh: "在开发之前，我们需要先拿到技术规范文档。", en: "Before development starts, we need the technical {blank} first.",
+      answer: "specification", options: ["specification", "replicate", "format"] },
+    { zh: "如果双方有疑问，我们可以协助安排一次会议。", en: "If both sides have questions, we can {blank} a call.",
+      answer: "facilitate", options: ["facilitate", "retain", "overview"] },
+    { zh: "项目经理负责协调统筹多个部门的工作。", en: "The project manager needs to {blank} the work across departments.",
+      answer: "coordinate", options: ["coordinate", "mapping", "follow-the-sun"] },
+    { zh: "这个界面设计得非常简洁干练。", en: "The interface is designed to be very {blank}.",
+      answer: "neat", options: ["neat", "identifier", "split"] },
+    { zh: "这个系统展示了交易的完整生命周期。", en: "This system shows the full {blank} of a trade.",
+      answer: "life cycle", options: ["life cycle", "transparent", "upgrade"] },
+    { zh: "这是一套非常全面综合的服务方案。", en: "This is a very {blank} service package.",
+      answer: "comprehensive", options: ["comprehensive", "provisioning", "onboarding"] },
+    { zh: "合规部门负责对异常交易行为进行市场监控。", en: "Compliance is responsible for market {blank} of unusual trading activity.",
+      answer: "surveillance", options: ["surveillance", "reconcile", "high touch"] },
+    { zh: "按照他自己的说法，这个问题确实存在。", en: "By his own {blank}, this issue does exist.",
+      answer: "admission", options: ["admission", "self-sufficient", "native"] },
+    { zh: "风控团队希望能实时查看当天（T+0）的交易数据。", en: "The risk team wants to see {blank} data in real time.",
+      answer: "top day", options: ["top day", "covering", "sponsored access"] },
+    { zh: "这些客户的持仓涵盖了多个不同的资产类别。", en: "These clients hold positions across several {blank}.",
+      answer: "asset classes", options: ["asset classes", "duties", "clearer"] },
+    { zh: "完成这项资质申请是一项极具挑战性的工程。", en: "Completing this application is a huge {blank}.",
+      answer: "undertaking", options: ["undertaking", "junior", "completion"] },
+    { zh: "这次公司收购将改变整个行业格局。", en: "This {blank} will reshape the entire industry landscape.",
+      answer: "acquisition", options: ["acquisition", "Dry bulk", "pipe"] },
+    { zh: "他对整个市场有着非常深刻独到的洞察。", en: "He has deep {blank} into the overall market.",
+      answer: "insight", options: ["insight", "Thermal", "sticky"] },
+    { zh: "这些账户长期没有交易活动，处于休眠状态。", en: "These accounts have had no activity for a while and are {blank}.",
+      answer: "dormant", options: ["dormant", "currency", "expire"] },
+    { zh: "作为一家期货经纪商，公司需要遵守严格的监管要求。", en: "As an {blank}, the company must follow strict regulatory rules.",
+      answer: "FCM", options: ["FCM", "index", "netted off"] },
+    { zh: "这份报告涉及底层客户和底层资产两方面信息。", en: "This report covers both {blank} clients and {blank} assets.",
+      answer: "underlying", options: ["underlying", "in-house", "manageable"] },
+    { zh: "在这两个方案中，我们最终选择了前者。", en: "Between the two options, we eventually chose the {blank}.",
+      answer: "former", options: ["former", "Connectivity", "legacy"] },
+    { zh: "新的办公室将完整复刻现有的系统配置。", en: "The new office will {blank} the existing system setup exactly.",
+      answer: "replicate", options: ["replicate", "house account", "predominantly"] },
+    { zh: "公司承诺将保留客户原有的账号不变。", en: "The company promised to {blank} clients' existing account numbers.",
+      answer: "retain", options: ["retain", "assess", "refinement"] },
+    { zh: "两个系统的字段需要建立清晰的映射表。", en: "A clear {blank} needs to be built between the two systems' fields.",
+      answer: "mapping", options: ["mapping", "movement", "aggregate"] },
+    { zh: "每一条记录都有一个唯一的标识符。", en: "Every record has a unique {blank}.",
+      answer: "identifier", options: ["identifier", "Pre-trade", "extensively"] },
+    { zh: "这项处理对客户来说是完全透明、无感知的。", en: "This process is completely {blank} to the client.",
+      answer: "transparent", options: ["transparent", "Post-trade", "normalizes"] },
+    { zh: "新客户的权限开通配置将在今天完成。", en: "The account {blank} for new clients will be completed today.",
+      answer: "provisioning", options: ["provisioning", "bespoke", "algorithm"] },
+    { zh: "财务团队每天都要对账，核对系统间数据是否一致。", en: "The finance team needs to {blank} the data between systems every day.",
+      answer: "reconcile", options: ["reconcile", "Reconciliation", "regulatory"] },
+    { zh: "公司希望客户能尽可能实现自助操作，减少人工依赖。", en: "The company hopes clients can be as {blank} as possible.",
+      answer: "self-sufficient", options: ["self-sufficient", "format", "plug in"] },
+    { zh: "他是销售团队负责人之一，主要对接客户账户。", en: "He is one of the sales leads, mainly {blank}.",
+      answer: "cover client accounts / cover sales", options: ["cover client accounts / cover sales", "get a brief overview of", "middleware / clearing house feed"] },
+    { zh: "他从公司成立第一天起就加入了团队。", en: "He {blank} the team.",
+      answer: "joined since day one", options: ["joined since day one", "pipes are already in place", "tight type of integration"] },
+    { zh: "我们团队负责管理公司自营账户。", en: "Our team {blank}.",
+      answer: "look after house accounts", options: ["look after house accounts", "move over remaining business", "direct line to C-level"] },
+    { zh: "他最初是从初级经纪人做起，一步步走到现在。", en: "He {blank} before working his way up.",
+      answer: "started off as a dealer / junior broker", options: ["started off as a dealer / junior broker", "the sticky part of positions", "get hold of the spec"] },
+    { zh: "他同时并行处理多项工作，还负责编写自定义代码。", en: "He {blank} for the whole team.",
+      answer: "runs parallel things / writes custom codes", options: ["runs parallel things / writes custom codes", "net off existing positions", "facilitate a call"] },
+    { zh: "交易支持团队采用全球日不落接力模式运作。", en: "The trade support desk follows a {blank}, covering 24/7.",
+      answer: "follow-the-sun model", options: ["follow-the-sun model", "relatively manageable", "whole life cycle of the trade"] },
+    { zh: "团队分为一线基础支持和二线故障排查两个层级。", en: "The team handles {blank} for all client queries.",
+      answer: "Level 1 / Level 2 support", options: ["Level 1 / Level 2 support", "legacy issues", "triggers risk criteria"] },
+    { zh: "新客户接入前，需要完成FIX协议的开通流程。", en: "New clients need to complete {blank} before going live.",
+      answer: "FIX onboarding", options: ["FIX onboarding", "predominantly CME and ICE", "stop clients in their tracks"] },
+    { zh: "以上是对整个团队运作模式的宏观概述。", en: "That's a {blank} of how the team operates.",
+      answer: "high-level overview", options: ["high-level overview", "small to moderate size positions", "market surveillance module"] },
+    { zh: "客户可以选择人工高触达服务，也可以选择电子化自动执行。", en: "Clients can choose between {blank}.",
+      answer: "high touch orders vs. electronic execution", options: ["high touch orders vs. electronic execution", "refinement of markets", "top day (T+0) vs. T+1 reporting"] },
+    { zh: "公司支持所有主流交易所的原生数据接口。", en: "The firm supports {blank} from all major exchanges.",
+      answer: "exchange native feeds/APIs", options: ["exchange native feeds/APIs", "aggregate flow / full copies", "follow up on anomaly"] },
+    { zh: "公司目前接入的平台大约在二十个左右。", en: "The firm currently connects to {blank} twenty platforms.",
+      answer: "somewhere in the region of", options: ["somewhere in the region of", "consume drop copies", "across certain asset classes"] },
+    { zh: "大客户可以选择直连交易所的低延迟通道。", en: "Major clients can opt for {blank} to the exchange.",
+      answer: "direct connections / direct access", options: ["direct connections / direct access", "From a support perspective", "regulatory responsibility"] },
+    { zh: "请先简要概述一下目前电子交易的整体情况。", en: "Could you {blank} the current state of electronic trading?",
+      answer: "get a brief overview of", options: ["get a brief overview of", "regulatory requirements (MiFID)", "comprehensive offering"] },
+    { zh: "这些平台之间的数据通道早已铺设就绪。", en: "The data channels between these platforms — {blank}.",
+      answer: "pipes are already in place", options: ["pipes are already in place", "plug into a platform", "apply for OIA"] },
+    { zh: "计划是把剩余业务全部迁移到新平台上。", en: "The plan is to {blank} to the new platform.",
+      answer: "move over remaining business", options: ["move over remaining business", "feed into mid-office systems", "replicate that same setup"] },
+    { zh: "新交易持仓是这次迁移中最难处理的部分。", en: "New trades are {blank} in this migration.",
+      answer: "the sticky part of positions", options: ["the sticky part of positions", "middleware / clearing house feed", "a big undertaking"] },
+    { zh: "这些存量头寸已经完成了轧差对冲处理。", en: "These existing positions have already been {blank}.",
+      answer: "net off existing positions", options: ["net off existing positions", "tight type of integration", "migrate bigger customers"] },
+    { zh: "整体来看，这部分工作应该是相对可控的。", en: "Overall, this piece of work should be {blank}.",
+      answer: "relatively manageable", options: ["relatively manageable", "direct line to C-level", "stop trading for transition"] },
+    { zh: "旧系统的这个问题主要是历史遗留原因造成的。", en: "This problem with the old system is mostly down to {blank}.",
+      answer: "legacy issues", options: ["legacy issues", "get hold of the spec", "keep things simple"] },
+    { zh: "公司的交易绝大部分集中在CME和ICE两家交易所。", en: "The firm's trading is {blank}.",
+      answer: "predominantly CME and ICE", options: ["predominantly CME and ICE", "facilitate a call", "one environment serving two entities"] },
+    { zh: "其余的持仓大多是中小规模的头寸。", en: "The rest are just {blank}.",
+      answer: "small to moderate size positions", options: ["small to moderate size positions", "whole life cycle of the trade", "a heads up"] },
+    { zh: "团队正在针对整体市场覆盖做进一步的细化梳理。", en: "The team is working on {blank}.",
+      answer: "refinement of markets", options: ["refinement of markets", "triggers risk criteria", "dormant vs. active accounts"] },
+    { zh: "这个平台能够汇聚多个来源的完整成交数据。", en: "This platform provides {blank} from many sources.",
+      answer: "aggregate flow / full copies", options: ["aggregate flow / full copies", "stop clients in their tracks", "one-to-one mapping vs. one-to-many"] },
+    { zh: "系统会接收旁路成交数据流并进行处理。", en: "The system will {blank} and process them.",
+      answer: "consume drop copies", options: ["consume drop copies", "market surveillance module", "tapping on market data feeds"] },
+    { zh: "从技术支持的角度来看，这套系统非常实用。", en: "{blank}, this system is extremely useful.",
+      answer: "From a support perspective", options: ["From a support perspective", "top day (T+0) vs. T+1 reporting", "upstream parents"] },
+    { zh: "这套系统能满足MiFID等各类监管合规要求。", en: "This system meets {blank} such as MiFID.",
+      answer: "regulatory requirements (MiFID)", options: ["regulatory requirements (MiFID)", "follow up on anomaly", "make a call on something"] },
+    { zh: "公司计划把这套系统接入现有的中台平台。", en: "The plan is to {blank} the existing mid-office platform.",
+      answer: "plug into a platform", options: ["plug into a platform", "across certain asset classes", "the former option"] },
+    { zh: "这些数据最终会推送进入中台系统。", en: "This data will eventually {blank}.",
+      answer: "feed into mid-office systems", options: ["feed into mid-office systems", "regulatory responsibility", "sub-account level vs. group level"] },
+    { zh: "公司的中间件直接对接清算所的数据源。", en: "The firm's {blank} connects directly to the exchange.",
+      answer: "middleware / clearing house feed", options: ["middleware / clearing house feed", "comprehensive offering", "not transparent to clients"] },
+    { zh: "双方需要做一次紧密、深度的系统集成。", en: "Both sides need a {blank}.",
+      answer: "tight type of integration", options: ["tight type of integration", "apply for OIA", "facing the exchange"] },
+    { zh: "我们与对方的高管保持着直接沟通渠道。", en: "We have a {blank} on the other side.",
+      answer: "direct line to C-level", options: ["direct line to C-level", "replicate that same setup", "central database for limits"] },
+    { zh: "拿到技术规范文档后，开发团队就能开始工作。", en: "Once we {blank}, the dev team can start.",
+      answer: "get hold of the spec", options: ["get hold of the spec", "a big undertaking", "Trade Provisioning System (TPS)"] },
+    { zh: "如果客户有疑问，我们可以协助安排一次专题会议。", en: "If clients have questions, we can {blank}.",
+      answer: "facilitate a call", options: ["facilitate a call", "migrate bigger customers", "reconcile limits with platforms"] },
+    { zh: "这个系统能在一个界面上展示交易的完整生命周期。", en: "This system shows the {blank} on one screen.",
+      answer: "whole life cycle of the trade", options: ["whole life cycle of the trade", "stop trading for transition", "self-sufficient clients"] },
+    { zh: "当某些风控条件被触发时，系统会自动预警。", en: "The system alerts automatically when it {blank}.",
+      answer: "triggers risk criteria", options: ["triggers risk criteria", "keep things simple", "full audit trail"] },
+    { zh: "风控团队会在第一时间阻断客户的异常操作。", en: "The risk team will {blank} if something looks off.",
+      answer: "stop clients in their tracks", options: ["stop clients in their tracks", "one environment serving two entities", "open contract / termination"] },
+    { zh: "合规部门使用一个专门的市场监控模块。", en: "Compliance uses a dedicated {blank}.",
+      answer: "market surveillance module", options: ["market surveillance module", "a heads up", "on behalf of clients"] },
+    { zh: "很多合规平台都是T+1更新，而非当日实时。", en: "Many platforms report {blank} rather than in real time.",
+      answer: "top day (T+0) vs. T+1 reporting", options: ["top day (T+0) vs. T+1 reporting", "dormant vs. active accounts", "gotten quite a bit of traction"] },
+    { zh: "合规人员会在次日对异常交易进行跟进调查。", en: "Compliance will {blank} the next day.",
+      answer: "follow up on anomaly", options: ["follow up on anomaly", "one-to-one mapping vs. one-to-many", "perform a conformance test"] },
+    { zh: "这套监控系统覆盖了公司所有的资产类别。", en: "This system covers the firm's business {blank}.",
+      answer: "across certain asset classes", options: ["across certain asset classes", "tapping on market data feeds", "co-location / rack space"] },
+    { zh: "公司仍然负有监督审查客户交易的合规责任。", en: "The firm still has a {blank} to monitor client trading.",
+      answer: "regulatory responsibility", options: ["regulatory responsibility", "upstream parents", "cover client accounts / cover sales"] },
+    { zh: "公司希望能在中国市场提供一套全面完善的服务方案。", en: "The idea is to have a {blank} in China.",
+      answer: "comprehensive offering", options: ["comprehensive offering", "make a call on something", "joined since day one"] },
+    { zh: "香港实体需要申请海外机构投资者接入资格。", en: "The Hong Kong entity will need to {blank}.",
+      answer: "apply for OIA", options: ["apply for OIA", "the former option", "look after house accounts"] },
+    { zh: "新的办公室会复刻和现有环境完全相同的配置。", en: "The new office will {blank}.",
+      answer: "replicate that same setup", options: ["replicate that same setup", "sub-account level vs. group level", "started off as a dealer / junior broker"] },
+    { zh: "完成这项资质申请是一项相当浩大的工程。", en: "Getting that approval is {blank}.",
+      answer: "a big undertaking", options: ["a big undertaking", "not transparent to clients", "runs parallel things / writes custom codes"] },
+    { zh: "公司曾尝试把大型客户迁移到新加坡实体名下。", en: "The firm tried to {blank} to the Singapore entity.",
+      answer: "migrate bigger customers", options: ["migrate bigger customers", "facing the exchange", "follow-the-sun model"] },
+    { zh: "为了完成系统迁移，客户需要暂停交易几天。", en: "To complete the migration, clients need to {blank}.",
+      answer: "stop trading for transition", options: ["stop trading for transition", "central database for limits", "Level 1 / Level 2 support"] },
+    { zh: "公司的原则是尽量保持整个流程简单明了。", en: "The firm's principle is to {blank}.",
+      answer: "keep things simple", options: ["keep things simple", "Trade Provisioning System (TPS)", "FIX onboarding"] },
+    { zh: "目前只有一套系统环境，同时服务两个法律实体。", en: "Right now there's {blank}.",
+      answer: "one environment serving two entities", options: ["one environment serving two entities", "reconcile limits with platforms", "high-level overview"] },
+    { zh: "在正式公告前，公司提前向合作方打了招呼。", en: "The firm gave the partner {blank} before the announcement.",
+      answer: "a heads up", options: ["a heads up", "self-sufficient clients", "high touch orders vs. electronic execution"] },
+    { zh: "这些账户里既有休眠账户，也有活跃账户。", en: "These accounts include both {blank}.",
+      answer: "dormant vs. active accounts", options: ["dormant vs. active accounts", "full audit trail", "exchange native feeds/APIs"] },
+    { zh: "系统采用的是一对多的映射方式，而不是一对一。", en: "The system uses {blank} rather than one-to-one.",
+      answer: "one-to-one mapping vs. one-to-many", options: ["one-to-one mapping vs. one-to-many", "open contract / termination", "somewhere in the region of"] },
+    { zh: "公司直接接入并利用交易所的行情数据源。", en: "The firm is {blank} directly from the exchange.",
+      answer: "tapping on market data feeds", options: ["tapping on market data feeds", "on behalf of clients", "direct connections / direct access"] },
+    { zh: "目前的系统配置都是由上游母清算行完成设置的。", en: "The current setup was configured by the firm's {blank}.",
+      answer: "upstream parents", options: ["upstream parents", "gotten quite a bit of traction", "get a brief overview of"] },
+    { zh: "管理层需要就是否上报这件事做出最终决定。", en: "Management needs to {blank} whether to report this.",
+      answer: "make a call on something", options: ["make a call on something", "perform a conformance test", "pipes are already in place"] },
+    { zh: "在这两个方案中，公司最终选择了前者。", en: "Between the two, the firm chose {blank}.",
+      answer: "the former option", options: ["the former option", "co-location / rack space", "move over remaining business"] },
+    { zh: "目前风控额度是在子账户层级设置的，而不是集团层级。", en: "Limits are currently set at the {blank} rather than group level.",
+      answer: "sub-account level vs. group level", options: ["sub-account level vs. group level", "cover client accounts / cover sales", "the sticky part of positions"] },
+    { zh: "这些内部账号对客户而言是完全无感、不可见的。", en: "These internal account numbers are {blank}.",
+      answer: "not transparent to clients", options: ["not transparent to clients", "joined since day one", "net off existing positions"] },
+    { zh: "这是经纪商与客户之间直接面向交易所报送的账号。", en: "This is the account number {blank} between broker and client.",
+      answer: "facing the exchange", options: ["facing the exchange", "look after house accounts", "relatively manageable"] },
+    { zh: "公司设有一个中央数据库来追踪所有账户的风控额度。", en: "The firm has a {blank} to track limits by account.",
+      answer: "central database for limits", options: ["central database for limits", "started off as a dealer / junior broker", "legacy issues"] },
+    { zh: "客户可以通过交易权限配置系统提交额度申请。", en: "Clients can submit requests via the {blank}.",
+      answer: "Trade Provisioning System (TPS)", options: ["Trade Provisioning System (TPS)", "runs parallel things / writes custom codes", "predominantly CME and ICE"] },
+    { zh: "系统会自动将各平台的额度与设定值进行核验对齐。", en: "The system will {blank} against what's set.",
+      answer: "reconcile limits with platforms", options: ["reconcile limits with platforms", "follow-the-sun model", "small to moderate size positions"] },
+    { zh: "公司的目标是让客户尽可能实现自主自助操作。", en: "The goal is to make clients as {blank} as possible.",
+      answer: "self-sufficient clients", options: ["self-sufficient clients", "Level 1 / Level 2 support", "refinement of markets"] },
+    { zh: "每一次风控额度的变更都会留下完整的审计记录。", en: "Every limit change is captured in a {blank}.",
+      answer: "full audit trail", options: ["full audit trail", "FIX onboarding", "aggregate flow / full copies"] },
+    { zh: "这是一份无固定期限合同，随时可以终止。", en: "This is an {blank}, meaning we can end it anytime.",
+      answer: "open contract / termination", options: ["open contract / termination", "high-level overview", "consume drop copies"] },
+    { zh: "该机构正代表客户向监管机构报送交易活动。", en: "The firm is reporting to the regulator {blank}.",
+      answer: "on behalf of clients", options: ["on behalf of clients", "high touch orders vs. electronic execution", "From a support perspective"] },
+    { zh: "这项业务近期获得了相当不错的市场关注度。", en: "This business has {blank} recently.",
+      answer: "gotten quite a bit of traction", options: ["gotten quite a bit of traction", "exchange native feeds/APIs", "regulatory requirements (MiFID)"] },
+    { zh: "客户在开通API之前，需要先完成与交易所的一致性测试。", en: "Clients need to {blank} before the API is enabled.",
+      answer: "perform a conformance test", options: ["perform a conformance test", "somewhere in the region of", "plug into a platform"] },
+    { zh: "由于价格昂贵，公司并不直接提供机房托管服务。", en: "The firm doesn't offer {blank} directly, as it's quite pricey.",
+      answer: "co-location / rack space", options: ["co-location / rack space", "direct connections / direct access", "feed into mid-office systems"] },
 ];
 
 // ---- CloudBase (腾讯云开发) setup ----
@@ -430,18 +1129,33 @@ const COLLECTION_NAME = "buzz_game";
 
 let db = null;
 let cbApp = null;
+let authReadyPromise = null;
+let connStatus = 'connecting'; // 'connecting' | 'ready' | 'failed'
 
 if (typeof cloudbase === 'undefined') {
+    connStatus = 'failed';
     showConnError('CloudBase SDK 未能从 CDN 加载成功（可能是网络问题或该环境屏蔽了外部脚本）。请尝试用完整浏览器直接打开本文件，或检查网络连接后刷新页面。');
 } else {
     cbApp = cloudbase.init({ env: CLOUDBASE_ENV_ID });
     const auth = cbApp.auth({ persistence: 'local' });
-    auth.anonymousAuthProvider().signIn().then(() => {
+    const doAnonymousSignIn = () => {
+        if (typeof auth.signInAnonymously === 'function') {
+            return auth.signInAnonymously();
+        } else if (typeof auth.anonymousAuthProvider === 'function') {
+            return auth.anonymousAuthProvider().signIn();
+        } else {
+            return Promise.reject(new Error('当前 CloudBase SDK 版本不支持匿名登录接口'));
+        }
+    };
+    authReadyPromise = doAnonymousSignIn().then(() => {
         db = cbApp.database();
+        connStatus = 'ready';
         ensureSessionDoc();
     }).catch(err => {
+        connStatus = 'failed';
         console.error('anonymous sign-in failed', err);
-        showConnError('匿名登录失败，请确认云开发环境已在"登录授权"中开启"匿名登录"。错误信息：' + (err && err.message ? err.message : err));
+        showConnError('匿名登录失败，请确认云开发环境已在"身份认证"中开启"匿名登录"。错误信息：' + (err && err.message ? err.message : err));
+        throw err;
     });
 }
 
@@ -457,11 +1171,34 @@ function showConnError(msg) {
 let playerName = null;
 let currentQIndex = null;
 let currentRoundId = null;
+let currentShuffledOptions = null;
 let sessionWatcher = null;
 let leaderboardWatcher = null;
+let latestSessionState = null;
+let chatWatcher = null;
+let activityWatcher = null;
+let lastStampTs = null;
 
-function pickRandomQIndex() {
-    return Math.floor(Math.random() * quizBank.length);
+function shuffleArray(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
+// Draw the next question index without repeating until the whole bank has been used once (shuffled-bag approach)
+function pickNextQIndex(usedIndices) {
+    const used = Array.isArray(usedIndices) ? usedIndices : [];
+    const all = quizBank.map((_, i) => i);
+    let available = all.filter(i => !used.includes(i));
+    if (available.length === 0) {
+        available = all; // exhausted the bank — reshuffle for a fresh round
+    }
+    const idx = available[Math.floor(Math.random() * available.length)];
+    const newUsed = available === all ? [idx] : [...used, idx];
+    return { idx, newUsed };
 }
 
 // Sanitize a nickname so it can safely be used as a document _id (no . $ # [ ] / or whitespace-only)
@@ -474,18 +1211,43 @@ function ensureSessionDoc() {
     db.collection(COLLECTION_NAME).doc('session').get().then(res => {
         const exists = res.data && res.data.length > 0;
         if (!exists) {
+            const { idx, newUsed } = pickNextQIndex([]);
             db.collection(COLLECTION_NAME).doc('session').set({
-                data: { type: 'session', qIndex: pickRandomQIndex(), roundId: Date.now(), buzzedBy: null }
-            }).catch(err => console.error('ensureSessionDoc set failed', err));
+                data: { type: 'session', qIndex: idx, usedIndices: newUsed, roundId: Date.now(), buzzedBy: null, buzzedAt: null, lastResult: null }
+            }).catch(err => { console.error('ensureSessionDoc set failed', err); showConnError('创建题目失败（很可能是数据库权限设置问题）：' + (err && err.message ? err.message : err)); });
         }
-    }).catch(err => console.error('ensureSessionDoc get failed', err));
+    }).catch(err => { console.error('ensureSessionDoc get failed', err); showConnError('读取题目失败（很可能是数据库权限设置问题）：' + (err && err.message ? err.message : err)); });
 }
 
 function joinGame() {
-    if (!db) { alert('数据库尚未连接成功，无法加入抢答，请确认匿名登录已开启，然后刷新页面重试。'); return; }
     const raw = document.getElementById('nameInput').value;
     const val = sanitizeName(raw);
     if (!val) { alert('请输入一个有效的昵称后再加入'); return; }
+
+    if (connStatus === 'failed') {
+        alert('数据库连接失败，无法加入抢答，请检查网络或刷新页面重试（详细原因见页面顶部的红色提示）。');
+        return;
+    }
+
+    if (connStatus === 'connecting') {
+        const btn = document.querySelector('#joinGate .refresh-btn');
+        if (btn) { btn.disabled = true; btn.textContent = '⏳ 正在连接数据库…'; }
+        if (authReadyPromise) {
+            authReadyPromise.then(() => {
+                if (btn) { btn.disabled = false; btn.textContent = '✅ 加入抢答'; }
+                finishJoin(val);
+            }).catch(() => {
+                if (btn) { btn.disabled = false; btn.textContent = '✅ 加入抢答'; }
+                alert('数据库连接失败，无法加入抢答，请检查网络或刷新页面重试。');
+            });
+        }
+        return;
+    }
+
+    finishJoin(val);
+}
+
+function finishJoin(val) {
     playerName = val;
     document.getElementById('joinGate').style.display = 'none';
     document.getElementById('gameArea').style.display = 'block';
@@ -506,74 +1268,249 @@ function joinGame() {
         onChange: function (snapshot) {
             const docs = snapshot.docs;
             if (!docs || !docs.length) return;
-            const s = docs[0];
+            const s = docs[0].data; // actual fields are nested under the doc's "data" property
+            latestSessionState = s;
             if (s.qIndex !== currentQIndex || s.roundId !== currentRoundId) {
                 currentQIndex = s.qIndex;
                 currentRoundId = s.roundId;
-                renderQuestion(quizBank[s.qIndex]);
+                currentShuffledOptions = shuffleArray(quizBank[s.qIndex].options);
             }
+            renderQuestion(quizBank[s.qIndex], s);
             updateBuzzUI(s);
+            maybeShowStamp(s);
         },
-        onError: function (err) { console.error('session watch error', err); }
+        onError: function (err) { console.error('session watch error', err); showConnError('读取题目失败（很可能是数据库权限设置问题）：' + (err && err.message ? err.message : err)); }
     });
 
     // Real-time listener on all leaderboard (score) docs
-    leaderboardWatcher = db.collection(COLLECTION_NAME).where({ type: 'score' }).watch({
+    leaderboardWatcher = db.collection(COLLECTION_NAME).where({ 'data.type': 'score' }).watch({
         onChange: function (snapshot) {
             const lb = {};
-            (snapshot.docs || []).forEach(d => { lb[d.name] = d.score; });
+            (snapshot.docs || []).forEach(d => { const rec = d.data; lb[rec.name] = rec.score; });
             renderLeaderboard(lb);
         },
-        onError: function (err) { console.error('leaderboard watch error', err); }
+        onError: function (err) { console.error('leaderboard watch error', err); showConnError('读取排名榜失败（很可能是数据库权限设置问题）：' + (err && err.message ? err.message : err)); }
     });
+
+    // Real-time listener on the activity log (each result is its own document, same robust pattern as chat)
+    activityWatcher = db.collection(COLLECTION_NAME)
+        .where({ 'data.type': 'activity' })
+        .orderBy('data.ts', 'desc')
+        .limit(10)
+        .watch({
+            onChange: function (snapshot) {
+                const items = (snapshot.docs || []).map(d => d.data);
+                renderActivityLog(items);
+            },
+            onError: function (err) {
+                console.error('activity watch error', err);
+                showConnError('读取战况播报失败（很可能是数据库权限设置问题）：' + (err && err.message ? err.message : err));
+            }
+        });
+
+    // Real-time listener on chat messages (embedded right in this same page, no separate join step)
+    chatWatcher = db.collection(COLLECTION_NAME)
+        .where({ 'data.type': 'chat' })
+        .orderBy('data.ts', 'asc')
+        .limit(200)
+        .watch({
+            onChange: function (snapshot) {
+                const msgs = (snapshot.docs || []).map(d => d.data);
+                renderChatMessages(msgs);
+            },
+            onError: function (err) {
+                console.error('chat watch error', err);
+                showConnError('聊天室连接失败（很可能是数据库权限设置问题）：' + (err && err.message ? err.message : err));
+            }
+        });
+
+    startBuzzWatchdog();
+    refreshLeaderboardOnce(); // immediate first load
+    refreshActivityLogOnce();
+    refreshSessionOnce();
+    setInterval(refreshLeaderboardOnce, 6000); // periodic self-healing in case the realtime channel drops an update
+    setInterval(refreshActivityLogOnce, 6000);
+    setInterval(refreshSessionOnce, 6000);
 }
+
+// Fully re-fetches all score docs directly (bypassing the realtime watch channel), so the
+// leaderboard eventually self-corrects even if a watch push event was dropped/ignored.
+function refreshLeaderboardOnce() {
+    if (!db) return;
+    db.collection(COLLECTION_NAME).where({ 'data.type': 'score' }).get().then(res => {
+        const lb = {};
+        (res.data || []).forEach(d => { const rec = d.data; lb[rec.name] = rec.score; });
+        renderLeaderboard(lb);
+    }).catch(err => console.error('leaderboard poll refresh failed', err));
+}
+
+function refreshActivityLogOnce() {
+    if (!db) return;
+    db.collection(COLLECTION_NAME).where({ 'data.type': 'activity' }).orderBy('data.ts', 'desc').limit(10).get().then(res => {
+        const items = (res.data || []).map(d => d.data);
+        renderActivityLog(items);
+    }).catch(err => console.error('activity poll refresh failed', err));
+}
+
+function refreshSessionOnce() {
+    if (!db) return;
+    db.collection(COLLECTION_NAME).doc('session').get().then(res => {
+        const doc = res.data && res.data[0];
+        const s = doc && doc.data;
+        if (!s) return;
+        latestSessionState = s;
+        if (s.qIndex !== currentQIndex || s.roundId !== currentRoundId) {
+            currentQIndex = s.qIndex;
+            currentRoundId = s.roundId;
+            currentShuffledOptions = shuffleArray(quizBank[s.qIndex].options);
+        }
+        renderQuestion(quizBank[s.qIndex], s);
+        updateBuzzUI(s);
+        maybeShowStamp(s);
+    }).catch(err => console.error('session poll refresh failed', err));
+}
+
+const BUZZ_TIMEOUT_MS = 15000; // if the buzzer doesn't answer within 15s, auto-release
 
 function buzzIn() {
     if (!playerName || !db) return;
     // Conditional update: only applies if buzzedBy is still null (first click wins)
     const _ = db.command;
-    db.collection(COLLECTION_NAME).where({ _id: 'session', buzzedBy: _.eq(null) })
-        .update({ data: { buzzedBy: playerName } })
+    db.collection(COLLECTION_NAME).where({ _id: 'session', 'data.buzzedBy': _.eq(null) })
+        .update({ data: { buzzedBy: playerName, buzzedAt: Date.now() } })
         .catch(err => console.error('buzzIn failed', err));
 }
 
-function markResult(isCorrect) {
+// Manual escape valve: anyone can force-clear a stuck "someone is answering" state
+// (e.g. if the buzzer closed their browser mid-answer and never submitted).
+function forceResetBuzz() {
     if (!db) return;
-    db.collection(COLLECTION_NAME).doc('session').get().then(res => {
-        const s = res.data && res.data[0];
-        if (!s || !s.buzzedBy) return;
-        if (isCorrect) {
-            const _ = db.command;
-            db.collection(COLLECTION_NAME).doc(s.buzzedBy).update({
-                data: { score: _.inc(10) }
-            }).catch(err => console.error('score update failed', err));
-            nextQuestion();
-        } else {
-            db.collection(COLLECTION_NAME).doc('session').update({
-                data: { buzzedBy: null }
-            }).catch(err => console.error('reset buzz failed', err));
+    db.collection(COLLECTION_NAME).doc('session').update({
+        data: { buzzedBy: null, buzzedAt: null, lastResult: null }
+    }).catch(err => console.error('forceResetBuzz failed', err));
+}
+
+// Passive watchdog: periodically check whether the current buzz has been sitting unanswered
+// too long, and auto-release it so the game doesn't get stuck forever.
+function startBuzzWatchdog() {
+    setInterval(() => {
+        if (!latestSessionState) return;
+        const s = latestSessionState;
+        if (s.buzzedBy && !s.lastResult && s.buzzedAt && (Date.now() - s.buzzedAt > BUZZ_TIMEOUT_MS)) {
+            forceResetBuzz();
         }
-    });
+    }, 5000);
+}
+
+// Called only by the player who currently holds the buzz (their option buttons are the only clickable ones).
+// The machine judges automatically by comparing the chosen option to the answer key in quizBank.
+// Speed-based scoring: faster correct answers earn more points.
+// 0-3s: 10, 3-6s: 8, 6-9s: 6, 9-12s: 4, 9-15s(up to timeout): 2. Wrong answer: -5.
+function calcPoints(isCorrect, elapsedMs) {
+    if (!isCorrect) return -5;
+    if (elapsedMs <= 3000) return 10;
+    if (elapsedMs <= 6000) return 8;
+    if (elapsedMs <= 9000) return 6;
+    if (elapsedMs <= 12000) return 4;
+    return 2; // up to the 15s buzz timeout
+}
+
+function submitAnswer(chosenOption) {
+    if (!db || !playerName) return;
+    const q = quizBank[currentQIndex];
+    const isCorrect = chosenOption === q.answer;
+    const buzzedAt = (latestSessionState && latestSessionState.buzzedAt) || Date.now();
+    const elapsed = Date.now() - buzzedAt;
+    const points = calcPoints(isCorrect, elapsed);
+    const now = Date.now();
+
+    // Disable further clicks immediately on this client while the result is being written
+    document.querySelectorAll('#qOptions .option-btn').forEach(b => { b.disabled = true; b.onclick = null; });
+
+    // Show the stamp instantly for the person answering, without waiting on the realtime
+    // watch round-trip (which can occasionally drop/delay events).
+    lastStampTs = now;
+    showStamp(isCorrect, points);
+
+    // Write the activity-log entry as its own standalone document (same robust pattern as chat messages),
+    // instead of a nested array field that's easy to accidentally overwrite on other updates.
+    db.collection(COLLECTION_NAME).add({
+        data: { type: 'activity', name: playerName, correct: isCorrect, points: points, chosenOption: chosenOption, answer: q.answer, ts: now }
+    }).catch(err => console.error('activity log write failed', err));
+
+    db.collection(COLLECTION_NAME).doc('session').update({
+        data: { lastResult: { name: playerName, chosenOption: chosenOption, correct: isCorrect, points: points, ts: now } }
+    }).then(() => {
+        db.collection(COLLECTION_NAME).doc(playerName).update({
+            data: { score: db.command.inc(points) }
+        }).catch(err => console.error('score update failed', err));
+
+        if (isCorrect) {
+            setTimeout(() => nextQuestion(), 1800);
+        } else {
+            setTimeout(() => {
+                db.collection(COLLECTION_NAME).doc('session').update({
+                    data: { buzzedBy: null, buzzedAt: null, lastResult: null }
+                }).catch(err => console.error('reset buzz failed', err));
+            }, 1800);
+        }
+    }).catch(err => console.error('submitAnswer failed', err));
 }
 
 function nextQuestion() {
     if (!db) return;
-    db.collection(COLLECTION_NAME).doc('session').update({
-        data: { qIndex: pickRandomQIndex(), roundId: Date.now(), buzzedBy: null }
-    }).catch(err => console.error('nextQuestion failed', err));
+    db.collection(COLLECTION_NAME).doc('session').get().then(res => {
+        const doc = res.data && res.data[0];
+        const currentUsed = (doc && doc.data && doc.data.usedIndices) || [];
+        const { idx, newUsed } = pickNextQIndex(currentUsed);
+        db.collection(COLLECTION_NAME).doc('session').update({
+            data: { qIndex: idx, usedIndices: newUsed, roundId: Date.now(), buzzedBy: null, buzzedAt: null, lastResult: null }
+        }).catch(err => console.error('nextQuestion update failed', err));
+    }).catch(err => console.error('nextQuestion get failed', err));
 }
 
-function renderQuestion(q) {
+function renderQuestion(q, s) {
     document.getElementById('qZh').textContent = q.zh;
     document.getElementById('qEn').innerHTML = q.en.replace('{blank}', '<span class="blank-slot">______</span>');
     const optsDiv = document.getElementById('qOptions');
     optsDiv.innerHTML = '';
-    q.options.forEach(opt => {
-        const div = document.createElement('div');
-        div.className = 'option-display';
-        div.textContent = opt;
-        optsDiv.appendChild(div);
+    const iAmTheBuzzer = s && s.buzzedBy && s.buzzedBy === playerName && !s.lastResult;
+    const opts = currentShuffledOptions || q.options;
+    opts.forEach(opt => {
+        if (iAmTheBuzzer) {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.textContent = opt;
+            btn.onclick = function () { submitAnswer(opt); };
+            optsDiv.appendChild(btn);
+        } else {
+            const div = document.createElement('div');
+            div.className = 'option-display';
+            div.textContent = opt;
+            optsDiv.appendChild(div);
+        }
     });
+}
+
+function renderActivityLog(log) {
+    const el = document.getElementById('activityLog');
+    if (!el) return;
+    if (!log || log.length === 0) {
+        el.innerHTML = '<div style="color:#999;">暂无记录</div>';
+        return;
+    }
+    // Always sort newest-first ourselves, regardless of the order the realtime watch delivers.
+    const sorted = log.slice().sort((a, b) => (b.ts || 0) - (a.ts || 0));
+    el.innerHTML = sorted.map(item => {
+        const icon = item.correct ? '✅' : '❌';
+        const color = item.correct ? '#1e7e34' : '#a71d2a';
+        const sign = item.points >= 0 ? '+' : '';
+        const desc = item.correct
+            ? (item.name + ' 答对了')
+            : (item.name + ' 选了 "' + item.chosenOption + '"，答错了');
+        return '<div style="padding:6px 0; border-bottom:1px dashed #eee; color:' + color + ';">' +
+            icon + ' ' + desc + '（' + sign + item.points + ' 分）</div>';
+    }).join('');
 }
 
 function renderLeaderboard(lb) {
@@ -589,20 +1526,143 @@ function renderLeaderboard(lb) {
     }).join('');
 }
 
+// Clears every player's score record and resets the session (new question, empty activity log).
+// Does not touch chat messages.
+function resetLeaderboard() {
+    if (!confirm('确定要清空所有人的抢答记录和排名吗？此操作无法撤销。')) return;
+    if (!db) { alert('数据库尚未连接，无法执行清空操作。'); return; }
+
+    Promise.all([
+        db.collection(COLLECTION_NAME).where({ 'data.type': 'score' }).get(),
+        db.collection(COLLECTION_NAME).where({ 'data.type': 'activity' }).get()
+    ]).then(([scoreRes, activityRes]) => {
+        const docs = (scoreRes.data || []).concat(activityRes.data || []);
+        const deletions = docs.map(d => db.collection(COLLECTION_NAME).doc(d._id).remove());
+        return Promise.all(deletions);
+    }).then(() => {
+        const { idx, newUsed } = pickNextQIndex([]);
+        return db.collection(COLLECTION_NAME).doc('session').update({
+            data: { qIndex: idx, usedIndices: newUsed, roundId: Date.now(), buzzedBy: null, buzzedAt: null, lastResult: null }
+        });
+    }).then(() => {
+        alert('已清空排行榜和抢答记录，重新开始！');
+    }).catch(err => {
+        console.error('resetLeaderboard failed', err);
+        alert('清空失败，请检查网络或数据库权限设置：' + (err && err.message ? err.message : err));
+    });
+}
+
+// ---- Live chat room (embedded alongside the quiz; reuses the same playerName from joining the buzz-in game) ----
+function clearChat() {
+    if (!confirm('确定要清空所有聊天记录吗？此操作无法撤销。')) return;
+    if (!db) { alert('数据库尚未连接，无法执行清空操作。'); return; }
+
+    db.collection(COLLECTION_NAME).where({ 'data.type': 'chat' }).get().then(res => {
+        const docs = res.data || [];
+        const deletions = docs.map(d => db.collection(COLLECTION_NAME).doc(d._id).remove());
+        return Promise.all(deletions);
+    }).then(() => {
+        alert('聊天记录已清空。');
+    }).catch(err => {
+        console.error('clearChat failed', err);
+        alert('清空失败，请检查网络或数据库权限设置：' + (err && err.message ? err.message : err));
+    });
+}
+
+function sendChatMessage() {
+    if (!db || !playerName) return;
+    const input = document.getElementById('chatInput');
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    db.collection(COLLECTION_NAME).add({
+        data: { type: 'chat', name: playerName, message: text, ts: Date.now() }
+    }).catch(err => console.error('sendChatMessage failed', err));
+}
+
+function renderChatMessages(msgs) {
+    const el = document.getElementById('chatMessages');
+    if (!el) return;
+    if (!msgs || msgs.length === 0) {
+        el.innerHTML = '<div style="color:#999;">暂无消息</div>';
+        return;
+    }
+    const wasNearBottom = (el.scrollHeight - el.scrollTop - el.clientHeight) < 60;
+    el.innerHTML = msgs.map(m => {
+        const time = new Date(m.ts).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+        const isMe = m.name === playerName;
+        return '<div style="margin-bottom:10px;">' +
+            '<span style="font-weight:700; color:' + (isMe ? '#0056b3' : '#243b55') + ';">' + m.name + '</span>' +
+            '<span style="color:#aaa; font-size:12px; margin-left:8px;">' + time + '</span>' +
+            '<div style="margin-top:2px;">' + m.message.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</div>' +
+            '</div>';
+    }).join('');
+    if (wasNearBottom) el.scrollTop = el.scrollHeight;
+}
+
 function updateBuzzUI(s) {
     const statusDiv = document.getElementById('buzzStatus');
     const buzzBtn = document.getElementById('buzzBtn');
-    const judgeButtons = document.getElementById('judgeButtons');
+    const banner = document.getElementById('resultBanner');
 
-    if (s.buzzedBy) {
-        statusDiv.textContent = '🔔 ' + s.buzzedBy + ' 抢到了！';
+    if (s.lastResult) {
+        banner.style.display = 'block';
+        const pts = (typeof s.lastResult.points === 'number') ? s.lastResult.points : (s.lastResult.correct ? 10 : -5);
+        if (s.lastResult.correct) {
+            banner.className = 'result-banner correct';
+            banner.textContent = '🎉 ' + s.lastResult.name + ' 回答正确！+' + pts + ' 分，即将进入下一题…';
+        } else {
+            banner.className = 'result-banner wrong';
+            banner.textContent = '❌ ' + s.lastResult.name + ' 选了 "' + s.lastResult.chosenOption + '"，回答错误（' + pts + ' 分），即将重新开放抢答…';
+        }
         buzzBtn.disabled = true;
-        judgeButtons.style.display = 'flex';
+        statusDiv.textContent = '';
     } else {
-        statusDiv.textContent = '等待有人抢答…';
-        buzzBtn.disabled = false;
-        judgeButtons.style.display = 'none';
+        banner.style.display = 'none';
+        if (s.buzzedBy) {
+            statusDiv.textContent = (s.buzzedBy === playerName)
+                ? '🔔 是你抢到了！请点击上方正确的选项作答'
+                : ('🔔 ' + s.buzzedBy + ' 抢到了，正在作答…');
+            buzzBtn.disabled = true;
+        } else {
+            statusDiv.textContent = '等待有人抢答…';
+            buzzBtn.disabled = false;
+        }
     }
+}
+
+// Flash a big rotated "stamp" announcing correct/wrong to everyone, exactly once per actual result
+// (guarded by lastResult.ts so re-renders of the same result don't re-trigger the animation).
+function maybeShowStamp(s) {
+    if (s.lastResult && s.lastResult.ts && s.lastResult.ts !== lastStampTs) {
+        lastStampTs = s.lastResult.ts;
+        showStamp(s.lastResult.correct, s.lastResult.points);
+    }
+}
+
+function showStamp(isCorrect, points) {
+    const el = document.getElementById('stampOverlay');
+    if (!el) { console.error('showStamp: #stampOverlay element not found in DOM'); return; }
+    const sign = points >= 0 ? '+' : '';
+    el.textContent = isCorrect ? ('✓ 正确 ' + sign + points + '分') : ('✗ 错误 ' + points + '分');
+
+    // Set everything via inline styles directly (highest CSS priority, no dependency on
+    // class-toggle timing or transition reflow quirks across browsers).
+    el.style.color = isCorrect ? '#28a745' : '#dc3545';
+    el.style.borderColor = isCorrect ? '#28a745' : '#dc3545';
+    el.style.opacity = '1';
+    el.style.visibility = 'visible';
+    el.style.transform = 'translate(-50%, -50%) rotate(-12deg) scale(1)';
+
+    clearTimeout(showStamp._hideTimer);
+    clearTimeout(showStamp._hideTimer2);
+    showStamp._hideTimer = setTimeout(() => {
+        el.style.opacity = '0';
+        el.style.transform = 'translate(-50%, -50%) rotate(-12deg) scale(0.6)';
+    }, 1300);
+    showStamp._hideTimer2 = setTimeout(() => {
+        el.style.visibility = 'hidden';
+    }, 1600);
 }
 </script>
 
