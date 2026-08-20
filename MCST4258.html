@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="zh-Hans-SG">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>[小区名称已隐去] 第11届常年大会 · 业主速览(完整版)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0C222E; --slate:#42606B; --mist:#DDE5E5; --paper:#FFFFFF;
+  --line:#B9C7C8; --tide:#0B6E63; --signal:#A93521; --sand:#EFEAE0; --amber:#C9A227;
+  --serif:"Noto Serif SC",Georgia,"Songti SC","SimSun",serif;
+  --sans:"Noto Sans SC",-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+  --mono:"Roboto Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:82px}
+body{margin:0;background:var(--mist);color:var(--ink);font-family:var(--sans);line-height:1.75;-webkit-font-smoothing:antialiased}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px}
+
+.topbar{position:sticky;top:0;z-index:50;background:rgba(12,34,46,.96);backdrop-filter:blur(8px);border-bottom:1px solid #0a1a24}
+.topbar .wrap{display:flex;align-items:center;gap:16px;height:56px;overflow-x:auto}
+.topbar a{color:#9FBDBC;text-decoration:none;font-size:13px;letter-spacing:.05em;white-space:nowrap;padding:4px 0;border-bottom:1px solid transparent}
+.topbar a:hover,.topbar a:focus-visible{color:#fff;border-bottom-color:var(--tide)}
+.topbar .brand{color:#fff;font-family:var(--serif);font-weight:700;letter-spacing:.12em;font-size:14px;margin-right:auto}
+
+header.hero{background:var(--ink);color:#EAF1F0;padding:56px 0 44px;position:relative;overflow:hidden}
+.waves{position:absolute;inset:auto 0 -6px 0;height:70px;opacity:.28}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.28em;color:#7FA9A5;text-transform:uppercase}
+h1{font-family:var(--serif);font-weight:900;font-size:clamp(30px,6vw,52px);line-height:1.15;margin:14px 0 6px;letter-spacing:-.01em}
+.sub{color:#A9C3C1;font-size:15px;max-width:46ch}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;background:#20404E;margin-top:34px;border:1px solid #20404E}
+.meta div{background:var(--ink);padding:16px 18px}
+.meta dt{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:#7FA9A5;margin:0 0 6px}
+.meta dd{margin:0;font-size:17px;font-weight:500;color:#fff}
+.meta dd small{display:block;font-size:12.5px;color:#9FBDBC;font-weight:400;margin-top:3px}
+.clocks{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+.clock{border:1px solid #2E5260;padding:12px 16px;flex:1 1 190px}
+.clock .n{font-family:var(--mono);font-size:30px;font-weight:700;color:#fff;line-height:1}
+.clock .n span{font-size:14px;color:#7FA9A5;margin-left:4px}
+.clock .l{font-size:12.5px;color:#A9C3C1;margin-top:6px}
+.clock.urgent{border-color:var(--signal);background:#1B2530}
+.clock.urgent .n{color:#FF8B72}
+
+section{padding:52px 0 8px}
+.shead{display:flex;align-items:baseline;gap:14px;border-bottom:2px solid var(--ink);padding-bottom:10px;margin-bottom:26px}
+.shead h2{font-family:var(--serif);font-weight:700;font-size:clamp(21px,3.4vw,27px);margin:0}
+.shead .tag{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;color:var(--slate);margin-left:auto;white-space:nowrap}
+.lead{font-size:15.5px;color:#22414D;max-width:68ch;margin:0 0 22px}
+
+.card{background:var(--paper);border:1px solid var(--line);padding:22px 22px 18px;margin-bottom:14px}
+.card h3{font-family:var(--serif);font-size:18px;margin:0 0 8px;font-weight:700}
+.card p{margin:0 0 10px;font-size:14.5px}
+.card p:last-child{margin-bottom:0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:680px){.two{grid-template-columns:1fr}}
+
+/* 头条发现 */
+.finding{background:var(--paper);border:1px solid var(--line);border-top:5px solid var(--signal);padding:24px 24px 20px;margin-bottom:14px}
+.finding .k{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--signal)}
+.finding h3{font-family:var(--serif);font-size:21px;margin:8px 0 12px;line-height:1.4}
+.finding p{font-size:15px;margin:0 0 12px}
+.finding p:last-child{margin-bottom:0}
+.big{font-family:var(--mono);font-size:34px;font-weight:700;color:var(--signal);line-height:1.1;display:block;margin:4px 0 2px}
+
+/* 议案 */
+.motion{background:var(--paper);border:1px solid var(--line);border-left:5px solid var(--slate);margin-bottom:12px}
+.motion.sr{border-left-color:var(--signal)}
+.motion.or{border-left-color:var(--tide)}
+.mhead{display:flex;gap:14px;align-items:flex-start;padding:16px 20px;cursor:pointer;user-select:none}
+.mhead:hover{background:#F6F9F8}
+.num{font-family:var(--mono);font-weight:700;font-size:15px;color:var(--slate);min-width:34px;padding-top:2px}
+.mtitle{flex:1}
+.mtitle b{font-family:var(--serif);font-size:16.5px;font-weight:700;display:block;line-height:1.5}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chip{font-family:var(--mono);font-size:11px;letter-spacing:.08em;padding:3px 8px;border:1px solid var(--line);color:var(--slate);background:#F4F7F6}
+.chip.sr{border-color:var(--signal);color:var(--signal);background:#FCF3F1}
+.chip.or{border-color:var(--tide);color:var(--tide);background:#F0F7F5}
+.caret{color:var(--slate);font-size:13px;padding-top:4px;transition:transform .2s}
+.motion[open] .caret{transform:rotate(90deg)}
+.mbody{padding:0 20px 20px 68px;font-size:14.5px}
+.mbody dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 16px}
+.mbody dt{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;color:var(--slate);padding-top:5px}
+.mbody dd{margin:0}
+.watch{margin-top:14px;padding:12px 14px;background:var(--sand);border-left:3px solid var(--amber);font-size:14px}
+.watch b{font-family:var(--serif)}
+@media(max-width:640px){.mbody{padding-left:20px}.mbody dl{grid-template-columns:1fr;gap:2px 0}.mbody dt{padding-top:10px}}
+
+/* 投票条 */
+.poll{background:var(--paper);border:1px solid var(--line);padding:18px 20px;margin-bottom:12px}
+.poll .pt{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.poll .pt b{font-family:var(--serif);font-size:16px}
+.result{font-family:var(--mono);font-size:12px;letter-spacing:.08em;padding:3px 9px;border:1px solid}
+.result.pass{color:var(--tide);border-color:var(--tide);background:#F0F7F5}
+.result.fail{color:var(--signal);border-color:var(--signal);background:#FCF3F1}
+.bar{position:relative;height:30px;background:#E7ECEB;border:1px solid var(--line);display:flex;overflow:hidden}
+.bar .for{background:var(--tide)}
+.bar .against{background:#C3CFCF}
+.bar .seg{display:flex;align-items:center;padding:0 8px;font-family:var(--mono);font-size:11.5px;color:#fff;white-space:nowrap}
+.bar .against.seg{color:var(--ink)}
+.thr{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--signal)}
+.thr::after{content:attr(data-l);position:absolute;top:-17px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:10.5px;color:var(--signal);white-space:nowrap}
+.pnote{font-size:13.5px;color:var(--slate);margin-top:14px}
+
+/* 计算器 */
+.calc{background:var(--ink);color:#EAF1F0;padding:26px 24px;border:1px solid var(--ink)}
+.calc h3{font-family:var(--serif);color:#fff;margin:0 0 4px;font-size:19px}
+.calc .hint{color:#9FBDBC;font-size:13.5px;margin:0 0 20px}
+.svrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:18px}
+.svbtn{font-family:var(--mono);font-size:13px;padding:8px 14px;background:transparent;color:#A9C3C1;border:1px solid #2E5260;cursor:pointer}
+.svbtn:hover{border-color:#4E7C85;color:#fff}
+.svbtn[aria-pressed="true"]{background:var(--tide);border-color:var(--tide);color:#fff}
+input[type=number]{font-family:var(--mono);font-size:14px;width:110px;padding:8px 10px;background:#12303C;border:1px solid #2E5260;color:#fff}
+input[type=number]:focus-visible,.svbtn:focus-visible,summary:focus-visible{outline:2px solid #6FD3C4;outline-offset:2px}
+.out{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:#20404E;border:1px solid #20404E}
+.out div{background:#0E2836;padding:14px 16px}
+.out .k{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#7FA9A5}
+.out .v{font-family:var(--mono);font-size:22px;font-weight:700;color:#fff;margin-top:6px}
+.out .v small{font-size:12px;color:#9FBDBC;font-weight:400}
+.calcnote{font-size:12.5px;color:#8FAFAD;margin:16px 0 0}
+
+/* 清单 */
+ul.todo{list-style:none;padding:0;margin:0}
+ul.todo li{background:var(--paper);border:1px solid var(--line);margin-bottom:8px;padding:14px 18px;display:flex;gap:14px;align-items:flex-start}
+ul.todo input{margin-top:5px;width:17px;height:17px;accent-color:var(--tide);flex-shrink:0}
+ul.todo .t{font-size:14.5px}
+ul.todo .t b{font-family:var(--serif);display:block;font-size:15.5px;margin-bottom:2px}
+ul.todo .when{font-family:var(--mono);font-size:11.5px;color:var(--signal);letter-spacing:.06em;margin-top:5px;display:block}
+ul.todo li.done .t{opacity:.45;text-decoration:line-through}
+
+/* 表格 */
+table{width:100%;border-collapse:collapse;background:var(--paper);border:1px solid var(--line);font-size:13.5px}
+th,td{padding:8px 11px;text-align:left;border-bottom:1px solid var(--mist)}
+th{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--slate);background:#F4F7F6;font-weight:500}
+td.n{font-family:var(--mono);text-align:right;white-space:nowrap}
+td.up{color:var(--signal)}
+td.dn{color:var(--tide)}
+tr.tot td{font-weight:700;background:#F4F7F6;border-top:2px solid var(--ink)}
+tr:last-child td{border-bottom:none}
+.tscroll{overflow-x:auto;margin-bottom:12px;-webkit-overflow-scrolling:touch}
+
+/* 沉淀基金图 */
+.sfchart{background:var(--paper);border:1px solid var(--line);padding:22px 20px 14px;margin-bottom:14px}
+.sfbars{display:flex;align-items:stretch;gap:6px;height:230px;margin:22px 0 0;position:relative}
+.sfcol{flex:1;display:flex;flex-direction:column;min-width:0}
+.sfpos{flex:0 0 60%;display:flex;flex-direction:column;justify-content:flex-end}
+.sfneg{flex:0 0 40%;display:flex;flex-direction:column;justify-content:flex-start;border-top:2px solid var(--ink)}
+.sfpos i,.sfneg i{display:block;background:var(--tide)}
+.sfneg i{background:var(--signal)}
+.sfval{font-family:var(--mono);font-size:9.5px;text-align:center;color:var(--slate);margin-bottom:3px;white-space:nowrap}
+.sfyear{font-family:var(--mono);font-size:9.5px;text-align:center;color:var(--slate);margin-top:6px;writing-mode:vertical-rl;align-self:center;letter-spacing:.02em}
+@media(min-width:720px){.sfyear{writing-mode:horizontal-tb;font-size:10px}}
+.sflegend{font-size:13px;color:var(--slate);margin-top:14px}
+
+/* 规则速查 */
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.rule{background:var(--paper);border:1px solid var(--line);padding:16px 18px}
+.rule h4{font-family:var(--serif);font-size:15.5px;margin:0 0 6px}
+.rule p{font-size:14px;margin:0}
+.rule .badge{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--tide);display:block;margin-bottom:6px}
+
+.qlist{counter-reset:q;list-style:none;padding:0;margin:0}
+.qlist li{background:var(--paper);border:1px solid var(--line);padding:16px 18px 16px 58px;position:relative;margin-bottom:8px;font-size:14.5px}
+.qlist li::before{counter-increment:q;content:"问" counter(q);position:absolute;left:16px;top:16px;font-family:var(--mono);font-size:11px;color:#fff;background:var(--slate);padding:3px 6px}
+.qlist li b{font-family:var(--serif)}
+.gap{background:var(--sand);border:1px dashed #B9A87A;padding:18px 20px;font-size:14.5px}
+footer{background:var(--ink);color:#8FAFAD;padding:36px 0 44px;margin-top:56px;font-size:13px}
+footer b{color:#EAF1F0;font-family:var(--serif)}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <div class="wrap">
+    <span class="brand">MCST 4258 · AGM 11</span>
+    <a href="#todo">要做的事</a>
+    <a href="#motions">表决清单</a>
+    <a href="#sinking">沉淀基金</a>
+    <a href="#budget">预算</a>
+    <a href="#money">缴费</a>
+    <a href="#rules">投票规则</a>
+    <a href="#last">去年</a>
+    <a href="#ask">建议提问</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">MCST 4258</div>
+    <h1>第11届常年大会<br>业主速览</h1>
+    <p class="sub">根据大会文件第 1–57 页整理:开会时间、要投什么票、钱的真实状况、以及最该在会上问的问题。</p>
+
+    <dl class="meta">
+      <div><dt>DATE</dt><dd>2026年9月12日 · 周六<small>上午 10:00</small></dd></div>
+      <div><dt>VENUE</dt><dd>Tower A 二层停车场<small>[小区地址已隐去]</small></dd></div>
+      <div><dt>QUORUM</dt><dd>30,000 份额<small>总份额 100,000 的 30%</small></dd></div>
+      <div><dt>NOTICE</dt><dd>2026年8月12日发出<small>距开会31天,合法定期限</small></dd></div>
+    </dl>
+
+    <div class="clocks">
+      <div class="clock urgent"><div class="n" id="c-pay">—</div><div class="l">距缴清欠费的最后期限<br>2026年9月9日(会前3天,否则丧失投票权)</div></div>
+      <div class="clock urgent"><div class="n" id="c-proxy">—</div><div class="l">距委托书递交截止<br>2026年9月10日 上午10:00(会前48小时)</div></div>
+      <div class="clock"><div class="n" id="c-agm">—</div><div class="l">距开会<br>2026年9月12日 上午10:00</div></div>
+    </div>
+  </div>
+  <svg class="waves" viewBox="0 0 1200 70" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0,40 C150,10 250,60 400,35 C550,10 650,58 800,33 C950,8 1050,55 1200,30 L1200,70 L0,70 Z" fill="#1C4652"/>
+    <path d="M0,52 C160,26 260,66 420,46 C580,26 680,66 840,46 C1000,26 1080,60 1200,44 L1200,70 L0,70 Z" fill="#2A5A66"/>
+  </svg>
+</header>
+
+<div class="wrap">
+
+<!-- ========== 三个发现 ========== -->
+<section id="what">
+  <div class="shead"><h2>先看这三件事</h2><span class="tag">KEY FINDINGS</span></div>
+  <p class="lead">今年的议程表面平淡——费率不涨,大部分是例行续聘。但把附在后面的账目、预算和沉淀基金推算表读完,会看到三个议程本身没有点出来的问题。</p>
+
+  <div class="finding">
+    <div class="k">FINDING 01 · 第52页</div>
+    <h3>管理处自己的十年推算显示:沉淀基金 2032/33 年会见底,缺口约 30.6 万</h3>
+    <span class="big">−$306,346</span>
+    <p>沉淀基金十年现金流推算表把 2032/33 年度的净结余算成负数,接下来 2033/34 年 −$227,546、2034/35 年 −$105,246,要到 2035/36 年才勉强回正($15,054)。原因是下一轮维修与重新粉刷的 <b>160 万元</b>集中落在 2032/33 年(七年周期)。</p>
+    <p>值得注意的是,这份推算<b>已经假设费率会往上调</b>:2028/29 年起升到 $0.35、2032/33 年起升到 $0.40。也就是说,即使照计划加价,缺口依然存在。今年议程第 7.3 项却只写「维持 $0.30」,并没有把这个推算结果放到台面上讨论。</p>
+  </div>
+
+  <div class="finding" style="border-top-color:var(--amber)">
+    <div class="k" style="color:#8A6F12">FINDING 02 · 第45页</div>
+    <h3>预算书说「实际需要 $1.58」,但这个数字没有扣掉利息和杂项收入</h3>
+    <p>预算表底部写:提案年度支出 $1,892,100,除以 100,000 份额 = 每年 $18.92,即 <b>$1.58/份额/月</b>,并注明「现行费率 $1.53」——读起来像是在暗示收费不足。</p>
+    <p>但同一张表上已经列了预计利息收入 $43,000 和预计其他收入 $58,000,合计 $101,000。把这笔钱扣掉,真正需要向业主收的是 $1,791,100,折合 <b>约 $1.49/份额/月</b>,低于现行的 $1.53。</p>
+    <p>另外,收入栏写的「管理基金收入 @$1.53psv = $1,792,000」这个数字有问题:$1.53 × 100,000 份额 × 12 个月 = <b>$1,836,000</b>。$1,792,000 恰好是刚过去这一财年的实收额(前4个月按旧费率 $1.42、后8个月按 $1.53),因为费率是 2025年10月1日才调整的。按整年 $1.53 计,收入应多出 <b>$44,000</b>,全年盈余会是约 $44,900,而不是预算写的 $900。</p>
+  </div>
+
+  <div class="finding" style="border-top-color:var(--tide)">
+    <div class="k" style="color:var(--tide)">FINDING 03 · 第35–36页</div>
+    <h3>管理基金已经转正,赤字是一次性的</h3>
+    <p>本财年(2025年6月–2026年5月)盈余 <b>$36,927</b>,去年是赤字 $27,890。管理基金结余从 $468,863 升到 $505,790。去年会上说的「十年来第一次赤字」没有延续。</p>
+    <p>帮上忙的主要是水电:从 $268,287 降到 $231,427(省了 3.7 万,部分来自新加坡电力的电表读数退款)。但另一边,清洁合约从 $395,400 涨到 $419,400,明年还要再涨到 $460,800。</p>
+  </div>
+</section>
+
+<!-- ========== 要做的事 ========== -->
+<section id="todo">
+  <div class="shead"><h2>你现在要做的事</h2><span class="tag">CHECKLIST</span></div>
+  <p class="lead">勾选只是给自己看的进度记号,刷新页面会重置。三个日期不一样,别记混。</p>
+  <ul class="todo" id="todolist">
+    <li><input type="checkbox" id="t1"><label for="t1" class="t"><b>先确认没有欠费——这条最容易被忽略</b>说明第 1.6 条写明:如果该单位的所有款项<b>没有在开会前至少 3 天付清</b>,业主就丧失投票资格。也就是要在 <b>9月9日(周三)</b> 之前结清。账目显示全屋苑欠款 $76,300,其中超过 60 天的有 $37,776。<span class="when">还有 <span class="dleft" data-target="pay">—</span> 天</span></label></li>
+    <li><input type="checkbox" id="t2"><label for="t2" class="t"><b>去不了就填委托书(第60–61页)</b>受托人不必是业主,但<b>一名受托人最多只能代表 2 个单位</b>(或全屋苑单位总数的 2%,取较高者),超出的委托书无效。必须在 <b>9月10日 上午10:00 前</b>送到管理处。另注意:如果你本人到场,你签的委托书自动作废。<span class="when">还有 <span class="dleft" data-target="proxy">—</span> 天</span></label></li>
+    <li><input type="checkbox" id="t3"><label for="t3" class="t"><b>9月12日(周六)上午10:00 到场</b>建议 9:45 前到 Tower A 二层停车场登记,带身份证/PR卡。公司名义持有的单位,代表人须带授权书(第59页)。<span class="when">还有 <span class="dleft" data-target="agm">—</span> 天</span></label></li>
+    <li><input type="checkbox" id="t4"><label for="t4" class="t"><b>翻一下第52页那张沉淀基金推算表</b>整份文件里信息量最大的一页,也是最容易被跳过的一页。看最下面 A 到 H 那几行:2032/33 年那一栏是负数。</label></li>
+    <li><input type="checkbox" id="t5"><label for="t5" class="t"><b>想进理事会?不必事先交表</b>说明第 7 条写明提名<b>可以口头在会上提出</b>,只要候选人当场同意即可;书面提名才需要提前 48 小时交给秘书。去年 11 席里最低票当选者只有 27 票。</label></li>
+    <li><input type="checkbox" id="t6"><label for="t6" class="t"><b>有自己的议题?现在写信只能进下一届议程</b>依附表一第12(1)、(3)条,大会通知发出后才收到的书面动议,秘书须列入<b>再下一次</b>大会议程。本届会上「其他事项」不能表决临时提出的动议,但可以发言反映。</label></li>
+  </ul>
+</section>
+
+<!-- ========== 表决清单 ========== -->
+<section id="motions">
+  <div class="shead"><h2>待表决事项清单</h2><span class="tag">11 ITEMS · 点击展开</span></div>
+  <p class="lead">按议程顺序。<span style="color:var(--tide)">■</span> 普通决议 = 赞成份额多于反对份额即通过;<span style="color:var(--signal)">■</span> 特别决议 = 需现场投票份额的 75% 以上;其余为例行动议。</p>
+
+  <details class="motion">
+    <summary class="mhead"><span class="num">2.0</span><span class="mtitle"><b>确认第10届常年大会(2025年9月13日)会议记录</b>
+      <span class="chips"><span class="chip">例行</span><span class="chip">可提出更正</span></span></span><span class="caret">▶</span></summary>
+    <div class="mbody">
+      <dl>
+        <dt>内容</dt><dd>确认上届记录无误,并讨论「由此产生的事项」。</dd>
+        <dt>建议</dt><dd>这是唯一能纠正上届记录的机会。记录里有几处笔误(见「建议提问」第1条),可当场要求更正。</dd>
+      </dl>
+      <div class="watch"><b>顺带一问:</b>重新粉刷工程原定 2026年1月18日完工。账目显示本年度沉淀基金付出 $1,026,600 的粉刷款,加上去年的 $302,854,已付超过 132 万。可以问:工程是否已验收结案?有没有延期索赔或尾款未付?J1/J2 泳池立面的空鼓修补做完了吗?</div>
+    </div>
+  </details>
+
+  <details class="motion">
+    <summary class="mhead"><span class="num">3.0</span><span class="mtitle"><b>通过 2025年6月1日–2026年5月31日 经审计账目</b>
+      <span class="chips"><span class="chip">例行</span><span class="chip">无保留意见</span></span></span><span class="caret">▶</span></summary>
+    <div class="mbody">
+      <dl>
+        <dt>审计意见</dt><dd>YWL &amp; Co 于 2026年7月20日出具<b>无保留意见</b>(unqualified),认为账目真实公允,会计记录亦按法令妥善保存。理事会由财政业主P与秘书业主M签署。</dd>
+        <dt>结果</dt><dd>盈余 $36,927(去年赤字 $27,890)。管理基金 $505,790,沉淀基金 $1,118,719,合计净资产 $1,624,509(去年 $2,456,800)。</dd>
+        <dt>现金</dt><dd>现金与定存合计 $1,717,797,一年内减少 $909,998。定存利率从 2.55–3.1% 降至 <b>1.15–2%</b>,利息收入因此腰斩。</dd>
+      </dl>
+      <div class="watch"><b>净资产少了 83 万,不必惊慌但要问清楚:</b>这是沉淀基金付掉重新粉刷工程的结果,属于「钱变成了新油漆」,不是亏损。真正要问的是下一轮怎么办——见下方沉淀基金一节。</div>
+    </div>
+  </details>
+
+  <details class="motion">
+    <summary class="mhead"><span class="num">4.0</span><span class="mtitle"><b>授权新理事会续聘审计师 YWL &amp; Co(或其他审计师)并议定费用</b>
+      <span class="chips"><span class="chip">例行</span></span></span><span class="caret">▶</span></summary>
+    <div class="mbody"><dl><dt>费用</dt><dd>本年度审计费 $1,280(去年 $1,230),明年预算同为 $1,280。金额很小,通常无争议。</dd></dl></div>
+  </details>
+
+  <details class="motion">
+    <summary class="mhead"><span class="num">5.0</span><span class="mtitle"><b>续保:火险、公众责任险、疏忽及遗漏险、平板玻璃险</b>
+      <span class="chips"><span class="chip">例行</span><span class="chip">保额已翻倍</span></span></span><span class="caret">▶</span></summary>
+    <div class="mbody">
+      <dl>
+        <dt>保额</dt><dd>火险 <b>S$239,300,000</b>(去年 $124,133,000,<b>接近翻倍</b>)· 公众责任险 $2,000,000 · 疏忽及遗漏险 $2,000,000 · 平板玻璃险 $320,000</dd>
+        <dt>承保人</dt><dd>Income Insurance Limited,承保期 2026年2月1日 至 2027年1月31日。</dd>
+        <dt>保费</dt><dd>火险 $14,358 · 公众责任 $150 · 平板玻璃 $1,280 · 疏忽遗漏 $150,合计约 <b>$15,938</b>。本年度实际入账保险开支 $11,346,明年预算 $15,932。</dd>
+      </dl>
+      <div class="watch"><b>好消息:</b>建筑重估让保额几乎翻倍(重置成本口径),而保费只从约 $9,000 升到约 $15,900。以屋苑规模而言,这个代价换到足额的重建保障是划算的。去年会上担心的「保费大涨」并未发生。</div>
+    </div>
+  </details>
+
+  <details class="motion">
+    <summary class="mhead"><span class="num">6.0</span><span class="mtitle"><b>续聘管理代理 Chambers(或其他公司),并授权理事会决定授权范围</b>
+      <span class="chips"><span class="chip">例行</span><span class="chip">明年费用降 2.7 万</span></span></span><span class="caret">▶</span></summary>
+    <div class="mbody">
+      <dl>
+        <dt>现况</dt><dd>Chambers Property Management Services Pte Ltd,2025年9月续聘。现行费用 <b>$24,021/月</b>,包含代理费、驻场团队(1 名产业经理、1 名产业主任、1 名行政助理、1 名楼宇主管)人力成本及会计服务。驻场经理为 驻场物业经理。</dd>
+        <dt>数字</dt><dd>本年度实际:代理费 $53,000 + 驻场人力 $254,242 = <b>$307,242</b>。明年预算:代理费 $55,800 + 驻场人力 $225,000 = <b>$280,800</b>。</dd>
+      </dl>
+      <div class="watch"><b>一个值得问的反差:</b>在渐进式薪金还会持续上调到 2030 年的背景下,明年的驻场人力预算却比今年实际少了 $29,242。是要减人、换岗,还是把某个职位挪去别的科目?这关系到管理处的服务水平。</div>
+    </div>
+  </details>
+
+  <details class="motion or">
+    <summary class="mhead"><span class="num">7.0</span><span class="mtitle"><b>2026/2027 预算 · 管理费与沉淀基金费率(均维持不变)</b>
+      <span class="chips"><span class="chip or">普通决议</span><span class="chip">四小项</span><span class="chip">需要你判断</span></span></span><span class="caret">▶</span></summary>
+    <div class="mbody">
+      <dl>
+        <dt>7.1</dt><dd>通过 2026/2027 年度预算:提案支出 <b>$1,892,100</b>(今年预算 $1,894,724,实际支出 $1,824,329)。</dd>
+        <dt>7.2</dt><dd>管理基金<b>维持</b> S$1.53/份额/月,2026年10月1日起;按季预缴,缴款日为 2026年10月1日、2027年1月1日、4月1日、7月1日(另加消费税)。</dd>
+        <dt>7.3</dt><dd>沉淀基金<b>维持</b> S$0.30/份额/月,缴款安排同上。</dd>
+        <dt>7.4</dt><dd>逾期利息与法律费用<b>维持</b> 20% 年息按日计算,逾期超过30天起算(依法令第40(6)(b)条)。</dd>
+      </dl>
+      <div class="watch"><b>7.2 的数字要自己算一遍:</b>预算书写「需要 $1.58」,但那是把全部支出摊到份额上,没扣掉 $101,000 的利息与杂项收入;扣掉后约 $1.49。而且收入栏用的 $1,792,000 是上一年的混合费率实收数,整年按 $1.53 应为 $1,836,000。两项加起来,$1.53 其实是<b>宽裕</b>而非不足。<br><br><b>7.3 才是真正该讨论的:</b>沉淀基金一年从 199 万降到 112 万,而管理处自己的十年推算显示 2032/33 年会出现 30.6 万缺口。维持 $0.30 是把问题推给未来的业主。可以要求理事会在会上说明:是打算届时一次性大幅加价、动用管理基金调拨,还是重新编排工程周期。</div>
+    </div>
+  </details>
+
+  <details class="motion or">
+    <summary class="mhead"><span class="num">8.1</span><span class="mtitle"><b>普通决议:准许 #01-48 商铺在共有产业外墙安装「4U Mart」招牌</b>
+      <span class="chips"><span class="chip or">普通决议 · 过半数</span><span class="chip">需要你判断</span><span class="chip">附录1</span></span></span><span class="caret">▶</span></summary>
+    <div class="mbody">
+      <dl>
+        <dt>申请人</dt><dd>业主C2(#01-48,现任理事,去年以「保留席」进入理事会),为其租客迷你超市申请。</dd>
+        <dt>内容</dt><dd>依法令第33(1)(a)条,授予为期一年(2026年10月1日–2027年9月30日)在共有产业上安装招牌的专用权与特殊权益,条件与租金由理事会决定。8.1.2 授权理事会办理安装、收取租金或押金。</dd>
+        <dt>尺寸</dt><dd>附录1 照片标了两个方案:<b>12 呎 × 2 呎</b>,以及 <b>4 呎 × 1.25 呎</b>。</dd>
+      </dl>
+      <div class="watch"><b>投票前想清楚三点:</b>① 议案没写明批准哪个尺寸,也没写租金金额,全部交给理事会定——可以动议要求把尺寸和最低租金写进决议。② 申请人本人是理事,理事会既审批又是获益方的关联人,是否应回避表决。③ 授予共有产业专用权,本项用普通决议(过半数),第9项性质相近却用特别决议(75%),门槛差别很大,可请管理层说明依据。</div>
+    </div>
+  </details>
+
+  <details class="motion sr">
+    <summary class="mhead"><span class="num">9.1</span><span class="mtitle"><b>特别决议:准许 #03-21 把阳台窗改为推拉门(改动外立面)</b>
+      <span class="chips"><span class="chip sr">特别决议 · 需75%</span><span class="chip">需要你判断</span><span class="chip">附录2</span></span></span><span class="caret">▶</span></summary>
+    <div class="mbody">
+      <dl>
+        <dt>申请人</dt><dd>业主SC(#03-21)。</dd>
+        <dt>理由</dt><dd>现有平开窗向内开启会挡住狭窄的阳台通道,有碰撞风险;改成推拉门可消除障碍。</dd>
+        <dt>承诺</dt><dd>框架颜色与现有窗框一致、材质外观匹配;安装前先送实物样板和色卡给管理处审批。已咨询 BCA 与 URA:封阳台一般不需提交建筑图,不涉结构加固也不需结构图;玻璃采用夹层或热强化玻璃;必要时聘专业工程师出具稳定与安全证明。</dd>
+        <dt>9.1.2</dt><dd>若通过,授权理事会办理、收取装修押金,并在完工后验收。</dd>
+      </dl>
+      <div class="watch"><b>值得留意:</b>附录2 附了「Before / After」两张照片,「After」看起来是已完成的状态。若工程已经动过,这就变成<b>事后追认</b>,性质不同,值得当场问清楚。另外这一项一旦通过就是永久性的外立面权利,可以问理事会打算用什么统一标准处理后续同类申请。</div>
+    </div>
+  </details>
+
+  <details class="motion">
+    <summary class="mhead"><span class="num">10.0</span><span class="mtitle"><b>选举第11届理事会</b>
+      <span class="chips"><span class="chip">四小项</span><span class="chip">可现场口头提名</span></span></span><span class="caret">▶</span></summary>
+    <div class="mbody">
+      <dl>
+        <dt>10.1</dt><dd>先表决理事人数。去年从 14 人减到 11 人(理由是人多凑不齐法定人数)。</dd>
+        <dt>10.2</dt><dd>选举理事。提名可口头在会上提出,候选人当场同意即可。</dd>
+        <dt>10.3</dt><dd>授权新理事会自行推选主席、秘书、财政。去年第10届推选:主席业主W、财政业主P、秘书业主M。</dd>
+        <dt>10.4</dt><dd>决定是否保留某些事项只能由业主大会决定。去年表决为「不保留」。</dd>
+      </dl>
+      <div class="watch"><b>10.4 值得重新想一想:</b>通过「不保留」意味着几乎所有决定权都在 11 人的理事会手上,包括第8项招牌的租金定价、第9项的施工验收。如果你希望某类事项(例如超过某金额的工程合约、或再次授予共有产业专用权)必须回到业主大会表决,今年就该在这一项上发言。</div>
+    </div>
+  </details>
+
+  <details class="motion">
+    <summary class="mhead"><span class="num">11.0</span><span class="mtitle"><b>其他事项</b>
+      <span class="chips"><span class="chip">须事先书面提交</span></span></span><span class="caret">▶</span></summary>
+    <div class="mbody"><dl><dt>规则</dt><dd>只处理已依附表一第12(1)条以书面通知秘书的动议。现场临时提出的只能作为意见反映,不能表决。上届此项无人提交。</dd></dl></div>
+  </details>
+</section>
+
+<!-- ========== 沉淀基金 ========== -->
+<section id="sinking">
+  <div class="shead"><h2>沉淀基金:十年后会怎样</h2><span class="tag">第52页 · 10-YEAR PROJECTION</span></div>
+  <p class="lead">这是管理处自己编的十年现金流推算,不是外部批评。柱子代表每年度结束时的净结余;跌到基线以下就是没钱付账。红色年份都出现在第七年之后。</p>
+
+  <div class="sfchart">
+    <div class="sfbars" id="sfbars"></div>
+    <p class="sflegend"><b>推算已假设费率会调升:</b>2026/27–2027/28 每份额 $0.30 → 2028/29–2031/32 升至 $0.35 → 2032/33 起升至 $0.40。即使如此,2032/33 至 2034/35 三年仍为负。压垮的是 2032/33 年那笔 <b>$1,600,000</b> 的下一轮维修与重新粉刷(七年周期),当年总支出 $1,955,700,而当年可用资金只有 $1,649,354。</p>
+  </div>
+
+  <div class="tscroll">
+  <table>
+    <tr><th>年度</th><th class="n">年度支出</th><th class="n">年初结余</th><th class="n">当年征收</th><th class="n">年末净结余</th><th class="n">费率/份额/月</th></tr>
+    <tr><td>2026/2027</td><td class="n">572,365</td><td class="n">1,118,719</td><td class="n">360,000</td><td class="n">906,354</td><td class="n">$0.30</td></tr>
+    <tr><td>2027/2028</td><td class="n">341,700</td><td class="n">906,354</td><td class="n">360,000</td><td class="n">924,654</td><td class="n">$0.30</td></tr>
+    <tr><td>2028/2029</td><td class="n">325,200</td><td class="n">924,654</td><td class="n">420,000</td><td class="n">1,019,454</td><td class="n">$0.35</td></tr>
+    <tr><td>2029/2030</td><td class="n">361,700</td><td class="n">1,019,454</td><td class="n">420,000</td><td class="n">1,077,754</td><td class="n">$0.35</td></tr>
+    <tr><td>2030/2031</td><td class="n">361,700</td><td class="n">1,077,754</td><td class="n">420,000</td><td class="n">1,136,054</td><td class="n">$0.35</td></tr>
+    <tr><td>2031/2032</td><td class="n">386,700</td><td class="n">1,136,054</td><td class="n">420,000</td><td class="n">1,169,354</td><td class="n">$0.35</td></tr>
+    <tr style="background:#FCF3F1"><td><b>2032/2033</b></td><td class="n up"><b>1,955,700</b></td><td class="n">1,169,354</td><td class="n">480,000</td><td class="n up"><b>−306,346</b></td><td class="n">$0.40</td></tr>
+    <tr style="background:#FCF3F1"><td>2033/2034</td><td class="n">401,200</td><td class="n up">−306,346</td><td class="n">480,000</td><td class="n up"><b>−227,546</b></td><td class="n">$0.40</td></tr>
+    <tr style="background:#FCF3F1"><td>2034/2035</td><td class="n">357,700</td><td class="n up">−227,546</td><td class="n">480,000</td><td class="n up"><b>−105,246</b></td><td class="n">$0.40</td></tr>
+    <tr><td>2035/2036</td><td class="n">359,700</td><td class="n up">−105,246</td><td class="n">480,000</td><td class="n">15,054</td><td class="n">$0.40</td></tr>
+  </table>
+  </div>
+
+  <div class="two">
+    <div class="card">
+      <h3>钱今年花到哪去了</h3>
+      <p>本年度沉淀基金动用 <b>$1,245,800</b>,其中维修与重新粉刷 <b>$1,026,600</b> 占了八成。其余:建筑工程 $75,670、抽水泵 $50,330、电梯 $27,556、设施 $18,847、消防系统 $13,505、泳池 $13,072、电力 $9,119、安保设备 $5,011、冷气 $3,290、园景 $2,800。</p>
+      <p>相比之下,每年只征收 $360,000($0.30 × 100,000 份额 × 12)。</p>
+    </div>
+    <div class="card">
+      <h3>推算表里最贵的几项</h3>
+      <p>22 部电梯的翻新摊提每年 $168,500(总成本 360 万,寿命 22 年),是<b>逐年最大的一笔</b>;冷气更换每年 $11,700(总成本 35 万);泳池重建每年 $40,000(总成本 80 万);再防水每年 $10,000。2026/27 年还有一笔 $50,000 的开关房支出和 $220,665 的粉刷尾款。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 预算 ========== -->
+<section id="budget">
+  <div class="shead"><h2>2026/2027 预算逐项对照</h2><span class="tag">第45页 · 25 ITEMS</span></div>
+  <p class="lead">左边是今年的预算与实际支出,右边是明年的提案。红色表示明年增加,绿色表示减少。</p>
+  <div class="tscroll">
+  <table>
+    <tr><th>项目</th><th class="n">今年预算</th><th class="n">今年实际</th><th class="n">明年提案</th><th class="n">增减</th></tr>
+    <tr><td>冷气与机械通风(ACMV)</td><td class="n">5,000</td><td class="n">2,964</td><td class="n">4,060</td><td class="n up">+1,096</td></tr>
+    <tr><td>审计费</td><td class="n">1,230</td><td class="n">1,280</td><td class="n">1,280</td><td class="n">—</td></tr>
+    <tr><td>银行手续费</td><td class="n">600</td><td class="n">306</td><td class="n">200</td><td class="n dn">−106</td></tr>
+    <tr><td>健身房与设施维护</td><td class="n">17,252</td><td class="n">16,436</td><td class="n">16,270</td><td class="n dn">−166</td></tr>
+    <tr><td>一般开支</td><td class="n">11,800</td><td class="n">3,140</td><td class="n">5,000</td><td class="n up">+1,860</td></tr>
+    <tr><td>节庆活动与茶点</td><td class="n">13,000</td><td class="n">10,734</td><td class="n">9,500</td><td class="n dn">−1,234</td></tr>
+    <tr><td>会议开支</td><td class="n">6,000</td><td class="n">3,878</td><td class="n">4,000</td><td class="n up">+122</td></tr>
+    <tr><td>法律与专业费用</td><td class="n">1,000</td><td class="n">0</td><td class="n">2,000</td><td class="n up">+2,000</td></tr>
+    <tr><td>印刷文具邮费</td><td class="n">8,300</td><td class="n">7,481</td><td class="n">7,300</td><td class="n dn">−181</td></tr>
+    <tr><td>电话与传真</td><td class="n">6,000</td><td class="n">5,511</td><td class="n">5,200</td><td class="n dn">−311</td></tr>
+    <tr><td>楼宇工程</td><td class="n">14,000</td><td class="n">12,777</td><td class="n">13,000</td><td class="n up">+223</td></tr>
+    <tr><td>保安系统维护</td><td class="n">11,510</td><td class="n">6,655</td><td class="n">8,600</td><td class="n up">+1,945</td></tr>
+    <tr><td>接驳巴士</td><td class="n">120,800</td><td class="n">121,200</td><td class="n">130,000</td><td class="n up">+8,800</td></tr>
+    <tr><td><b>清洁服务</b></td><td class="n">421,400</td><td class="n">421,438</td><td class="n"><b>462,800</b></td><td class="n up"><b>+41,362</b></td></tr>
+    <tr><td>电力安装</td><td class="n">12,650</td><td class="n">20,011</td><td class="n">18,150</td><td class="n dn">−1,861</td></tr>
+    <tr><td>消防系统</td><td class="n">12,228</td><td class="n">10,236</td><td class="n">11,508</td><td class="n up">+1,272</td></tr>
+    <tr><td>发电机维护</td><td class="n">2,600</td><td class="n">1,080</td><td class="n">1,000</td><td class="n dn">−80</td></tr>
+    <tr><td>保险</td><td class="n">9,028</td><td class="n">11,346</td><td class="n">15,932</td><td class="n up">+4,586</td></tr>
+    <tr><td>园景</td><td class="n">126,706</td><td class="n">124,133</td><td class="n">130,056</td><td class="n up">+5,923</td></tr>
+    <tr><td>电梯</td><td class="n">134,396</td><td class="n">131,068</td><td class="n">132,340</td><td class="n up">+1,272</td></tr>
+    <tr><td>灭虫</td><td class="n">9,676</td><td class="n">12,478</td><td class="n">13,592</td><td class="n up">+1,114</td></tr>
+    <tr><td><b>保安服务</b></td><td class="n">314,800</td><td class="n">308,000</td><td class="n"><b>322,600</b></td><td class="n up">+14,600</td></tr>
+    <tr><td>水缸与水管维护</td><td class="n">12,300</td><td class="n">4,250</td><td class="n">11,300</td><td class="n up">+7,050</td></tr>
+    <tr><td>游泳池</td><td class="n">40,900</td><td class="n">45,345</td><td class="n">40,700</td><td class="n dn">−4,645</td></tr>
+    <tr><td>水电</td><td class="n">270,000</td><td class="n">231,427</td><td class="n">241,000</td><td class="n up">+9,573</td></tr>
+    <tr><td>折旧</td><td class="n">3,200</td><td class="n">3,912</td><td class="n">3,912</td><td class="n">—</td></tr>
+    <tr><td><b>管理代理服务</b></td><td class="n">308,348</td><td class="n">307,242</td><td class="n"><b>280,800</b></td><td class="n dn"><b>−26,442</b></td></tr>
+    <tr class="tot"><td>合计</td><td class="n">1,894,724</td><td class="n">1,824,329</td><td class="n">1,892,100</td><td class="n up">+67,771</td></tr>
+  </table>
+  </div>
+  <p class="pnote">预算书列的收入侧:管理基金收入 $1,792,000 + 预计利息 $43,000 + 预计其他收入 $58,000 = $1,893,000,减支出 $1,892,100,盈余 $900。<br>
+  <b>但如上所述,$1,792,000 应为 $1,836,000</b>($1.53 × 100,000 × 12),修正后盈余约 $44,900。</p>
+</section>
+
+<!-- ========== 计算器 ========== -->
+<section id="money">
+  <div class="shead"><h2>这笔钱对你意味着多少</h2><span class="tag">CALCULATOR</span></div>
+  <p class="lead">费率按份额计算,不按房型。上届出席名单出现过的份额有 196、229 和 335(商铺)。你的份额印在缴费单上。</p>
+  <div class="calc">
+    <h3>按份额算你的季度账单</h3>
+    <p class="hint">管理基金 $1.53/份额/月 + 沉淀基金 $0.30/份额/月,按季预缴,另加消费税。</p>
+    <div class="svrow">
+      <button class="svbtn" data-sv="196" aria-pressed="false">196 份额</button>
+      <button class="svbtn" data-sv="229" aria-pressed="true">229 份额</button>
+      <button class="svbtn" data-sv="335" aria-pressed="false">335 份额</button>
+      <label for="svInput" style="font-size:13px;color:#9FBDBC">自订</label>
+      <input type="number" id="svInput" value="229" min="1" max="2000" step="1">
+      <label for="gstInput" style="font-size:13px;color:#9FBDBC">消费税 %</label>
+      <input type="number" id="gstInput" value="9" min="0" max="20" step="0.5" style="width:70px">
+    </div>
+    <div class="out">
+      <div><div class="k">管理基金 / 月</div><div class="v" id="o-mgmt">—</div></div>
+      <div><div class="k">沉淀基金 / 月</div><div class="v" id="o-sink">—</div></div>
+      <div><div class="k">每月合计</div><div class="v" id="o-month">—</div></div>
+      <div><div class="k">每季应缴(含税)</div><div class="v" id="o-qtr">—</div></div>
+      <div><div class="k">全年(含税)</div><div class="v" id="o-year">—</div></div>
+      <div><div class="k">你的投票权重</div><div class="v" id="o-weight">—</div></div>
+    </div>
+    <p class="calcnote">投票权重 = 你的份额 ÷ 全屋苑 100,000 份额。参考:去年管理费议案赞成与反对只差 97 个份额。<br>
+    另:第三辆车起每月 $200(不可退还,按季预缴,另加消费税),不按份额计算。</p>
+  </div>
+</section>
+
+<!-- ========== 投票规则 ========== -->
+<section id="rules">
+  <div class="shead"><h2>投票规则速查</h2><span class="tag">第53–57页 · BMSMA 摘录</span></div>
+  <p class="lead">这几页藏在文件最后,但决定了你的票算不算数。</p>
+  <div class="rules">
+    <div class="rule"><span class="badge">谁能投票</span><h4>登记在册的业主本人</h4><p>只有分层地契册上登记的业主、占有中的按揭权人或接管人可投票。共同业主之间,以册上<b>排名在前者</b>的一票为准。信托持有的,投票权在受托人手上。</p></div>
+    <div class="rule"><span class="badge">会失去资格</span><h4>欠费超过截止日</h4><p>该单位的所有款项须在<b>开会前至少 3 天</b>付清,否则不得投票;若未遵守管理团依法令送达的通知,同样丧失资格。</p></div>
+    <div class="rule"><span class="badge">委托书</span><h4>一人最多代表 2 个单位</h4><p>或全屋苑单位总数的 2%,取较高者;超出部分的委托书无效。受托人不必是业主。若委托人本人到场,委托书作废。须在会前 48 小时递交。</p></div>
+    <div class="rule"><span class="badge">法定人数</span><h4>30% 份额,否则半小时后照开</h4><p>若开会时间起半小时内不足 30%,只要有<b>两名或以上业主亲自在场</b>,会议即可视为足额进行。去年就是这样开的。</p></div>
+    <div class="rule"><span class="badge">普通决议</span><h4>赞成份额 &gt; 反对份额</h4><p>须在通知发出后第 15 天或以后召开。以有效票的份额相比,赞成多于反对即通过。</p></div>
+    <div class="rule"><span class="badge">特别决议</span><h4>投票份额的 75% 以上</h4><p>须在通知发出后第 22 天或以后召开。以<b>表决当时在场(含委托)且投出有效票</b>的份额为分母,至少 75% 赞成。弃权不计入分母。</p></div>
+    <div class="rule"><span class="badge">更高门槛</span><h4>90% 决议 · 一致决议 · 共识决议</h4><p>一致决议 = 无一票反对;90% 决议 = 至少 90% 份额;综合决议与共识决议还需在会后 12 周内取得全体业主 90%(或全体书面支持)。本届议程没有这几类。</p></div>
+    <div class="rule"><span class="badge">理事提名</span><h4>可口头、可书面</h4><p>口头提名在会上当场提出;书面提名须在会前 48 小时交秘书。两者都必须有候选人同意(书面须提前 48 小时,口头可当场)。同意书只能由候选人本人在选举开始前当面撤回。</p></div>
+  </div>
+</section>
+
+<!-- ========== 合约 ========== -->
+<section id="contracts">
+  <div class="shead"><h2>服务合约与到期日</h2><span class="tag">第25–27页 · 理事会报告</span></div>
+  <p class="lead">好几份合约在开会前后到期。合约价格是明年预算的主要变量,可以在会上问续约条件。</p>
+  <div class="tscroll">
+  <table>
+    <tr><th>项目</th><th>承包商</th><th class="n">费用</th><th>到期日</th></tr>
+    <tr><td>清洁(1 主管 + 10 清洁员)</td><td>Four Season Cleaning</td><td class="n">$38,400/月</td><td>2027年5月31日</td></tr>
+    <tr><td>保安(1 共用主管 + 日夜各 2 名高级保安)</td><td>Keith Morton Security</td><td class="n">$26,050/月</td><td><b>2026年9月30日</b></td></tr>
+    <tr><td>管理代理(含驻场四人)</td><td>Chambers Property Mgmt</td><td class="n">$24,021/月</td><td>本届大会后重聘</td></tr>
+    <tr><td>电梯(22 部)</td><td>KONE Elevator</td><td class="n">$10,714/月</td><td><b>2026年8月31日</b></td></tr>
+    <tr><td>接驳巴士</td><td>Zheng Xing Yun Service</td><td class="n">$10,100/月</td><td>2027年7月31日</td></tr>
+    <tr><td>园景(3 名驻场 + 3 名双周支援)</td><td>Lucky Garden</td><td class="n">$10,588/月</td><td>2027年7月31日</td></tr>
+    <tr><td>游泳池(每周 3 次)</td><td>Wateronic</td><td class="n">$3,000/月</td><td><b>2026年7月31日(已到期)</b></td></tr>
+    <tr><td>消防系统</td><td>Wuji Building Services</td><td class="n">$8,200/年</td><td><b>2026年8月31日</b></td></tr>
+    <tr><td>灭虫(每月一次)</td><td>Rentokil Initial</td><td class="n">$659.20/月</td><td>2027年7月31日</td></tr>
+    <tr><td>保安系统(门禁/闸门/闭路电视)</td><td>Fermax Asia Pacific</td><td class="n">$5,600/年</td><td>2027年7月31日</td></tr>
+    <tr><td>冷气与机械通风</td><td>Y &amp; T Aircon</td><td class="n">$2,964/年</td><td><b>2026年9月30日</b></td></tr>
+    <tr><td>电力(持牌电业工作人)</td><td>Portfolio Electrical</td><td class="n">$1,500/年</td><td>2027年8月5日</td></tr>
+    <tr><td>各类水泵</td><td>Top M &amp; E</td><td class="n">$1,200/年</td><td>2027年2月28日</td></tr>
+    <tr><td>发电机</td><td>ADA Electrical Engineering</td><td class="n">$600/年</td><td><b>2026年9月30日</b></td></tr>
+  </table>
+  </div>
+  <p class="pnote">保安主管与隔壁 Watercolor 公寓共用(集群管理),这是去年省下约 $78,000 的措施。</p>
+</section>
+
+<!-- ========== 去年 ========== -->
+<section id="last">
+  <div class="shead"><h2>去年已经定下的事</h2><span class="tag">2025年9月13日 · 出席 8.6%</span></div>
+  <p class="lead">下面每一条都已生效。深色为赞成份额,浅色为反对;红线是通过门槛。</p>
+
+  <div class="poll">
+    <div class="pt"><b>管理基金升至 $1.53/份额/月</b><span class="result pass">通过 · 差 97 份额</span></div>
+    <div class="bar"><div class="seg for" style="width:50.5%">赞成 4,937 · 50.50%</div><div class="seg against" style="width:49.5%">反对 4,840 · 49.50%</div><div class="thr" style="left:50%" data-l="普通决议 50%"></div></div>
+    <p class="pnote">另有 621 份额弃权。费率从 $1.42 升至 $1.53,2025年10月1日生效。</p>
+  </div>
+
+  <div class="poll">
+    <div class="pt"><b>阳台内禁烟(列为附则)</b><span class="result pass">通过</span></div>
+    <div class="bar"><div class="seg for" style="width:80.4%">赞成 8,445 · 80.40%</div><div class="seg against" style="width:19.6%">反对 2,059</div><div class="thr" style="left:75%" data-l="特别决议 75%"></div></div>
+    <p class="pnote">屋苑内没有指定吸烟角,一切依国家环境局规定。</p>
+  </div>
+
+  <div class="poll">
+    <div class="pt"><b>第三辆车起每月 $200</b><span class="result pass">通过</span></div>
+    <div class="bar"><div class="seg for" style="width:90.1%">赞成 8,698 · 90.10%</div><div class="seg against" style="width:9.9%">反对 956</div><div class="thr" style="left:75%" data-l="特别决议 75%"></div></div>
+    <p class="pnote">当时约 70% 车位已占用,约 12 户登记三辆或以上。管理代理表明车位不是权利,紧张时优先分配给车少的单位。</p>
+  </div>
+
+  <div class="poll">
+    <div class="pt"><b>准许在现有网球场打匹克球</b><span class="result fail">否决</span></div>
+    <div class="bar"><div class="seg for" style="width:43.08%">赞成 4,578 · 43.08%</div><div class="seg against" style="width:56.92%">反对 6,049 · 56.92%</div><div class="thr" style="left:75%" data-l="特别决议 75%"></div></div>
+    <p class="pnote">未达 75% 门槛。</p>
+  </div>
+
+  <h3 style="font-family:var(--serif);font-size:18px;margin:30px 0 12px">第10届理事会(11人)</h3>
+  <div class="tscroll">
+  <table>
+    <tr><th>业主代号</th><th>单位</th><th class="n">得票</th><th>职务</th></tr>
+    <tr><td>业主D</td><td>#11-16</td><td class="n">44</td><td>法律与传讯</td></tr>
+    <tr><td>业主T1</td><td>#11-02</td><td class="n">41</td><td>园景小组</td></tr>
+    <tr><td>业主N</td><td>#06-40</td><td class="n">40</td><td>保安小组 · 居民网络主席</td></tr>
+    <tr><td>业主W</td><td>#02-46</td><td class="n">39</td><td><b>主席</b></td></tr>
+    <tr><td>业主F</td><td>#07-18</td><td class="n">39</td><td>设施与机电小组</td></tr>
+    <tr><td>业主P</td><td>#11-27</td><td class="n">38</td><td><b>财政</b></td></tr>
+    <tr><td>业主RA</td><td>#03-18</td><td class="n">36</td><td>保安小组</td></tr>
+    <tr><td>业主M</td><td>#06-42</td><td class="n">30</td><td><b>秘书</b></td></tr>
+    <tr><td>业主GZ</td><td>#10-38</td><td class="n">29</td><td></td></tr>
+    <tr><td>业主CM</td><td>#11-14</td><td class="n">27</td><td>设施与机电小组</td></tr>
+    <tr><td>业主C2</td><td>#01-48</td><td class="n">保留席</td><td>本届第8项议案申请人</td></tr>
+  </table>
+  </div>
+  <p class="pnote">落选:业主TH(19)、业主EH(16)、业主NS(12)、业主VB(10)、业主RR(10)。</p>
+</section>
+
+<!-- ========== 新规矩 ========== -->
+<section id="houserules">
+  <div class="shead"><h2>已生效、和日常有关的规矩</h2><span class="tag">HOUSE RULES</span></div>
+  <div class="two">
+    <div class="card"><h3>阳台不能抽烟</h3><p>2025年以 80.4% 通过的特别决议,阳台内吸烟已列入禁止范围。</p></div>
+    <div class="card"><h3>第三辆车每月 $200</h3><p>不可退还的行政费,每年 1、4、7、10 月按季预缴,另加消费税。</p></div>
+    <div class="card"><h3>阳台栏杆不能晾衣</h3><p>任何情况下都不允许,请用室内晾衣架。</p></div>
+    <div class="card"><h3>小孩不能在车道玩耍</h3><p>共有区域尤其车辆通道严禁玩耍。楼层间噪音也请自律。</p></div>
+    <div class="card"><h3>公用雨伞带出屋苑等于偷窃</h3><p>自2020年起在 Tower A、G、J2 至巴士候车处提供,遗失损坏严重。</p></div>
+    <div class="card"><h3>楼上漏水,楼上负责</h3><p>保修期已过,单位内维修由业主自理:窗的可开启部分属业主;渗水由源头的楼上单位负责修理与费用;单位专用管道由业主维护。发现渗水尽快通报管理处存档。</p></div>
+  </div>
+  <div class="card" style="margin-top:14px"><h3>邻里噪音的处理路径</h3><p>先礼貌地与邻居沟通 → 谈不拢找管理处协助 → 仍无共识可转介社区调解中心(Community Mediation Centre)。</p></div>
+</section>
+
+<!-- ========== 建议提问 ========== -->
+<section id="ask">
+  <div class="shead"><h2>建议在会上提的问题</h2><span class="tag">TALKING POINTS</span></div>
+  <ol class="qlist">
+    <li><b>沉淀基金 2032/33 年出现 30.6 万缺口,理事会打算怎么办?</b>第52页的推算表已经假设费率会升到 $0.35 和 $0.40,仍然填不上 160 万的下一轮粉刷。请说明:是准备届时一次性大幅加价、从管理基金调拨(去年调过 20 万)、还是重新编排工程周期?现在维持 $0.30 是否等于把成本推给几年后的业主?</li>
+    <li><b>预算书的收入栏是不是少算了 4.4 万?</b>「管理基金收入 @$1.53psv = $1,792,000」这个数字是上一年混合费率的实收额;整年按 $1.53 计应为 $1,836,000。同时,「需要 $1.58」这个结论没有扣除已列在同一张表上的 $101,000 利息与其他收入,扣除后约为 $1.49。请管理代理说明这两处的计算口径。</li>
+    <li><b>明年的驻场人力预算为什么反而少了 2.9 万?</b>驻场人力从今年实际 $254,242 降到明年预算 $225,000,而渐进式薪金还要涨到 2030 年。是要减人、换岗,还是把成本挪到别的科目?会不会影响服务水平?</li>
+    <li><b>清洁合约明年再涨 4.1 万,做了几家比价吗?</b>清洁服务合约从 $395,400(FY2025)→ $419,400(FY2026)→ 提案 $460,800,两年涨了 16.5%,而清洁人手在 2025 年才从 11 人减到 10 人。合约要到 2027年5月才到期,涨幅从何而来?</li>
+    <li><b>重新粉刷工程结案了吗?</b>沉淀基金两年为此付出超过 132 万($1,026,600 + $302,854),原定 2026年1月18日完工。是否已验收、有无尾款或索赔?棕色油漆不均匀的返工做了没有?屋顶清洗最终有没有安排?</li>
+    <li><b>第8项招牌决议能否写明尺寸和最低租金?</b>目前条件与租金全部授权理事会决定,而申请人本人是理事。可动议修订:写入批准的尺寸方案、年租金下限、押金,以及关联理事回避表决的安排。同时请说明为何此项用普通决议而第9项用特别决议。</li>
+    <li><b>第9项的阳台改窗,是申请还是追认?</b>附录2 的「After」照片看起来是已完成状态。若已施工,请说明处理方式;若批准,后续同类申请用什么统一标准?</li>
+    <li><b>第10.4项要不要保留部分事项给业主大会?</b>例如超过某金额的工程合约、或再次授予共有产业专用权,是否应回到大会表决。</li>
+    <li><b>上届会议记录有几处笔误,请求更正。</b>第17页标题写成「第8届常年大会会议记录」,正文却是确认第9届(2024年9月28日)的记录;第22页第8.3项结尾写成「Motion 8.2 通过」,应为 8.3;第23页小节编号由 9.2 跳到 10.3。另外第53页说明第1.2条关于第一按揭权人的表述,似乎漏了否定词——按法令,按揭权人行使投票权时,业主本人投的票<b>不</b>予计算。</li>
+  </ol>
+</section>
+
+<!-- ========== 缺页 ========== -->
+<section id="gaps">
+  <div class="shead"><h2>这份速览的覆盖范围</h2><span class="tag">PAGES 1–57 / 61</span></div>
+  <div class="gap">
+    <p style="margin:0 0 10px"><b>已整理(第 1–57 页):</b>目录、召集函、议程、附录1(招牌尺寸)、附录2(改窗申请)、第10届大会完整会议记录、第10届理事会报告、FY2026 经审计账目全套(含全部附注)、2026/2027 管理基金预算与说明、沉淀基金十年推算表、大会说明与《建筑物管理与分层管理法令》摘录。</p>
+    <p style="margin:0"><b>未收录(第 58–61 页):</b>理事提名表、授权书、委托书——都是需要手填的表格,内容已在上面「投票规则速查」里说明用法,到管理处或从纸本直接取用即可。</p>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <p><b>MCST 4258 第11届常年大会业主速览(完整版)</b></p>
+    <p>内容根据 2026年8月12日发出的大会文件第 1–57 页整理,如与纸本正本有出入,以正本为准。文中对预算与推算表的核算属个人阅读理解,建议在会上向管理代理求证。本页不构成法律或财务意见;涉及决议效力、专用权授予门槛等问题,建议咨询专业人士或直接向管理处查询。<br>
+    管理处:[小区地址已隐去] · 电话 [已隐去] · 传真 [已隐去]</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var AGM   = new Date('2026-09-12T10:00:00+08:00');
+  var PROXY = new Date('2026-09-10T10:00:00+08:00');
+  var PAY   = new Date('2026-09-09T23:59:00+08:00');
+
+  function daysTo(d){ var ms = d - new Date(); return ms <= 0 ? 0 : Math.ceil(ms/86400000); }
+  function paint(){
+    var a = daysTo(AGM), p = daysTo(PROXY), y = daysTo(PAY);
+    document.getElementById('c-agm').innerHTML   = a + '<span>天</span>';
+    document.getElementById('c-proxy').innerHTML = p + '<span>天</span>';
+    document.getElementById('c-pay').innerHTML   = y + '<span>天</span>';
+    document.querySelectorAll('.dleft').forEach(function(el){
+      el.textContent = el.dataset.target === 'agm' ? a : (el.dataset.target === 'proxy' ? p : y);
+    });
+  }
+  paint(); setInterval(paint, 60000);
+
+  // 沉淀基金柱状图
+  var sf = [
+    ['2026/27', 906354],['2027/28', 924654],['2028/29', 1019454],['2029/30', 1077754],
+    ['2030/31', 1136054],['2031/32', 1169354],['2032/33', -306346],['2033/34', -227546],
+    ['2034/35', -105246],['2035/36', 15054]
+  ];
+  var MAXP = 1200000, MAXN = 350000;
+  var host = document.getElementById('sfbars');
+  sf.forEach(function(d){
+    var col = document.createElement('div'); col.className = 'sfcol';
+    var pos = document.createElement('div'); pos.className = 'sfpos';
+    var neg = document.createElement('div'); neg.className = 'sfneg';
+    var v = d[1];
+    if(v >= 0){
+      var lab = document.createElement('div'); lab.className = 'sfval';
+      lab.textContent = Math.round(v/1000) + 'k';
+      var bar = document.createElement('i'); bar.style.height = (v/MAXP*100) + '%';
+      pos.appendChild(lab); pos.appendChild(bar);
+    } else {
+      var bar2 = document.createElement('i'); bar2.style.height = (Math.abs(v)/MAXN*100) + '%';
+      var lab2 = document.createElement('div'); lab2.className = 'sfval';
+      lab2.style.color = 'var(--signal)';
+      lab2.textContent = '−' + Math.round(Math.abs(v)/1000) + 'k';
+      neg.appendChild(bar2); neg.appendChild(lab2);
+    }
+    var yr = document.createElement('div'); yr.className = 'sfyear'; yr.textContent = d[0];
+    col.appendChild(pos); col.appendChild(neg); col.appendChild(yr);
+    host.appendChild(col);
+  });
+
+  // 缴费计算
+  var MGMT = 1.53, SINK = 0.30, TOTAL_SV = 100000;
+  var svInput = document.getElementById('svInput');
+  var gstInput = document.getElementById('gstInput');
+  var btns = document.querySelectorAll('.svbtn');
+  function money(n){ return '$' + n.toLocaleString('en-SG',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+  function calc(){
+    var sv = parseFloat(svInput.value), gst = parseFloat(gstInput.value);
+    if(!isFinite(sv) || sv <= 0) sv = 0;
+    if(!isFinite(gst) || gst < 0) gst = 0;
+    var m = sv*MGMT, s = sv*SINK, mo = m+s, q = mo*3*(1+gst/100);
+    document.getElementById('o-mgmt').textContent  = money(m);
+    document.getElementById('o-sink').textContent  = money(s);
+    document.getElementById('o-month').textContent = money(mo);
+    document.getElementById('o-qtr').innerHTML     = money(q) + ' <small>含税</small>';
+    document.getElementById('o-year').innerHTML    = money(q*4) + ' <small>含税</small>';
+    document.getElementById('o-weight').innerHTML  = (sv/TOTAL_SV*100).toFixed(3) + '<small>%</small>';
+    btns.forEach(function(b){ b.setAttribute('aria-pressed', String(parseFloat(b.dataset.sv) === sv)); });
+  }
+  btns.forEach(function(b){ b.addEventListener('click', function(){ svInput.value = b.dataset.sv; calc(); }); });
+  svInput.addEventListener('input', calc);
+  gstInput.addEventListener('input', calc);
+  calc();
+
+  document.querySelectorAll('#todolist input').forEach(function(cb){
+    cb.addEventListener('change', function(){ cb.closest('li').classList.toggle('done', cb.checked); });
+  });
+})();
+</script>
+</body>
+</html>
