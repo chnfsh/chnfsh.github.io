@@ -45,16 +45,18 @@ button:focus-visible{outline:2px solid var(--plaque);outline-offset:3px;border-r
 .kb.leave{animation:none;transition:transform .7s cubic-bezier(.5,0,.75,0),opacity .6s ease;opacity:0}
 
 /* hotspots */
-.hs{position:absolute;z-index:2;pointer-events:auto;transform:translate(-50%,-50%);width:44px;height:44px;display:grid;place-items:center}
-.hs .ring{position:relative;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#fff;filter:drop-shadow(0 0 2px rgba(20,28,34,.55)) drop-shadow(0 1px 4px rgba(20,28,34,.35));transition:background .25s}
-.hs .ring::before,.hs .ring::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid #fff;transform:scale(0);animation:ripple 2.4s ease-out infinite;pointer-events:none}
+.hs{position:absolute;z-index:2;pointer-events:auto;transform:translate(-50%,-50%);width:64px;height:64px;display:grid;place-items:center}
+.hs .ring{position:relative;width:64px;height:64px;border-radius:50%;display:grid;place-items:center;color:#fff;filter:drop-shadow(0 0 2px rgba(20,28,34,.55)) drop-shadow(0 1px 4px rgba(20,28,34,.35));transition:background .25s}
+.hs .ring::before,.hs .ring::after{content:"";position:absolute;inset:0;border-radius:50%;border:2.5px solid var(--lantern);transform:scale(.5);animation:ripple 2.4s ease-out infinite;pointer-events:none}
 .hs .ring::after{animation-delay:1.2s}
-@keyframes ripple{0%{transform:scale(0);opacity:1}70%{opacity:.75}100%{transform:scale(1);opacity:0}}
-.hs svg{width:18px;height:18px;opacity:0;animation:arrowIn .45s ease 1s forwards}
+@keyframes ripple{0%{transform:scale(.5);opacity:1}70%{opacity:.7}100%{transform:scale(1);opacity:0}}
+.hs .disc{position:absolute;left:50%;top:50%;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;background:rgba(255,255,255,.42);opacity:0;animation:discIn .45s ease 1s forwards}
+@keyframes discIn{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+.hs svg{position:relative;width:28px;height:28px;opacity:0;animation:arrowIn .45s ease 1s forwards}
 @keyframes arrowIn{from{opacity:0;translate:0 3px}to{opacity:1;translate:0 0}}
 .hs.d-r svg{transform:rotate(90deg)}.hs.d-b svg{transform:rotate(180deg)}.hs.d-l svg{transform:rotate(-90deg)}
-.hs .lbl{position:absolute;left:calc(50% + 20px);top:50%;transform:translate(-4px,-50%);white-space:nowrap;font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:rgba(248,249,246,.95);color:var(--dai);box-shadow:0 2px 10px rgba(46,58,68,.2);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}
-.hs.flip .lbl{left:auto;right:calc(50% + 20px);transform:translate(4px,-50%)}
+.hs .lbl{position:absolute;left:calc(50% + 30px);top:50%;transform:translate(-4px,-50%);white-space:nowrap;font-size:13px;font-weight:500;padding:4px 10px;border-radius:999px;background:rgba(248,249,246,.95);color:var(--dai);box-shadow:0 2px 10px rgba(46,58,68,.2);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}
+.hs.flip .lbl{left:auto;right:calc(50% + 30px);transform:translate(4px,-50%)}
 .hs:hover .lbl,.hs:focus-visible .lbl,.layer.peek .hs .lbl{opacity:1;transform:translate(0,-50%)}
 .hs:hover .ring,.hs:focus-visible .ring{background:rgba(255,255,255,.22)}
 
@@ -213,7 +215,7 @@ button:focus-visible{outline:2px solid var(--plaque);outline-offset:3px;border-r
   .phead{flex-wrap:wrap}.ptabs{flex-basis:100%;order:3}
 }
 @media (prefers-reduced-motion:reduce){
-  .kb{animation:none}.hs .ring::before{animation:none;transform:scale(.8);opacity:.9}.hs .ring::after{display:none}.hs svg{animation:none;opacity:1}
+  .kb{animation:none}.hs .ring::before{animation:none;transform:scale(.6);opacity:.9}.hs .ring::after{display:none}.hs svg,.hs .disc{animation:none;opacity:1}
   .layer,.drawer,.kb.leave,.poems,.cover{transition-duration:.01s}
 }
 </style>
@@ -285,7 +287,7 @@ const areaName = Object.fromEntries(D.areas.map(a => [a.id, a.name]));
 const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const strip_p = t => t.replace(/[，。；？！、]$/, '');
 const col = (t, cls = '', extra = '') => `<span class="col ${cls}"${extra}>${[...t].filter(c => !/[，。；、]/.test(c)).map(c => `<i>${esc(c)}</i>`).join('')}</span>`;
-const ARROW = '<svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const ARROW = '<svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const POUCH = '<svg viewBox="0 0 34 42"><path d="M11 9c-1.5-3 .5-6 3-5 1 .4 2 1.6 3 1.6S19 4.4 20 4c2.5-1 4.5 2 3 5" fill="none" stroke="#c9a24e" stroke-width="2" stroke-linecap="round"/><path d="M10 11c-6 6-8 13-7 19 1 7 7 10 14 10s13-3 14-10c1-6-1-13-7-19z" fill="#7d2c25"/><path d="M9 11.5h16" stroke="#c9a24e" stroke-width="3" stroke-linecap="round"/><circle cx="17" cy="26" r="6.5" fill="none" stroke="#c9a24e" stroke-width="1.4"/><path d="M14 26h6M17 23v6" stroke="#c9a24e" stroke-width="1.4" stroke-linecap="round"/></svg>';
 const FL = {u:'<path d="M12 19V5M6 11l6-6 6 6"/>', d:'<path d="M12 5v14M6 13l6 6 6-6"/>'};
 
@@ -321,7 +323,7 @@ function build(layer, s, pin){
     b.className = 'hs d-' + dir + (x > 62 ? ' flip' : '');
     b.style.left = x + '%'; b.style.top = y + '%';
     b.setAttribute('aria-label', label);
-    b.innerHTML = `<span class="ring">${ARROW}</span><span class="lbl">${esc(label)}</span>`;
+    b.innerHTML = `<span class="ring"><span class="disc"></span>${ARROW}</span><span class="lbl">${esc(label)}</span>`;
     b.addEventListener('click', e => { e.stopPropagation(); userGo(to, [x, y]); });
     hw.appendChild(b);
   }
